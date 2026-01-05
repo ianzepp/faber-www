@@ -16,6 +16,12 @@ order: 0
 Installation coming soon
 </div>
 
+<div class="links-block">
+
+[GitHub](https://github.com/ianzepp/faber-romanus) | [LLM Trials](https://github.com/ianzepp/faber-trials)
+
+</div>
+
 Faber is an intermediate language where LLMs generate human-readable Latin code that humans can review before compilation to TypeScript, Python, Zig, C++, or Rust.
 
 ## Why Latin?
