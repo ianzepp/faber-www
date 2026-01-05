@@ -280,7 +280,7 @@ function computeContextStats(results: GradedResult[]): ContextStats[] {
     if (r.correct) byContext[r.context].correct++
   }
 
-  const contextOrder = ['examples-only', 'minimal', 'basic', 'complete']
+  const contextOrder = ['examples-only', 'grammar-only', 'minimal', 'basic', 'complete']
 
   return Object.entries(byContext)
     .map(([context, s]) => ({

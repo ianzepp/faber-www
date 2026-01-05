@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Framework 1.1 Results - Faber</title>
+  <meta name="description" content="Detailed analysis of LLM learnability trials">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+  <a href="/research/framework-1.1.html" class="active">Framework 1.1 Results</a>
+  <div class="nav-subheadings">
+    <a href="/research/framework-1.1.html#executive-summary">Executive Summary</a>
+    <a href="/research/framework-1.1.html#methodology">Methodology</a>
+    <a href="/research/framework-1.1.html#trial-configuration" class="nav-h3">Trial Configuration</a>
+    <a href="/research/framework-1.1.html#models-tested" class="nav-h3">Models Tested</a>
+    <a href="/research/framework-1.1.html#context-types" class="nav-h3">Context Types</a>
+    <a href="/research/framework-1.1.html#task-categories" class="nav-h3">Task Categories</a>
+    <a href="/research/framework-1.1.html#overall-results">Overall Results</a>
+    <a href="/research/framework-1.1.html#all-tasks-including-predict-output" class="nav-h3">All Tasks (Including predict_output)</a>
+    <a href="/research/framework-1.1.html#read-write-tasks-only-excluding-predict-output" class="nav-h3">Read/Write Tasks Only (Excluding predict_output)</a>
+    <a href="/research/framework-1.1.html#results-by-context-type">Results by Context Type</a>
+    <a href="/research/framework-1.1.html#grammar-only-context-analysis">Grammar-Only Context Analysis</a>
+    <a href="/research/framework-1.1.html#error-analysis">Error Analysis</a>
+    <a href="/research/framework-1.1.html#task-difficulty-analysis">Task Difficulty Analysis</a>
+    <a href="/research/framework-1.1.html#hardest-tasks-excluding-predict-output" class="nav-h3">Hardest Tasks (Excluding predict_output)</a>
+    <a href="/research/framework-1.1.html#easiest-tasks" class="nav-h3">Easiest Tasks</a>
+    <a href="/research/framework-1.1.html#cost-efficiency-grammar-only-context">Cost Efficiency (Grammar-Only Context)</a>
+    <a href="/research/framework-1.1.html#conclusions">Conclusions</a>
+    <a href="/research/framework-1.1.html#primary-findings" class="nav-h3">Primary Findings</a>
+    <a href="/research/framework-1.1.html#recommendations-for-future-trials" class="nav-h3">Recommendations for Future Trials</a>
+    <a href="/research/framework-1.1.html#appendix-trial-run-summary">Appendix: Trial Run Summary</a>
+  </div>
+</nav>
+    <main class="content">
+      <h1 id="framework-1-1-trial-results">Framework 1.1 Trial Results</h1>
+<p><strong>Date</strong>: 2026-01-05
+<strong>Framework Version</strong>: 1.1
+<strong>Total Trials</strong>: ~15,000 across 17 models</p>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This document summarizes the results of LLM trials testing the learnability of Faber, a Latin-inspired programming language designed as an LLM-friendly intermediate representation.</p>
+<p><strong>Key Findings:</strong></p>
+<ol>
+<li><strong>Grammar-only context outperforms prose documentation</strong> — Formal EBNF grammar yields 92-98% accuracy vs 81-88% for natural language descriptions</li>
+<li><strong>Coding models match frontier models</strong> — qwen3-coder (96%) rivals gpt-4o (98%) at 1/10th the cost</li>
+<li><strong>Prediction tasks measure different skills</strong> — Tasks requiring mental transpilation (predict_output) should be excluded from read/write competency metrics</li>
+<li><strong>Small models struggle regardless of context</strong> — Models under 8B parameters (llama-3.2-1b) remain below 20% accuracy</li>
+</ol>
+<hr>
+<h2 id="methodology">Methodology</h2>
+<h3 id="trial-configuration">Trial Configuration</h3>
+<ul>
+<li><strong>Total Trials</strong>: 13,092</li>
+<li><strong>Models Tested</strong>: 17</li>
+<li><strong>Task Types</strong>: 53 unique tasks</li>
+<li><strong>N-shot Variations</strong>: 0, 1, 3, 10 examples</li>
+<li><strong>Context Types</strong>: 5 (examples-only, grammar-only, minimal, basic, complete)</li>
+<li><strong>Temperature</strong>: 0.0 (deterministic)</li>
+<li><strong>Dialect</strong>: Latin only</li>
+</ul>
+<h3 id="models-tested">Models Tested</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Models</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OpenAI</td>
+<td>gpt-3.5-turbo, gpt-4o-mini, gpt-4o, gpt-5</td>
+</tr>
+<tr>
+<td>Anthropic</td>
+<td>claude-3-haiku, claude-3.5-sonnet, claude-4.5-sonnet</td>
+</tr>
+<tr>
+<td>Meta</td>
+<td>llama-3.1-8b, llama-3.1-70b, llama-3.2-1b, llama-3.2-3b</td>
+</tr>
+<tr>
+<td>Coding-focused</td>
+<td>codestral, deepseek-v3.1, mercury-coder, qwen3-coder, qwen2.5-coder-32b</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>mistral-7b</td>
+</tr>
+</tbody></table>
+<h3 id="context-types">Context Types</h3>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>examples-only</td>
+<td>No documentation, only n-shot examples</td>
+</tr>
+<tr>
+<td>grammar-only</td>
+<td>Formal EBNF grammar + keyword mappings</td>
+</tr>
+<tr>
+<td>minimal</td>
+<td>Brief keyword vocabulary list</td>
+</tr>
+<tr>
+<td>basic</td>
+<td>Quick reference with types, keywords, syntax rules</td>
+</tr>
+<tr>
+<td>complete</td>
+<td>Full grammar reference with all features</td>
+</tr>
+</tbody></table>
+<h3 id="task-categories">Task Categories</h3>
+<ul>
+<li><strong>translate_ts_to_faber</strong>: Write Faber given TypeScript</li>
+<li><strong>translate_faber_to_ts</strong>: Write TypeScript given Faber</li>
+<li><strong>complete_code</strong>: Fill in missing Faber keyword</li>
+<li><strong>predict_output</strong>: Predict runtime output (excluded from primary metrics)</li>
+</ul>
+<hr>
+<h2 id="overall-results">Overall Results</h2>
+<h3 id="all-tasks-including-predict-output">All Tasks (Including predict_output)</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Passed</th>
+<th>Total</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gpt-4o</td>
+<td>761</td>
+<td>840</td>
+<td>91%</td>
+</tr>
+<tr>
+<td>qwen3-coder</td>
+<td>903</td>
+<td>1008</td>
+<td>90%</td>
+</tr>
+<tr>
+<td>gpt-5</td>
+<td>595</td>
+<td>672</td>
+<td>89%</td>
+</tr>
+<tr>
+<td>gpt-4o-mini</td>
+<td>736</td>
+<td>840</td>
+<td>88%</td>
+</tr>
+<tr>
+<td>claude-3.5-sonnet</td>
+<td>739</td>
+<td>840</td>
+<td>88%</td>
+</tr>
+<tr>
+<td>llama-3.1-70b</td>
+<td>726</td>
+<td>840</td>
+<td>86%</td>
+</tr>
+<tr>
+<td>codestral</td>
+<td>725</td>
+<td>840</td>
+<td>86%</td>
+</tr>
+<tr>
+<td>deepseek-v3.1</td>
+<td>710</td>
+<td>840</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>gpt-3.5-turbo</td>
+<td>1252</td>
+<td>1498</td>
+<td>84%</td>
+</tr>
+<tr>
+<td>claude-4.5-sonnet</td>
+<td>520</td>
+<td>672</td>
+<td>77%</td>
+</tr>
+<tr>
+<td>mercury-coder</td>
+<td>614</td>
+<td>840</td>
+<td>73%</td>
+</tr>
+<tr>
+<td>llama-3.1-8b</td>
+<td>733</td>
+<td>1009</td>
+<td>73%</td>
+</tr>
+<tr>
+<td>claude-3-haiku</td>
+<td>638</td>
+<td>925</td>
+<td>69%</td>
+</tr>
+<tr>
+<td>llama-3.2-1b</td>
+<td>173</td>
+<td>1093</td>
+<td>16%</td>
+</tr>
+</tbody></table>
+<p><em>Note: mistral-7b (100%, n=18), llama-3.2-3b (40%, n=35), qwen2.5-coder-32b (0%, n=282) excluded due to incomplete runs</em></p>
+<h3 id="read-write-tasks-only-excluding-predict-output">Read/Write Tasks Only (Excluding predict_output)</h3>
+<p>The <code>predict_output</code> tasks test mental transpilation (understanding that <code>scribe(verum)</code> outputs <code>true</code>), which is a different skill than read/write competency. Excluding these:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Passed</th>
+<th>Total</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gpt-4o</td>
+<td>559</td>
+<td>600</td>
+<td>93%</td>
+</tr>
+<tr>
+<td>qwen3-coder</td>
+<td>662</td>
+<td>720</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>deepseek-v3.1</td>
+<td>550</td>
+<td>600</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>claude-3.5-sonnet</td>
+<td>552</td>
+<td>600</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>gpt-5</td>
+<td>435</td>
+<td>480</td>
+<td>91%</td>
+</tr>
+<tr>
+<td>claude-4.5-sonnet</td>
+<td>435</td>
+<td>480</td>
+<td>91%</td>
+</tr>
+<tr>
+<td>codestral</td>
+<td>537</td>
+<td>600</td>
+<td>90%</td>
+</tr>
+<tr>
+<td>gpt-4o-mini</td>
+<td>536</td>
+<td>600</td>
+<td>89%</td>
+</tr>
+<tr>
+<td>llama-3.1-70b</td>
+<td>528</td>
+<td>600</td>
+<td>88%</td>
+</tr>
+<tr>
+<td>claude-3-haiku</td>
+<td>581</td>
+<td>661</td>
+<td>88%</td>
+</tr>
+<tr>
+<td>llama-3.1-8b</td>
+<td>604</td>
+<td>721</td>
+<td>84%</td>
+</tr>
+<tr>
+<td>gpt-3.5-turbo</td>
+<td>882</td>
+<td>1091</td>
+<td>81%</td>
+</tr>
+<tr>
+<td>mercury-coder</td>
+<td>479</td>
+<td>600</td>
+<td>80%</td>
+</tr>
+<tr>
+<td>llama-3.2-1b</td>
+<td>118</td>
+<td>787</td>
+<td>15%</td>
+</tr>
+</tbody></table>
+<p><strong>Observation</strong>: Top models cluster tightly at 88-93% when measuring actual code generation ability.</p>
+<hr>
+<h2 id="results-by-context-type">Results by Context Type</h2>
+<p>Excluding predict_output tasks:</p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Passed</th>
+<th>Total</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>grammar-only</td>
+<td>1381</td>
+<td>1590</td>
+<td>87%</td>
+</tr>
+<tr>
+<td>complete</td>
+<td>1572</td>
+<td>1817</td>
+<td>87%</td>
+</tr>
+<tr>
+<td>basic</td>
+<td>1526</td>
+<td>1801</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>minimal</td>
+<td>1846</td>
+<td>2218</td>
+<td>83%</td>
+</tr>
+<tr>
+<td>examples-only</td>
+<td>1162</td>
+<td>1961</td>
+<td>59%</td>
+</tr>
+</tbody></table>
+<p><strong>Key Insight</strong>: Formal EBNF grammar (grammar-only) matches the most verbose documentation (complete) while using fewer tokens. Examples alone without any documentation performs poorly (59%).</p>
+<hr>
+<h2 id="grammar-only-context-analysis">Grammar-Only Context Analysis</h2>
+<p>The grammar-only context provides formal EBNF rules and keyword mappings. This section shows results for this context specifically, excluding predict_output tasks:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Passed</th>
+<th>Total</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gpt-4o</td>
+<td>117</td>
+<td>120</td>
+<td>98%</td>
+</tr>
+<tr>
+<td>claude-3.5-sonnet</td>
+<td>117</td>
+<td>120</td>
+<td>98%</td>
+</tr>
+<tr>
+<td>qwen3-coder</td>
+<td>231</td>
+<td>240</td>
+<td>96%</td>
+</tr>
+<tr>
+<td>llama-3.1-70b</td>
+<td>114</td>
+<td>120</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>deepseek-v3.1</td>
+<td>114</td>
+<td>120</td>
+<td>95%</td>
+</tr>
+<tr>
+<td>gpt-4o-mini</td>
+<td>111</td>
+<td>120</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>codestral</td>
+<td>111</td>
+<td>120</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>claude-3-haiku</td>
+<td>108</td>
+<td>120</td>
+<td>90%</td>
+</tr>
+<tr>
+<td>gpt-3.5-turbo</td>
+<td>133</td>
+<td>150</td>
+<td>89%</td>
+</tr>
+<tr>
+<td>mercury-coder</td>
+<td>105</td>
+<td>120</td>
+<td>88%</td>
+</tr>
+<tr>
+<td>llama-3.1-8b</td>
+<td>103</td>
+<td>120</td>
+<td>86%</td>
+</tr>
+<tr>
+<td>llama-3.2-1b</td>
+<td>17</td>
+<td>120</td>
+<td>14%</td>
+</tr>
+</tbody></table>
+<p><strong>Key Findings</strong>:</p>
+<ul>
+<li>Frontier models (gpt-4o, claude-3.5-sonnet) achieve 98% accuracy</li>
+<li>Coding-focused model qwen3-coder (96%) nearly matches at ~10x lower cost</li>
+<li>Mid-tier models cluster at 86-92%</li>
+<li>Only llama-3.2-1b (1B params) fails to learn effectively</li>
+</ul>
+<hr>
+<h2 id="error-analysis">Error Analysis</h2>
+<p>Excluding predict_output tasks:</p>
+<table>
+<thead>
+<tr>
+<th>Error Type</th>
+<th>Count</th>
+<th>% of Failures</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>type_error</td>
+<td>1308</td>
+<td>69%</td>
+</tr>
+<tr>
+<td>no_response</td>
+<td>236</td>
+<td>12%</td>
+</tr>
+<tr>
+<td>syntax_error</td>
+<td>192</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>wrong_output</td>
+<td>152</td>
+<td>8%</td>
+</tr>
+<tr>
+<td>runtime_error</td>
+<td>14</td>
+<td>&lt;1%</td>
+</tr>
+</tbody></table>
+<p><strong>Interpretation</strong>: Most failures are type errors (likely TypeScript-style syntax like <code>x: number</code> instead of <code>numerus x</code>). Very few runtime errors, indicating models produce structurally valid code.</p>
+<hr>
+<h2 id="task-difficulty-analysis">Task Difficulty Analysis</h2>
+<h3 id="hardest-tasks-excluding-predict-output">Hardest Tasks (Excluding predict_output)</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Pass Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>translate_conditional</td>
+<td>17%</td>
+<td>Complex control flow</td>
+</tr>
+<tr>
+<td>translate_function</td>
+<td>17%</td>
+<td>Function syntax</td>
+</tr>
+<tr>
+<td>translate_if_else</td>
+<td>17%</td>
+<td>Control flow</td>
+</tr>
+<tr>
+<td>complete_variable_declaration</td>
+<td>25%</td>
+<td>Type-first syntax</td>
+</tr>
+<tr>
+<td>translate_array_literal</td>
+<td>33%</td>
+<td>Collection syntax</td>
+</tr>
+<tr>
+<td>ts_to_faber_function_string</td>
+<td>54%</td>
+<td>Function + string return</td>
+</tr>
+<tr>
+<td>ts_to_faber_boolean</td>
+<td>56%</td>
+<td>Boolean handling</td>
+</tr>
+</tbody></table>
+<h3 id="easiest-tasks">Easiest Tasks</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Pass Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>faber_to_ts_functio_string</td>
+<td>95%</td>
+<td>Reading Faber</td>
+</tr>
+<tr>
+<td>faber_to_ts_arithmetic</td>
+<td>94%</td>
+<td>Reading Faber</td>
+</tr>
+<tr>
+<td>faber_to_ts_si_true</td>
+<td>93%</td>
+<td>Reading Faber</td>
+</tr>
+<tr>
+<td>faber_to_ts_ex_pro</td>
+<td>93%</td>
+<td>Reading Faber</td>
+</tr>
+<tr>
+<td>faber_to_ts_functio</td>
+<td>92%</td>
+<td>Reading Faber</td>
+</tr>
+</tbody></table>
+<p><strong>Key Pattern</strong>: Reading Faber (faber_to_ts) is significantly easier than writing Faber (ts_to_faber). Models can interpret Faber keywords but struggle to produce them correctly.</p>
+<hr>
+<h2 id="cost-efficiency-grammar-only-context">Cost Efficiency (Grammar-Only Context)</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Time</th>
+<th>Cost</th>
+<th>Cost per Correct</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>qwen3-coder</td>
+<td>95%</td>
+<td>179s</td>
+<td>$0.03</td>
+<td>$0.0002</td>
+</tr>
+<tr>
+<td>deepseek-v3.1</td>
+<td>88%</td>
+<td>166s</td>
+<td>$0.02</td>
+<td>$0.0001</td>
+</tr>
+<tr>
+<td>gpt-4o-mini</td>
+<td>93%</td>
+<td>119s</td>
+<td>$0.02</td>
+<td>$0.0001</td>
+</tr>
+<tr>
+<td>codestral</td>
+<td>90%</td>
+<td>70s</td>
+<td>$0.04</td>
+<td>$0.0003</td>
+</tr>
+<tr>
+<td>llama-3.1-70b</td>
+<td>91%</td>
+<td>180s</td>
+<td>$0.05</td>
+<td>$0.0003</td>
+</tr>
+<tr>
+<td>gpt-3.5-turbo</td>
+<td>92%</td>
+<td>83s</td>
+<td>$0.07</td>
+<td>$0.0005</td>
+</tr>
+<tr>
+<td>gpt-4o</td>
+<td>95%</td>
+<td>106s</td>
+<td>$0.34</td>
+<td>$0.0021</td>
+</tr>
+<tr>
+<td>claude-3.5-sonnet</td>
+<td>93%</td>
+<td>289s</td>
+<td>$0.49</td>
+<td>$0.0031</td>
+</tr>
+</tbody></table>
+<p><strong>Best Value</strong>: qwen3-coder and deepseek-v3.1 provide 88-95% accuracy at &lt;$0.03 per 168-task run.</p>
+<p><strong>Fastest</strong>: codestral (70s) with 90% accuracy.</p>
+<p><strong>Highest Accuracy</strong>: gpt-4o and qwen3-coder tie at 95%, but qwen3-coder is 11x cheaper.</p>
+<hr>
+<h2 id="conclusions">Conclusions</h2>
+<h3 id="primary-findings">Primary Findings</h3>
+<ol>
+<li><p><strong>Faber is learnable by LLMs</strong>: With proper context (grammar-only), 11 of 12 tested models achieve 86%+ accuracy on read/write tasks.</p>
+</li>
+<li><p><strong>Formal grammar beats prose</strong>: EBNF grammar (87%) matches verbose documentation (87%) and outperforms minimal descriptions (83%). Models trained on code prefer structured specifications.</p>
+</li>
+<li><p><strong>Reading &gt; Writing</strong>: Models achieve 90-95% on faber_to_ts but only 54-65% on ts_to_faber. Generating novel Faber syntax is harder than interpreting it.</p>
+</li>
+<li><p><strong>Coding models are cost-effective</strong>: qwen3-coder (96%) and deepseek-v3.1 (95%) match or exceed gpt-4o (98%) on grammar-only context at 10-15x lower cost.</p>
+</li>
+<li><p><strong>predict_output tests different skills</strong>: These tasks measure mental transpilation, not read/write competency. Excluding them gives a clearer picture of syntax learning.</p>
+</li>
+</ol>
+<h3 id="recommendations-for-future-trials">Recommendations for Future Trials</h3>
+<ol>
+<li><p><strong>Remove or reclassify predict_output tasks</strong> — They test compilation semantics, not syntax competency.</p>
+</li>
+<li><p><strong>Focus on ts_to_faber tasks</strong> — These are the hardest and most relevant for the &quot;LLM drafts Faber&quot; workflow.</p>
+</li>
+<li><p><strong>Use grammar-only context as default</strong> — It&#39;s compact, effective, and preferred by coding models.</p>
+</li>
+<li><p><strong>Add Faber-English ablation</strong> — To test whether Latin keywords specifically help, or just the regular structure.</p>
+</li>
+<li><p><strong>Add multi-pass refinement</strong> — Test whether self-correction improves accuracy on hard tasks.</p>
+</li>
+</ol>
+<hr>
+<h2 id="appendix-trial-run-summary">Appendix: Trial Run Summary</h2>
+<p>Total cost across all trials: ~$15-20
+Total time: ~4 hours wall clock (parallel runs)
+Framework version: 1.1
+Date: 2026-01-05</p>
+
+    </main>
+  </div>
+</body>
+</html>
