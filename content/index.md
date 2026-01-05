@@ -18,7 +18,7 @@ Installation coming soon
 
 <div class="links-block">
 
-[GitHub](https://github.com/ianzepp/faber-romanus) | [LLM Trials](https://github.com/ianzepp/faber-trials)
+[GitHub](https://github.com/ianzepp/faber-romanus)
 
 </div>
 
