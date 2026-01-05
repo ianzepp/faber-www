@@ -1,0 +1,13 @@
+# Faber Language
+> A Latin programming language designed for LLM consumption
+
+This site documents the Faber programming language.
+
+## Documentation
+- Full documentation: /faber-complete.md
+- Grammar reference: /docs/grammar.html
+- Examples: /docs/examples.html
+
+## Source
+- Language: https://github.com/ianzepp/faber-romanus
+- Research: https://github.com/ianzepp/faber-trials

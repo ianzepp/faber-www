@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typi - Faber</title>
+  <meta name="description" content="Faber programming language documentation">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html" class="active">Typi</a>
+  <div class="nav-subheadings">
+    <a href="/docs/typi.html#exempla">Exempla</a>
+    <a href="/docs/typi.html#syntax">Syntax</a>
+    <a href="/docs/typi.html#type-alias-declaration" class="nav-h3">Type Alias Declaration</a>
+    <a href="/docs/typi.html#type-annotation" class="nav-h3">Type Annotation</a>
+  </div>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="typi">Typi</h1>
+<p>Type system: type annotations, aliases, enums, nullable types, and collections.</p>
+<h2 id="exempla">Exempla</h2>
+<ul>
+<li><code>exempla/typi/</code></li>
+</ul>
+<hr>
+<h2 id="syntax">Syntax</h2>
+<h3 id="type-alias-declaration">Type Alias Declaration</h3>
+<pre><code class="language-ebnf">typeAliasDecl := &#39;typus&#39; IDENTIFIER &#39;=&#39; typeAnnotation
+</code></pre>
+<blockquote>
+<p>Enables creating named type aliases for complex types.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">typus ID = textus
+typus UserID = numerus&lt;32, Naturalis&gt;
+typus ConfigTypus = typus config    // typeof
+</code></pre>
+<h3 id="type-annotation">Type Annotation</h3>
+<pre><code class="language-ebnf">typeAnnotation := (&#39;de&#39; | &#39;in&#39;)? IDENTIFIER typeParams? &#39;?&#39;? arrayBrackets*
+typeParams := &#39;&lt;&#39; typeParameter (&#39;,&#39; typeParameter)* &#39;&gt;&#39;
+typeParameter := typeAnnotation | NUMBER | MODIFIER
+arrayBrackets := &#39;[]&#39; &#39;?&#39;?
+</code></pre>
+<blockquote>
+<p>Supports generics (lista<textus>), nullable (?), union types (unio&lt;A, B&gt;),
+and array shorthand (numerus[] desugars to lista<numerus>).</p>
+</blockquote>
+<hr>
+<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+
+    </main>
+  </div>
+</body>
+</html>

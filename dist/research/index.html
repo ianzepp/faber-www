@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research - Faber</title>
+  <meta name="description" content="LLM learnability research for Faber">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html" class="active">Research</a>
+  <div class="nav-subheadings">
+    <a href="/research/index.html#hypothesis">Hypothesis</a>
+    <a href="/research/index.html#evaluation">Evaluation</a>
+    <a href="/research/index.html#results">Results</a>
+    <a href="/research/index.html#methodology">Methodology</a>
+  </div>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="research">Research</h1>
+<p>Can LLMs learn Faber effectively? The <a href="https://github.com/ianzepp/faber-trials">faber-trials</a> project evaluates this systematically.</p>
+<h2 id="hypothesis">Hypothesis</h2>
+<p>Faber&#39;s design choices - Latin vocabulary, regular morphology, consistent syntax - should make it easier for LLMs to learn from few examples compared to languages optimized for human ergonomics.</p>
+<h2 id="evaluation">Evaluation</h2>
+<p>The trials test:</p>
+<ul>
+<li><strong>Multiple models</strong> - From GPT-3.5 to Llama 3.2 1B</li>
+<li><strong>N-shot learning</strong> - 0, 1, 3, and 10 example configurations</li>
+<li><strong>Task types</strong> - Translation, completion, prediction, explanation</li>
+<li><strong>Context levels</strong> - From examples-only to complete documentation</li>
+</ul>
+<h2 id="results">Results</h2>
+<p>See <a href="/research/results.html">Research Results</a> for current data.</p>
+<h2 id="methodology">Methodology</h2>
+<ul>
+<li>Deterministic: temperature 0.0, seed 42</li>
+<li>Reproducible: all prompts and responses logged</li>
+<li>Transparent: raw JSONL data available</li>
+</ul>
+<p>Source: <a href="https://github.com/ianzepp/faber-trials">faber-trials on GitHub</a></p>
+
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regimen - Faber</title>
+  <meta name="description" content="Faber programming language documentation">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html" class="active">Regimen</a>
+  <div class="nav-subheadings">
+    <a href="/docs/regimen.html#exempla">Exempla</a>
+    <a href="/docs/regimen.html#syntax">Syntax</a>
+    <a href="/docs/regimen.html#annotation" class="nav-h3">Annotation</a>
+    <a href="/docs/regimen.html#program" class="nav-h3">Program</a>
+    <a href="/docs/regimen.html#annotations" class="nav-h3">Annotations</a>
+    <a href="/docs/regimen.html#statement" class="nav-h3">Statement</a>
+    <a href="/docs/regimen.html#specifier" class="nav-h3">Specifier</a>
+    <a href="/docs/regimen.html#importa-declaration" class="nav-h3">Importa Declaration</a>
+    <a href="/docs/regimen.html#varia-declaration" class="nav-h3">Varia Declaration</a>
+    <a href="/docs/regimen.html#array-pattern" class="nav-h3">Array Pattern</a>
+    <a href="/docs/regimen.html#functio-declaration" class="nav-h3">Functio Declaration</a>
+    <a href="/docs/regimen.html#type-and-parameter-list" class="nav-h3">Type And Parameter List</a>
+    <a href="/docs/regimen.html#ordo-declaration" class="nav-h3">Ordo Declaration</a>
+    <a href="/docs/regimen.html#discretio-declaration" class="nav-h3">Discretio Declaration</a>
+    <a href="/docs/regimen.html#variant-declaration" class="nav-h3">Variant Declaration</a>
+    <a href="/docs/regimen.html#si-statement" class="nav-h3">Si Statement</a>
+    <a href="/docs/regimen.html#dum-statement" class="nav-h3">Dum Statement</a>
+    <a href="/docs/regimen.html#ex-statement" class="nav-h3">Ex Statement</a>
+    <a href="/docs/regimen.html#d-s-l-transforms" class="nav-h3">D S L Transforms</a>
+    <a href="/docs/regimen.html#collection-d-s-l-expression" class="nav-h3">Collection D S L Expression</a>
+    <a href="/docs/regimen.html#ab-expression" class="nav-h3">Ab Expression</a>
+    <a href="/docs/regimen.html#regex-literal" class="nav-h3">Regex Literal</a>
+    <a href="/docs/regimen.html#de-statement" class="nav-h3">De Statement</a>
+    <a href="/docs/regimen.html#in-statement" class="nav-h3">In Statement</a>
+    <a href="/docs/regimen.html#elige-statement" class="nav-h3">Elige Statement</a>
+    <a href="/docs/regimen.html#discerne-statement" class="nav-h3">Discerne Statement</a>
+    <a href="/docs/regimen.html#variant-pattern" class="nav-h3">Variant Pattern</a>
+    <a href="/docs/regimen.html#custodi-statement" class="nav-h3">Custodi Statement</a>
+    <a href="/docs/regimen.html#adfirma-statement" class="nav-h3">Adfirma Statement</a>
+    <a href="/docs/regimen.html#redde-statement" class="nav-h3">Redde Statement</a>
+    <a href="/docs/regimen.html#rumpe-statement" class="nav-h3">Rumpe Statement</a>
+    <a href="/docs/regimen.html#perge-statement" class="nav-h3">Perge Statement</a>
+    <a href="/docs/regimen.html#iace-statement" class="nav-h3">Iace Statement</a>
+    <a href="/docs/regimen.html#scribe-statement" class="nav-h3">Scribe Statement</a>
+    <a href="/docs/regimen.html#tempta-statement" class="nav-h3">Tempta Statement</a>
+    <a href="/docs/regimen.html#cape-clause" class="nav-h3">Cape Clause</a>
+    <a href="/docs/regimen.html#probandum-statement" class="nav-h3">Probandum Statement</a>
+    <a href="/docs/regimen.html#proba-statement" class="nav-h3">Proba Statement</a>
+    <a href="/docs/regimen.html#ad-statement" class="nav-h3">Ad Statement</a>
+    <a href="/docs/regimen.html#praepara-block" class="nav-h3">Praepara Block</a>
+    <a href="/docs/regimen.html#cura-statement" class="nav-h3">Cura Statement</a>
+    <a href="/docs/regimen.html#incipit-statement" class="nav-h3">Incipit Statement</a>
+    <a href="/docs/regimen.html#incipiet-statement" class="nav-h3">Incipiet Statement</a>
+    <a href="/docs/regimen.html#block-statement" class="nav-h3">Block Statement</a>
+    <a href="/docs/regimen.html#expression-statement" class="nav-h3">Expression Statement</a>
+    <a href="/docs/regimen.html#expression" class="nav-h3">Expression</a>
+    <a href="/docs/regimen.html#bitwise-or" class="nav-h3">Bitwise Or</a>
+    <a href="/docs/regimen.html#bitwise-xor" class="nav-h3">Bitwise Xor</a>
+    <a href="/docs/regimen.html#bitwise-and" class="nav-h3">Bitwise And</a>
+    <a href="/docs/regimen.html#shift" class="nav-h3">Shift</a>
+    <a href="/docs/regimen.html#praefixum-expression" class="nav-h3">Praefixum Expression</a>
+    <a href="/docs/regimen.html#scriptum-expression" class="nav-h3">Scriptum Expression</a>
+    <a href="/docs/regimen.html#lege-expression" class="nav-h3">Lege Expression</a>
+    <a href="/docs/regimen.html#qua-expression" class="nav-h3">Qua Expression</a>
+    <a href="/docs/regimen.html#novum-expression" class="nav-h3">Novum Expression</a>
+    <a href="/docs/regimen.html#finge-expression" class="nav-h3">Finge Expression</a>
+    <a href="/docs/regimen.html#lambda-expression" class="nav-h3">Lambda Expression</a>
+    <a href="/docs/regimen.html#identifier-or-keyword" class="nav-h3">Identifier Or Keyword</a>
+  </div>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="regimen">Regimen</h1>
+<p>Control flow: conditionals, loops, guards, assertions, and program structure.</p>
+<h2 id="exempla">Exempla</h2>
+<ul>
+<li><code>exempla/regimen/</code></li>
+</ul>
+<hr>
+<h2 id="syntax">Syntax</h2>
+<h3 id="annotation">Annotation</h3>
+<pre><code class="language-ebnf">annotation := &#39;@&#39; IDENTIFIER (expression)?
+</code></pre>
+<h3 id="program">Program</h3>
+<pre><code class="language-ebnf">program := statement*
+</code></pre>
+<h3 id="annotations">Annotations</h3>
+<pre><code class="language-ebnf">annotation := &#39;@&#39; IDENTIFIER+
+</code></pre>
+<blockquote>
+<p>Annotations modify the following declaration with metadata like
+visibility (publicum, privatum), async (futura), abstract (abstractum).</p>
+</blockquote>
+<h3 id="statement">Statement</h3>
+<pre><code class="language-ebnf">statement := importDecl | varDecl | funcDecl | typeAliasDecl | ifStmt | whileStmt | forStmt
+| returnStmt | throwStmt | tryStmt | blockStmt | exprStmt
+</code></pre>
+<blockquote>
+<p>Uses lookahead to determine statement type via keyword inspection.</p>
+</blockquote>
+<h3 id="specifier">Specifier</h3>
+<pre><code class="language-ebnf">specifier := &#39;ceteri&#39;? IDENTIFIER (&#39;ut&#39; IDENTIFIER)?
+</code></pre>
+<blockquote>
+<p>Shared between imports and destructuring.
+&#39;ceteri&#39; (rest) is only valid in destructuring contexts.
+&#39;ut&#39; provides aliasing: nomen ut n</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">scribe             -&gt; imported=scribe, local=scribe
+scribe ut s        -&gt; imported=scribe, local=s
+ceteri rest        -&gt; imported=rest, local=rest, rest=true
+</code></pre>
+<h3 id="importa-declaration">Importa Declaration</h3>
+<pre><code class="language-ebnf">importDecl := &#39;ex&#39; (STRING | IDENTIFIER) &#39;importa&#39; (specifierList | &#39;*&#39;)
+specifierList := specifier (&#39;,&#39; specifier)*
+specifier := IDENTIFIER (&#39;ut&#39; IDENTIFIER)?
+</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">ex norma importa scribe, lege
+ex norma importa scribe ut s, lege ut l
+ex &quot;norma/tempus&quot; importa nunc, dormi
+ex norma importa *
+</code></pre>
+<h3 id="varia-declaration">Varia Declaration</h3>
+<pre><code class="language-ebnf">varDecl := (&#39;varia&#39; | &#39;fixum&#39; | &#39;figendum&#39; | &#39;variandum&#39;) typeAnnotation? IDENTIFIER (&#39;=&#39; expression)?
+arrayDestruct := (&#39;varia&#39; | &#39;fixum&#39; | &#39;figendum&#39; | &#39;variandum&#39;) arrayPattern &#39;=&#39; expression
+</code></pre>
+<blockquote>
+<p>Type-first syntax: &quot;fixum textus nomen = value&quot; or &quot;fixum nomen = value&quot;
+Latin &#39;varia&#39; (let it be) for mutable, &#39;fixum&#39; (fixed) for immutable.</p>
+</blockquote>
+<h3 id="array-pattern">Array Pattern</h3>
+<pre><code class="language-ebnf">arrayPattern := &#39;[&#39; arrayPatternElement (&#39;,&#39; arrayPatternElement)* &#39;]&#39;
+arrayPatternElement := &#39;_&#39; | &#39;ceteri&#39;? IDENTIFIER
+</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">[a, b, c]                 // extract first three elements
+[first, ceteri rest]     // extract first, collect rest
+[_, second, _]           // skip first and third, extract second
+
+T SUPPORTED:
+[...rest]                // JS spread syntax
+[*rest]                  // Python unpack syntax
+</code></pre>
+<h3 id="functio-declaration">Functio Declaration</h3>
+<pre><code class="language-ebnf">funcDecl := &#39;functio&#39; IDENTIFIER &#39;(&#39; paramList &#39;)&#39; funcModifier* returnClause? blockStmt
+paramList := (typeParamDecl &#39;,&#39;)* (parameter (&#39;,&#39; parameter)*)?
+typeParamDecl := &#39;prae&#39; &#39;typus&#39; IDENTIFIER
+funcModifier := &#39;futura&#39; | &#39;cursor&#39; | &#39;curata&#39; IDENTIFIER
+returnClause := (&#39;-&gt;&#39; | &#39;fit&#39; | &#39;fiet&#39; | &#39;fiunt&#39; | &#39;fient&#39;) typeAnnotation
+</code></pre>
+<blockquote>
+<p>All function declarations start with &#39;functio&#39; for consistent parsing.
+Modifiers come after the parameter list, before the return clause.
+&#39;futura&#39; marks async functions (future/promise-based).
+&#39;cursor&#39; marks generator functions (yield-based).
+&#39;curata NAME&#39; marks managed functions (receives allocator as NAME).</p>
+<p>TYPE PARAMETERS: &#39;prae typus T&#39; declares compile-time type parameters.
+functio max(prae typus T, T a, T b) -&gt; T { ... }
+Maps to: <T> (TS/Rust), TypeVar (Py), comptime T: type (Zig)</p>
+<p>RETURN TYPE VERBS: Latin verb forms encode async/generator semantics directly:
+&#39;-&gt;&#39;    neutral arrow (semantics from modifier only)
+&#39;fit&#39;   &quot;it becomes&quot; - sync, returns single value
+&#39;fiet&#39;  &quot;it will become&quot; - async, returns Promise<T>
+&#39;fiunt&#39; &quot;they become&quot; - sync generator, yields multiple values
+&#39;fient&#39; &quot;they will become&quot; - async generator, yields Promise values</p>
+<p>When using verb forms, the futura/cursor modifier is NOT required - the verb
+itself carries the semantic information. The modifier becomes redundant:
+functio compute() -&gt; numerus { ... }         // arrow: sync by default
+functio compute() fit numerus { ... }        // verb: explicitly sync
+functio fetch() futura -&gt; textus { ... }     // modifier: async
+functio fetch() fiet textus { ... }          // verb implies async
+functio items() cursor -&gt; numerus { ... }    // modifier: generator
+functio items() fiunt numerus { ... }        // verb implies generator
+functio stream() fient datum { ... }         // verb implies async generator
+functio alloc(textus s) curata a -&gt; T { ... } // managed, allocator bound as &#39;a&#39;</p>
+<p>Modifier is still allowed for emphasis, but verb/modifier conflicts are errors.</p>
+<p>NOT SUPPORTED (will produce parser errors):</p>
+<ul>
+<li>TS-style param annotation: functio f(x: textus) (use: functio f(textus x))</li>
+<li>TS-style return type: functio f(): textus (use: functio f() -&gt; textus)</li>
+<li>Trailing comma in params: functio f(a, b,)</li>
+</ul>
+</blockquote>
+<h3 id="type-and-parameter-list">Type And Parameter List</h3>
+<pre><code class="language-ebnf">paramList := (typeParamDecl &#39;,&#39;)* (parameter (&#39;,&#39; parameter)*)?
+typeParamDecl := &#39;prae&#39; &#39;typus&#39; IDENTIFIER
+</code></pre>
+<blockquote>
+<p>Type parameters (prae typus T) must come first, followed by regular params.
+This matches the conventions of TypeScript, Rust, and Zig.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">(prae typus T, T a, T b)     -&gt; typeParams=[T], params=[a, b]
+(prae typus T, prae typus U) -&gt; typeParams=[T, U], params=[]
+(numerus a, numerus b)       -&gt; typeParams=[], params=[a, b]
+</code></pre>
+<h3 id="ordo-declaration">Ordo Declaration</h3>
+<pre><code class="language-ebnf">enumDecl := &#39;ordo&#39; IDENTIFIER &#39;{&#39; enumMember (&#39;,&#39; enumMember)* &#39;,&#39;? &#39;}&#39;
+enumMember := IDENTIFIER (&#39;=&#39; (&#39;-&#39;? NUMBER | STRING))?
+</code></pre>
+<blockquote>
+<p>Latin &#39;ordo&#39; (order/rank) for enumerated constants.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">ordo color { rubrum, viridis, caeruleum }
+ordo status { pendens = 0, actum = 1, finitum = 2 }
+ordo offset { ante = -1, ad = 0, post = 1 }
+</code></pre>
+<h3 id="discretio-declaration">Discretio Declaration</h3>
+<pre><code class="language-ebnf">discretioDecl := &#39;discretio&#39; IDENTIFIER typeParams? &#39;{&#39; variant (&#39;,&#39; variant)* &#39;,&#39;? &#39;}&#39;
+variant := IDENTIFIER (&#39;{&#39; variantFields &#39;}&#39;)?
+variantFields := (typeAnnotation IDENTIFIER (&#39;,&#39; typeAnnotation IDENTIFIER)*)?
+</code></pre>
+<blockquote>
+<p>Latin &#39;discretio&#39; (distinction) for tagged unions.
+Each variant has a compiler-managed tag for exhaustive pattern matching.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">discretio Event {
+    Click { numerus x, numerus y }
+    Keypress { textus key }
+    Quit
+}
+
+discretio Option&lt;T&gt; {
+    Some { T value }
+    None
+}
+</code></pre>
+<h3 id="variant-declaration">Variant Declaration</h3>
+<pre><code class="language-ebnf">variant := IDENTIFIER (&#39;{&#39; variantFields &#39;}&#39;)?
+variantFields := (typeAnnotation IDENTIFIER (&#39;,&#39; typeAnnotation IDENTIFIER)*)?
+</code></pre>
+<blockquote>
+<p>Variant names are capitalized by convention (like type names).
+Fields use type-first syntax like genus fields.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">Click { numerus x, numerus y }  -&gt; fields with payload
+Quit                            -&gt; unit variant (no payload)
+</code></pre>
+<h3 id="si-statement">Si Statement</h3>
+<pre><code class="language-ebnf">ifStmt := &#39;si&#39; expression (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression) (&#39;cape&#39; IDENTIFIER blockStmt)? (elseClause | &#39;sin&#39; ifStmt)?
+elseClause := (&#39;secus&#39; | &#39;secus&#39;) (ifStmt | blockStmt | statement)
+</code></pre>
+<blockquote>
+<p>&#39;cape&#39; (catch/seize) clause allows error handling within conditionals.
+&#39;ergo&#39; (therefore) for one-liner consequents.
+&#39;reddit&#39; (it returns) for early return one-liners.</p>
+<p>TWO STYLE OPTIONS (both supported, can be mixed within the same chain):</p>
+<p>Literal style: si / sin / secus
+si x &gt; 0 { positive() }
+sin x &lt; 0 { negative() }
+secus { zero() }</p>
+<p>Poetic style: si / sin / secus
+si x &gt; 0 { positive() }
+sin x &lt; 0 { negative() }    // &quot;sin&quot; = &quot;but if&quot; (classical Latin)
+secus { zero() }            // &quot;secus&quot; = &quot;otherwise&quot;</p>
+<p>Keywords are interchangeable at each branch point:</p>
+<ul>
+<li>&#39;sin&#39; ≡ &#39;sin&#39; (else-if)</li>
+<li>&#39;secus&#39; ≡ &#39;secus&#39; (else)</li>
+<li>Mixed: si ... sin ... secus { } is valid</li>
+</ul>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">si x &gt; 5 ergo scribe(&quot;big&quot;)
+si x &gt; 5 reddit verum            // early return
+si x &gt; 5 { scribe(&quot;big&quot;) } secus scribe(&quot;small&quot;)
+si x &lt; 0 { ... } sin x == 0 { ... } secus { ... }
+</code></pre>
+<h3 id="dum-statement">Dum Statement</h3>
+<pre><code class="language-ebnf">whileStmt := &#39;dum&#39; expression (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression) (&#39;cape&#39; IDENTIFIER blockStmt)?
+</code></pre>
+<blockquote>
+<p>&#39;dum&#39; (while/until) for while loops.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">dum x &gt; 0 { x = x - 1 }
+dum x &gt; 0 ergo x = x - 1
+dum x &gt; 0 reddit x
+</code></pre>
+<h3 id="ex-statement">Ex Statement</h3>
+<pre><code class="language-ebnf">exStmt := &#39;ex&#39; expression (forBinding | destructBinding | arrayDestructBinding)
+forBinding := (&#39;pro&#39; | &#39;fit&#39; | &#39;fiet&#39;) IDENTIFIER (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression) catchClause?
+destructBinding := (&#39;fixum&#39; | &#39;varia&#39; | &#39;figendum&#39; | &#39;variandum&#39;) specifierList
+arrayDestructBinding := (&#39;fixum&#39; | &#39;varia&#39; | &#39;figendum&#39; | &#39;variandum&#39;) arrayPattern
+specifierList := specifier (&#39;,&#39; specifier)*
+specifier := &#39;ceteri&#39;? IDENTIFIER (&#39;ut&#39; IDENTIFIER)?
+</code></pre>
+<blockquote>
+<p>&#39;ex&#39; (from/out of) introduces both iteration and extraction:</p>
+<ul>
+<li>Iteration: ex items pro item { ... } (for each item from items)</li>
+<li>Object destructuring: ex persona fixum nomen, aetas (extract properties)</li>
+<li>Array destructuring: ex coords fixum [x, y, z] (extract by position)</li>
+<li>Async destructuring: ex promise figendum result (await + extract)</li>
+</ul>
+<p>The binding keywords encode mutability and async semantics:</p>
+<ul>
+<li>fixum: immutable binding (const)</li>
+<li>varia: mutable binding (let)</li>
+<li>figendum: immutable + await (const with await)</li>
+<li>variandum: mutable + await (let with await)</li>
+</ul>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">ex numeri pro n { ... }              // for-loop (sync)
+ex numeri fiet n { ... }             // for-await-of loop (async)
+ex persona fixum nomen, aetas        // object destructuring
+ex persona fixum nomen ut n          // object destructuring with alias
+ex persona fixum nomen, ceteri rest  // object destructuring with rest
+ex coords fixum [x, y, z]            // array destructuring
+ex fetchData() figendum result       // async destructuring
+
+llection DSL forms:
+ex items prima 5 pro item { }        // iteration with transforms
+ex items prima 5, ultima 2 pro x {}  // multiple transforms
+</code></pre>
+<h3 id="d-s-l-transforms">D S L Transforms</h3>
+<pre><code class="language-ebnf">dslTransforms := dslTransform (&#39;,&#39; dslTransform)*
+dslTransform := dslVerb expression?
+dslVerb := &#39;prima&#39; | &#39;ultima&#39; | &#39;summa&#39;
+</code></pre>
+<blockquote>
+<p>DSL provides concise syntax for common collection operations.
+Transforms chain with commas: prima 5, ultima 3</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">prima 5           -&gt; first 5 elements
+ultima 3          -&gt; last 3 elements
+summa             -&gt; sum (no argument)
+prima 5, ultima 2 -&gt; first 5, then last 2 of those
+</code></pre>
+<h3 id="collection-d-s-l-expression">Collection D S L Expression</h3>
+<pre><code class="language-ebnf">dslExpr := &#39;ex&#39; expression dslTransform (&#39;,&#39; dslTransform)*
+</code></pre>
+<blockquote>
+<p>When &#39;ex&#39; appears in expression context with DSL verbs (not pro/fit/fiet),
+it creates a collection pipeline expression that can be assigned.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">fixum top5 = ex items prima 5
+fixum total = ex prices summa
+fixum result = ex items prima 10, ultima 3
+</code></pre>
+<h3 id="ab-expression">Ab Expression</h3>
+<pre><code class="language-ebnf">abExpr := &#39;ab&#39; expression filter? (&#39;,&#39; transform)*
+filter := [&#39;non&#39;] (&#39;ubi&#39; condition | identifier)
+condition := expression
+</code></pre>
+<blockquote>
+<p>&#39;ab&#39; (away from) is the dedicated DSL entry point for filtering.
+The &#39;ex&#39; preposition remains unchanged for iteration/import/destructuring.
+Include/exclude is handled via &#39;non&#39; keyword.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">ab users activus                     // boolean property shorthand
+ab users non banned                  // negated boolean property
+ab users ubi aetas &gt;= 18             // condition with ubi
+ab users non ubi banned et suspended // negated compound condition
+ab users activus, prima 10           // filter + transforms
+ab users activus pro user { }        // iteration form
+</code></pre>
+<h3 id="regex-literal">Regex Literal</h3>
+<pre><code class="language-ebnf">regexLiteral := &#39;sed&#39; STRING IDENTIFIER?
+</code></pre>
+<blockquote>
+<p>&#39;sed&#39; (the Unix stream editor) is synonymous with pattern matching.
+The pattern string is passed through verbatim to the target.
+Flags are a bare identifier after the pattern (no comma).</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">sed &quot;\\d+&quot;           // pattern only
+sed &quot;hello&quot; i        // case insensitive
+sed &quot;^start&quot; im      // multiple flags
+</code></pre>
+<h3 id="de-statement">De Statement</h3>
+<pre><code class="language-ebnf">deStmt := &#39;de&#39; expression (&#39;pro&#39; | &#39;fit&#39; | &#39;fiet&#39;) IDENTIFIER
+(blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression) catchClause?
+</code></pre>
+<blockquote>
+<p>&#39;de&#39; (from/concerning) for extracting keys from an object.
+Semantically read-only - contrasts with &#39;in&#39; for mutation.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">de tabula pro clavis { ... }  // from table, for each key
+de object pro k ergo scribe k // one-liner form
+de object pro k reddit k      // return first key
+</code></pre>
+<h3 id="in-statement">In Statement</h3>
+<pre><code class="language-ebnf">inStmt := &#39;in&#39; expression blockStmt
+</code></pre>
+<blockquote>
+<p>&#39;in&#39; (into) for reaching into an object to modify it.
+Semantically mutable - contrasts with &#39;de&#39; for read-only iteration.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">in user { nomen = &quot;Marcus&quot; }  // mutation block
+</code></pre>
+<h3 id="elige-statement">Elige Statement</h3>
+<pre><code class="language-ebnf">eligeStmt := &#39;elige&#39; expression &#39;{&#39; eligeCase* defaultCase? &#39;}&#39; catchClause?
+eligeCase := &#39;casu&#39; expression (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression)
+defaultCase := &#39;ceterum&#39; (blockStmt | statement)
+</code></pre>
+<blockquote>
+<p>&#39;elige&#39; (choose) for value-based switch.
+&#39;ergo&#39; (therefore) for one-liners, &#39;ceterum&#39; (otherwise) for default.
+&#39;reddit&#39; (it returns) for early return one-liners.
+For variant matching on discretio types, use &#39;discerne&#39; instead.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">elige status {
+    casu &quot;pending&quot; ergo scribe(&quot;waiting&quot;)
+    casu &quot;active&quot; reddit verum
+    ceterum iace &quot;Unknown status&quot;
+}
+</code></pre>
+<h3 id="discerne-statement">Discerne Statement</h3>
+<pre><code class="language-ebnf">discerneStmt := &#39;discerne&#39; discriminants &#39;{&#39; variantCase* &#39;}&#39;
+discriminants := expression (&#39;,&#39; expression)*
+variantCase := &#39;casu&#39; patterns (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression)
+patterns := pattern (&#39;,&#39; pattern)*
+pattern := &#39;_&#39; | (IDENTIFIER patternBind?)
+patternBind := (&#39;ut&#39; IDENTIFIER) | (&#39;pro&#39; IDENTIFIER (&#39;,&#39; IDENTIFIER)*)
+</code></pre>
+<blockquote>
+<p>&#39;discerne&#39; (distinguish!) pairs with &#39;discretio&#39; (the tagged union type).
+Uses &#39;casu&#39; for match arms, &#39;ut&#39; to bind whole variants, and &#39;pro&#39; for positional bindings.
+Multi-discriminant matching reduces nesting when comparing multiple values.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab"># Single discriminant
+discerne event {
+    casu Click pro x, y { scribe &quot;clicked at &quot; + x + &quot;, &quot; + y }
+    casu Keypress pro key reddit key
+    casu Quit ergo mori &quot;goodbye&quot;
+}
+
+# Multi-discriminant
+discerne left, right {
+    casu Primitivum ut l, Primitivum ut r { redde l.nomen == r.nomen }
+    casu _, _ { redde falsum }
+}
+</code></pre>
+<h3 id="variant-pattern">Variant Pattern</h3>
+<pre><code class="language-ebnf">pattern := &#39;_&#39; | (IDENTIFIER patternBind?)
+patternBind := (&#39;ut&#39; IDENTIFIER) | (&#39;pro&#39; IDENTIFIER (&#39;,&#39; IDENTIFIER)*)
+</code></pre>
+<blockquote>
+<p>Patterns match against discriminants in discerne statements.
+Wildcard &#39;_&#39; matches any variant without binding.
+&#39;ut&#39; binds the whole variant, &#39;pro&#39; destructures fields.</p>
+<p>DISAMBIGUATION: After &#39;pro&#39;, commas separate bindings until we see:</p>
+<ul>
+<li>&#39;_&#39; (wildcard pattern)</li>
+<li>An identifier followed by &#39;ut&#39; or &#39;pro&#39; (new pattern with binding)</li>
+<li>&#39;{&#39;, &#39;ergo&#39;, &#39;reddit&#39; (end of patterns)</li>
+</ul>
+</blockquote>
+<h3 id="custodi-statement">Custodi Statement</h3>
+<pre><code class="language-ebnf">guardStmt := &#39;custodi&#39; &#39;{&#39; guardClause+ &#39;}&#39;
+guardClause := &#39;si&#39; expression (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression)
+</code></pre>
+<blockquote>
+<p>&#39;custodi&#39; (guard!) groups early-exit conditions.
+&#39;ergo&#39; for one-liner actions, &#39;reddit&#39; for early return one-liners.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">custodi {
+    si user == nihil reddit nihil
+    si user.age &lt; 0 ergo iace &quot;Invalid age&quot;
+    si user.name == &quot;&quot; { redde defaultUser() }
+}
+</code></pre>
+<h3 id="adfirma-statement">Adfirma Statement</h3>
+<pre><code class="language-ebnf">assertStmt := &#39;adfirma&#39; expression (&#39;,&#39; expression)?
+</code></pre>
+<blockquote>
+<p>&#39;adfirma&#39; (affirm/assert) for runtime invariant checks.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">adfirma x &gt; 0
+adfirma x &gt; 0, &quot;x must be positive&quot;
+</code></pre>
+<h3 id="redde-statement">Redde Statement</h3>
+<pre><code class="language-ebnf">returnStmt := &#39;redde&#39; expression?
+</code></pre>
+<blockquote>
+<p>&#39;redde&#39; (give back/return) for return statements.</p>
+</blockquote>
+<h3 id="rumpe-statement">Rumpe Statement</h3>
+<pre><code class="language-ebnf">breakStmt := &#39;rumpe&#39;
+</code></pre>
+<blockquote>
+<p>&#39;rumpe&#39; (break!) exits the innermost loop.</p>
+</blockquote>
+<h3 id="perge-statement">Perge Statement</h3>
+<pre><code class="language-ebnf">continueStmt := &#39;perge&#39;
+</code></pre>
+<blockquote>
+<p>&#39;perge&#39; (continue/proceed!) skips to the next loop iteration.</p>
+</blockquote>
+<h3 id="iace-statement">Iace Statement</h3>
+<pre><code class="language-ebnf">throwStmt := (&#39;iace&#39; | &#39;mori&#39;) expression
+</code></pre>
+<blockquote>
+<p>Two error severity levels:
+iace (throw!) → recoverable, can be caught
+mori (die!)   → fatal/panic, unrecoverable</p>
+</blockquote>
+<h3 id="scribe-statement">Scribe Statement</h3>
+<pre><code class="language-ebnf">outputStmt := (&#39;scribe&#39; | &#39;vide&#39; | &#39;mone&#39;) expression (&#39;,&#39; expression)*
+</code></pre>
+<blockquote>
+<p>Latin output keywords as statement forms:
+scribe (write!) → console.log
+vide (see!)     → console.debug
+mone (warn!)    → console.warn</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">scribe &quot;hello&quot;
+vide &quot;debugging:&quot;, value
+mone &quot;warning:&quot;, message
+</code></pre>
+<h3 id="tempta-statement">Tempta Statement</h3>
+<pre><code class="language-ebnf">tryStmt := &#39;tempta&#39; blockStmt (&#39;cape&#39; IDENTIFIER blockStmt)? (&#39;demum&#39; blockStmt)?
+</code></pre>
+<blockquote>
+<p>&#39;tempta&#39; (attempt/try), &#39;cape&#39; (catch/seize), &#39;demum&#39; (finally/at last).</p>
+</blockquote>
+<h3 id="cape-clause">Cape Clause</h3>
+<pre><code class="language-ebnf">catchClause := &#39;cape&#39; IDENTIFIER blockStmt
+</code></pre>
+<h3 id="probandum-statement">Probandum Statement</h3>
+<pre><code class="language-ebnf">probandumDecl := &#39;probandum&#39; STRING &#39;{&#39; probandumBody &#39;}&#39;
+probandumBody := (curaBlock | probandumDecl | probaStmt)*
+</code></pre>
+<blockquote>
+<p>Latin &quot;probandum&quot; (gerundive of probare) = &quot;that which must be tested&quot;.
+Analogous to describe() in Jest/Vitest.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">probandum &quot;Tokenizer&quot; {
+    praepara { lexer = init() }
+    proba &quot;parses numbers&quot; { ... }
+}
+</code></pre>
+<h3 id="proba-statement">Proba Statement</h3>
+<pre><code class="language-ebnf">probaStmt := &#39;proba&#39; probaModifier? STRING blockStmt
+probaModifier := &#39;omitte&#39; STRING | &#39;futurum&#39; STRING
+</code></pre>
+<blockquote>
+<p>Latin &quot;proba&quot; (imperative of probare) = &quot;test!&quot; / &quot;prove!&quot;.
+Analogous to test() or it() in Jest/Vitest.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">proba &quot;parses integers&quot; { adfirma parse(&quot;42&quot;) est 42 }
+proba omitte &quot;blocked by #42&quot; { ... }
+proba futurum &quot;needs async support&quot; { ... }
+</code></pre>
+<h3 id="ad-statement">Ad Statement</h3>
+<pre><code class="language-ebnf">adStmt := &#39;ad&#39; STRING &#39;(&#39; argumentList &#39;)&#39; adBinding? blockStmt? catchClause?
+adBinding := adBindingVerb typeAnnotation? &#39;pro&#39; IDENTIFIER (&#39;ut&#39; IDENTIFIER)?
+adBindingVerb := &#39;fit&#39; | &#39;fiet&#39; | &#39;fiunt&#39; | &#39;fient&#39;
+argumentList := (expression (&#39;,&#39; expression)*)?
+</code></pre>
+<blockquote>
+<p>Latin &#39;ad&#39; (to/toward) dispatches to named endpoints:</p>
+<ul>
+<li>Stdlib syscalls: &quot;fasciculus:lege&quot;, &quot;console:log&quot;</li>
+<li>External packages: &quot;hono/Hono&quot;</li>
+<li>Remote services: &quot;<a href="https://api.example.com/users">https://api.example.com/users</a>&quot;</li>
+</ul>
+<p>Binding verbs encode sync/async and single/plural:</p>
+<ul>
+<li>fit: sync, single (&quot;it becomes&quot;)</li>
+<li>fiet: async, single (&quot;it will become&quot;)</li>
+<li>fiunt: sync, plural (&quot;they become&quot;)</li>
+<li>fient: async, plural (&quot;they will become&quot;)</li>
+</ul>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">ad &quot;console:log&quot; (&quot;hello&quot;)                           // fire-and-forget
+ad &quot;fasciculus:lege&quot; (&quot;file.txt&quot;) fit textus pro c { }  // sync binding
+ad &quot;http:get&quot; (url) fiet Response pro r { }          // async binding
+ad &quot;http:batch&quot; (urls) fient Response[] pro rs { }   // async plural
+</code></pre>
+<h3 id="praepara-block">Praepara Block</h3>
+<pre><code class="language-ebnf">praeparaBlock := (&#39;praepara&#39; | &#39;praeparabit&#39; | &#39;postpara&#39; | &#39;postparabit&#39;) &#39;omnia&#39;? blockStmt
+</code></pre>
+<blockquote>
+<p>Latin &quot;praepara&quot; (prepare!) for test setup, &quot;postpara&quot; (cleanup!) for teardown.
+Uses -bit suffix for async (future tense), matching fit/fiet pattern.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">praepara { lexer = init() }
+praepara omnia { db = connect() }
+praeparabit omnia { db = cede connect() }
+postpara { cleanup() }
+postpara omnia { db.close() }
+postparabit omnia { cede db.close() }
+</code></pre>
+<h3 id="cura-statement">Cura Statement</h3>
+<pre><code class="language-ebnf">curaStmt := &#39;cura&#39; curatorKind? expression? (&#39;pro&#39; | &#39;fit&#39; | &#39;fiet&#39;) typeAnnotation? IDENTIFIER blockStmt catchClause?
+curatorKind := &#39;arena&#39; | &#39;page&#39;
+</code></pre>
+<blockquote>
+<p>Latin &quot;cura&quot; (care) + binding verb for scoped resources.</p>
+<ul>
+<li>pro: neutral binding (&quot;for&quot;)</li>
+<li>fit: sync binding (&quot;it becomes&quot;)</li>
+<li>fiet: async binding (&quot;it will become&quot;)
+Curator kinds declare explicit allocator types (arena, page).
+Guarantees cleanup via solve() on scope exit.</li>
+</ul>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">cura arena fit mem { ... }                    // arena allocator
+cura page fit mem { ... }                     // page allocator
+cura aperi(&quot;data.bin&quot;) fit fd { lege(fd) }   // generic resource
+cura connect(url) fiet conn { ... }          // async resource
+</code></pre>
+<h3 id="incipit-statement">Incipit Statement</h3>
+<pre><code class="language-ebnf">incipitStmt := &#39;incipit&#39; (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression)
+</code></pre>
+<blockquote>
+<p>&#39;incipit&#39; (it begins) marks the program entry point.
+This is a pure structural marker with no magic injection.
+The source is responsible for any setup (allocators via cura, etc.).</p>
+<p>The &#39;ergo&#39; (therefore) form chains to a single statement, typically
+a cura block for allocator setup. This avoids extra nesting.
+The &#39;reddit&#39; form returns an exit code directly.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">incipit {
+    scribe &quot;Hello&quot;
+}
+
+incipit ergo cura arena {
+</code></pre>
+<h3 id="incipiet-statement">Incipiet Statement</h3>
+<pre><code class="language-ebnf">incipietStmt := &#39;incipiet&#39; (blockStmt | &#39;ergo&#39; statement | &#39;reddit&#39; expression)
+</code></pre>
+<blockquote>
+<p>&#39;incipiet&#39; (it will begin) marks the async program entry point.
+Mirrors the fit/fiet pattern: present for sync, future for async.</p>
+<p>The &#39;ergo&#39; form chains to a single statement for concise setup.
+The &#39;reddit&#39; form returns an exit code directly.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">incipiet {
+    fixum data = cede fetchData()
+    scribe data
+}
+
+incipiet ergo cura arena {
+    fixum data = cede fetchData()
+}
+
+incipiet reddit 0
+</code></pre>
+<h3 id="block-statement">Block Statement</h3>
+<pre><code class="language-ebnf">blockStmt := &#39;{&#39; statement* &#39;}&#39;
+</code></pre>
+<h3 id="expression-statement">Expression Statement</h3>
+<pre><code class="language-ebnf">exprStmt := expression
+</code></pre>
+<h3 id="expression">Expression</h3>
+<pre><code class="language-ebnf">expression := assignment
+</code></pre>
+<blockquote>
+<p>Top-level expression delegates to assignment (lowest precedence).</p>
+</blockquote>
+<h3 id="bitwise-or">Bitwise Or</h3>
+<pre><code class="language-ebnf">bitwiseOr := bitwiseXor (&#39;|&#39; bitwiseXor)*
+</code></pre>
+<blockquote>
+<p>Bitwise precedence is above comparison (unlike C), so
+<code>flags &amp; MASK == 0</code> parses as <code>(flags &amp; MASK) == 0</code>.</p>
+</blockquote>
+<h3 id="bitwise-xor">Bitwise Xor</h3>
+<pre><code class="language-ebnf">bitwiseXor := bitwiseAnd (&#39;^&#39; bitwiseAnd)*
+</code></pre>
+<h3 id="bitwise-and">Bitwise And</h3>
+<pre><code class="language-ebnf">bitwiseAnd := shift (&#39;&amp;&#39; shift)*
+</code></pre>
+<h3 id="shift">Shift</h3>
+<pre><code class="language-ebnf">shift := range ((&#39;&lt;&lt;&#39; | &#39;&gt;&gt;&#39;) range)*
+</code></pre>
+<h3 id="praefixum-expression">Praefixum Expression</h3>
+<pre><code class="language-ebnf">praefixumExpr := &#39;praefixum&#39; (blockStmt | &#39;(&#39; expression &#39;)&#39;)
+</code></pre>
+<blockquote>
+<p>Latin &#39;praefixum&#39; (pre-fixed) extends fixum vocabulary.
+Block form: praefixum { ... } for multi-statement computation
+Expression form: praefixum(expr) for simple expressions</p>
+<p>TARGET SUPPORT:
+Zig:    comptime { } or comptime (expr)
+C++:    constexpr
+Rust:   const (in const context)
+TS/Py:  Semantic error - not supported</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">fixum size = praefixum(256 * 4)
+fixum table = praefixum {
+    varia result = []
+    ex 0..10 pro i { result.adde(i * i) }
+    redde result
+}
+</code></pre>
+<h3 id="scriptum-expression">Scriptum Expression</h3>
+<pre><code class="language-ebnf">scriptumExpr := &#39;scriptum&#39; &#39;(&#39; STRING (&#39;,&#39; expression)* &#39;)&#39;
+</code></pre>
+<blockquote>
+<p>&quot;scriptum&quot; (that which has been written) is the perfect passive participle
+of scribere. While scribe outputs to console, scriptum returns a formatted string.</p>
+<p>The § placeholder is converted to target-appropriate format specifiers.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">scriptum(&quot;Hello, §&quot;, name)
+scriptum(&quot;§ + § = §&quot;, a, b, a + b)
+</code></pre>
+<h3 id="lege-expression">Lege Expression</h3>
+<pre><code class="language-ebnf">legeExpr := &#39;lege&#39; (&#39;lineam&#39;)?
+</code></pre>
+<h3 id="qua-expression">Qua Expression</h3>
+<pre><code class="language-ebnf">castExpr := call (&#39;qua&#39; typeAnnotation)*
+</code></pre>
+<blockquote>
+<p>Latin &#39;qua&#39; (as, in the capacity of) for type assertions.
+Compile-time only — no runtime checking. Maps to:</p>
+<ul>
+<li>TypeScript: x as T</li>
+<li>Python: x (ignored, dynamic typing)</li>
+<li>Zig: @as(T, x)</li>
+<li>Rust: x as T</li>
+<li>C++: static_cast<T>(x)</li>
+</ul>
+</blockquote>
+<h3 id="novum-expression">Novum Expression</h3>
+<pre><code class="language-ebnf">newExpr := &#39;novum&#39; IDENTIFIER (&#39;(&#39; argumentList &#39;)&#39;)? (objectLiteral | &#39;de&#39; expression)?
+</code></pre>
+<blockquote>
+<p>Two forms for property overrides:</p>
+<ul>
+<li>Inline literal: <code>novum Persona { nomen: &quot;Marcus&quot; }</code></li>
+<li>From expression: <code>novum Persona de props</code> (props is variable/call/etc.)</li>
+</ul>
+<p>The <code>de</code> (from) form allows dynamic overrides from variables or function results.</p>
+</blockquote>
+<h3 id="finge-expression">Finge Expression</h3>
+<pre><code class="language-ebnf">fingeExpr := &#39;finge&#39; IDENTIFIER (&#39;{&#39; fieldList &#39;}&#39;)? (&#39;qua&#39; IDENTIFIER)?
+</code></pre>
+<blockquote>
+<p>Latin &#39;finge&#39; (form/shape) for constructing discretio variants.
+Variant name comes first, optional fields in braces, optional qua for
+explicit discretio type when not inferrable from context.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">finge Click { x: 10, y: 20 }           - payload variant
+finge Click { x: 10, y: 20 } qua Event - with explicit type
+finge Active                            - unit variant
+finge Active qua Status                 - unit variant with explicit type
+</code></pre>
+<h3 id="lambda-expression">Lambda Expression</h3>
+<pre><code class="language-ebnf">lambdaExpr := (&#39;pro&#39; | &#39;fit&#39; | &#39;fiet&#39;) params? (&#39;-&gt;&#39; type)? (&#39;:&#39; expression | blockStmt)
+params := IDENTIFIER (&#39;,&#39; IDENTIFIER)*
+</code></pre>
+<h3 id="identifier-or-keyword">Identifier Or Keyword</h3>
+<pre><code class="language-ebnf">identifierOrKeyword := IDENTIFIER | KEYWORD
+</code></pre>
+<blockquote>
+<p>Import specifiers can be keywords (ex norma importa scribe).
+In this context, &#39;scribe&#39; is a valid name, not a statement keyword.</p>
+</blockquote>
+<hr>
+<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+
+    </main>
+  </div>
+</body>
+</html>

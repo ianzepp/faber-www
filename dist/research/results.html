@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Results - Faber</title>
+  <meta name="description" content="LLM learnability research from faber-trials">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html" class="active">Research Results</a>
+  <div class="nav-subheadings">
+    <a href="/research/results.html#by-model">By Model</a>
+    <a href="/research/results.html#by-n-shot-learning-curve">By N-shot (Learning Curve)</a>
+    <a href="/research/results.html#by-task">By Task</a>
+    <a href="/research/results.html#methodology">Methodology</a>
+  </div>
+</nav>
+    <main class="content">
+      <h1 id="research-results">Research Results</h1>
+<p>Results from the faber-trials evaluation harness. Testing whether LLMs can learn Faber syntax from examples.</p>
+<p><strong>Total evaluations:</strong> 101</p>
+<h2 id="by-model">By Model</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Tests</th>
+<th>Correct</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>llama-3.1-8b</td>
+<td>1</td>
+<td>1</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>claude-3-haiku</td>
+<td>1</td>
+<td>1</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>gpt-3.5-turbo</td>
+<td>70</td>
+<td>37</td>
+<td>53%</td>
+</tr>
+<tr>
+<td>llama-3.2-3b</td>
+<td>13</td>
+<td>2</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>llama-3.2-1b</td>
+<td>16</td>
+<td>2</td>
+<td>13%</td>
+</tr>
+</tbody></table>
+<h2 id="by-n-shot-learning-curve">By N-shot (Learning Curve)</h2>
+<table>
+<thead>
+<tr>
+<th>Examples</th>
+<th>Tests</th>
+<th>Correct</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0-shot</td>
+<td>68</td>
+<td>25</td>
+<td>37%</td>
+</tr>
+<tr>
+<td>1-shot</td>
+<td>21</td>
+<td>7</td>
+<td>33%</td>
+</tr>
+<tr>
+<td>3-shot</td>
+<td>6</td>
+<td>5</td>
+<td>83%</td>
+</tr>
+<tr>
+<td>10-shot</td>
+<td>6</td>
+<td>6</td>
+<td>100%</td>
+</tr>
+</tbody></table>
+<h2 id="by-task">By Task</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Tests</th>
+<th>Correct</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>predict_simple_output</td>
+<td>7</td>
+<td>6</td>
+<td>86%</td>
+</tr>
+<tr>
+<td>translate_simple_var</td>
+<td>14</td>
+<td>10</td>
+<td>71%</td>
+</tr>
+<tr>
+<td>translate_mutable_var</td>
+<td>13</td>
+<td>7</td>
+<td>54%</td>
+</tr>
+<tr>
+<td>translate_string_var</td>
+<td>13</td>
+<td>6</td>
+<td>46%</td>
+</tr>
+<tr>
+<td>complete_return_statement</td>
+<td>7</td>
+<td>3</td>
+<td>43%</td>
+</tr>
+<tr>
+<td>translate_for_of_loop</td>
+<td>11</td>
+<td>4</td>
+<td>36%</td>
+</tr>
+<tr>
+<td>translate_array_literal</td>
+<td>6</td>
+<td>2</td>
+<td>33%</td>
+</tr>
+<tr>
+<td>complete_variable_declaration</td>
+<td>8</td>
+<td>2</td>
+<td>25%</td>
+</tr>
+<tr>
+<td>translate_conditional</td>
+<td>6</td>
+<td>1</td>
+<td>17%</td>
+</tr>
+<tr>
+<td>translate_if_else</td>
+<td>6</td>
+<td>1</td>
+<td>17%</td>
+</tr>
+<tr>
+<td>translate_function</td>
+<td>6</td>
+<td>1</td>
+<td>17%</td>
+</tr>
+<tr>
+<td>translate_app_faber_to_ts</td>
+<td>4</td>
+<td>0</td>
+<td>0%</td>
+</tr>
+</tbody></table>
+<h2 id="methodology">Methodology</h2>
+<ul>
+<li><strong>Temperature:</strong> 0.0 (deterministic)</li>
+<li><strong>Seed:</strong> 42 (reproducible)</li>
+<li><strong>Dialects:</strong> Latin keywords</li>
+<li><strong>Context levels:</strong> examples-only, minimal, basic, complete</li>
+</ul>
+<p>See <a href="https://github.com/ianzepp/faber-trials">faber-trials</a> for raw data and methodology details.</p>
+
+    </main>
+  </div>
+</body>
+</html>

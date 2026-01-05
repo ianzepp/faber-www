@@ -1,0 +1,3969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Examples - Faber</title>
+  <meta name="description" content="Complete collection of Faber examples">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html" class="active">All Examples</a>
+  <div class="nav-subheadings">
+    <a href="/docs/examples-full.html#adfirma">adfirma</a>
+    <a href="/docs/examples-full.html#in-functio" class="nav-h3">in-functio</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#cura">cura</a>
+    <a href="/docs/examples-full.html#nested" class="nav-h3">nested</a>
+    <a href="/docs/examples-full.html#arena" class="nav-h3">arena</a>
+    <a href="/docs/examples-full.html#custodi">custodi</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#validation" class="nav-h3">validation</a>
+    <a href="/docs/examples-full.html#de-pro">de-pro</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#destructure">destructure</a>
+    <a href="/docs/examples-full.html#array" class="nav-h3">array</a>
+    <a href="/docs/examples-full.html#object" class="nav-h3">object</a>
+    <a href="/docs/examples-full.html#discerne">discerne</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#discretio">discretio</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#dum">dum</a>
+    <a href="/docs/examples-full.html#in-functio" class="nav-h3">in-functio</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#complex-condition" class="nav-h3">complex-condition</a>
+    <a href="/docs/examples-full.html#elige">elige</a>
+    <a href="/docs/examples-full.html#in-functio" class="nav-h3">in-functio</a>
+    <a href="/docs/examples-full.html#with-aliter" class="nav-h3">with-aliter</a>
+    <a href="/docs/examples-full.html#with-reddit" class="nav-h3">with-reddit</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#ex">ex</a>
+    <a href="/docs/examples-full.html#nested" class="nav-h3">nested</a>
+    <a href="/docs/examples-full.html#in-functio" class="nav-h3">in-functio</a>
+    <a href="/docs/examples-full.html#array" class="nav-h3">array</a>
+    <a href="/docs/examples-full.html#fiunt-iteration" class="nav-h3">fiunt-iteration</a>
+    <a href="/docs/examples-full.html#range-step" class="nav-h3">range-step</a>
+    <a href="/docs/examples-full.html#range" class="nav-h3">range</a>
+    <a href="/docs/examples-full.html#expressions">expressions</a>
+    <a href="/docs/examples-full.html#scriptum" class="nav-h3">scriptum</a>
+    <a href="/docs/examples-full.html#regex" class="nav-h3">regex</a>
+    <a href="/docs/examples-full.html#qua" class="nav-h3">qua</a>
+    <a href="/docs/examples-full.html#literal" class="nav-h3">literal</a>
+    <a href="/docs/examples-full.html#ab" class="nav-h3">ab</a>
+    <a href="/docs/examples-full.html#novum" class="nav-h3">novum</a>
+    <a href="/docs/examples-full.html#member" class="nav-h3">member</a>
+    <a href="/docs/examples-full.html#inter" class="nav-h3">inter</a>
+    <a href="/docs/examples-full.html#array" class="nav-h3">array</a>
+    <a href="/docs/examples-full.html#lambda" class="nav-h3">lambda</a>
+    <a href="/docs/examples-full.html#binary" class="nav-h3">binary</a>
+    <a href="/docs/examples-full.html#call" class="nav-h3">call</a>
+    <a href="/docs/examples-full.html#intra" class="nav-h3">intra</a>
+    <a href="/docs/examples-full.html#object" class="nav-h3">object</a>
+    <a href="/docs/examples-full.html#finge" class="nav-h3">finge</a>
+    <a href="/docs/examples-full.html#unary" class="nav-h3">unary</a>
+    <a href="/docs/examples-full.html#range" class="nav-h3">range</a>
+    <a href="/docs/examples-full.html#est" class="nav-h3">est</a>
+    <a href="/docs/examples-full.html#assignment" class="nav-h3">assignment</a>
+    <a href="/docs/examples-full.html#fac">fac</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#with-cape" class="nav-h3">with-cape</a>
+    <a href="/docs/examples-full.html#functio">functio</a>
+    <a href="/docs/examples-full.html#optional" class="nav-h3">optional</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#recursion" class="nav-h3">recursion</a>
+    <a href="/docs/examples-full.html#typed" class="nav-h3">typed</a>
+    <a href="/docs/examples-full.html#genus">genus</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#methods" class="nav-h3">methods</a>
+    <a href="/docs/examples-full.html#creo" class="nav-h3">creo</a>
+    <a href="/docs/examples-full.html#iace">iace</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#importa">importa</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#importa-local">importa-local</a>
+    <a href="/docs/examples-full.html#main" class="nav-h3">main</a>
+    <a href="/docs/examples-full.html#utils" class="nav-h3">utils</a>
+    <a href="/docs/examples-full.html#in">in</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#incipit">incipit</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#with-functions" class="nav-h3">with-functions</a>
+    <a href="/docs/examples-full.html#ordo">ordo</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#pactum">pactum</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#perge">perge</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#proba">proba</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#modifiers" class="nav-h3">modifiers</a>
+    <a href="/docs/examples-full.html#redde">redde</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#rumpe">rumpe</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#scribe">scribe</a>
+    <a href="/docs/examples-full.html#levels" class="nav-h3">levels</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#si">si</a>
+    <a href="/docs/examples-full.html#nested" class="nav-h3">nested</a>
+    <a href="/docs/examples-full.html#with-reddit" class="nav-h3">with-reddit</a>
+    <a href="/docs/examples-full.html#si-aliter" class="nav-h3">si-aliter</a>
+    <a href="/docs/examples-full.html#ergo" class="nav-h3">ergo</a>
+    <a href="/docs/examples-full.html#si-sin-secus" class="nav-h3">si-sin-secus</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#est" class="nav-h3">est</a>
+    <a href="/docs/examples-full.html#statements">statements</a>
+    <a href="/docs/examples-full.html#si" class="nav-h3">si</a>
+    <a href="/docs/examples-full.html#tempta-cape">tempta-cape</a>
+    <a href="/docs/examples-full.html#in-functio" class="nav-h3">in-functio</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#typealias">typealias</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#varia">varia</a>
+    <a href="/docs/examples-full.html#destructure" class="nav-h3">destructure</a>
+    <a href="/docs/examples-full.html#basic" class="nav-h3">basic</a>
+    <a href="/docs/examples-full.html#typed" class="nav-h3">typed</a>
+  </div>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="faber-examples-complete-collection">Faber Examples - Complete Collection</h1>
+<p>This file contains all 82 examples from the Faber exempla/ directory.</p>
+<h2 id="adfirma">adfirma</h2>
+<h3 id="in-functio">in-functio</h3>
+<pre><code class="language-faber"># Assertions in functions for preconditions and postconditions
+#
+# adfirma &lt;condition&gt;
+# adfirma &lt;condition&gt;, &quot;error message&quot;
+
+# Precondition: validate input at function start
+functio divide(numerus a, numerus b) fit numerus {
+    adfirma b != 0, &quot;divisor must not be zero&quot;
+    redde a / b
+}
+
+# Multiple preconditions
+functio calculateAge(numerus birthYear, numerus currentYear) fit numerus {
+    adfirma birthYear &gt; 0, &quot;birth year must be positive&quot;
+    adfirma currentYear &gt;= birthYear, &quot;current year must be &gt;= birth year&quot;
+    redde currentYear - birthYear
+}
+
+# Postcondition: validate result before returning
+functio absoluteValue(numerus n) fit numerus {
+    varia result = n
+    si n &lt; 0 {
+        result = -n
+    }
+    adfirma result &gt;= 0, &quot;result must be non-negative&quot;
+    redde result
+}
+
+incipit {
+    fixum quotient = divide(20, 4)
+    adfirma quotient == 5
+
+    fixum age = calculateAge(1990, 2024)
+    adfirma age == 34
+
+    fixum abs = absoluteValue(-42)
+    adfirma abs == 42
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic adfirma (assert) statements
+#
+# adfirma &lt;condition&gt;
+# adfirma &lt;condition&gt;, &quot;error message&quot;
+
+incipit {
+    fixum x = 10
+
+    # Simple assertion without message
+    adfirma x &gt; 0
+
+    # Assertion with custom error message
+    adfirma x == 10, &quot;x must equal 10&quot;
+
+    # Multiple assertions
+    fixum name = &quot;Marcus&quot;
+    adfirma name == &quot;Marcus&quot;
+    adfirma name != &quot;&quot;, &quot;name must not be empty&quot;
+
+    # Boolean assertions
+    fixum active = verum
+    adfirma active
+    adfirma active == verum, &quot;must be active&quot;
+}
+</code></pre>
+<h2 id="cura">cura</h2>
+<h3 id="nested">nested</h3>
+<pre><code class="language-faber"># Nested allocator scopes
+#
+# cura arena fit &lt;outer&gt; { cura arena fit &lt;inner&gt; { } }
+#
+# Allocator scopes can nest. Inner scopes free before outer scopes.
+
+incipit {
+    cura arena fit outer {
+        varia textus[] a = [&quot;one&quot;]
+
+        cura arena fit inner {
+            varia textus[] b = [&quot;two&quot;]
+            scribe &quot;Inner:&quot;, b
+        }
+        # inner freed here
+
+        a.adde(&quot;three&quot;)
+        scribe &quot;Outer:&quot;, a
+    }
+    # outer freed here
+}
+</code></pre>
+<h3 id="arena">arena</h3>
+<pre><code class="language-faber"># Arena allocator scope
+#
+# cura arena fit &lt;identifier&gt; { &lt;body&gt; }
+#
+# Arena allocators provide fast allocation with bulk deallocation.
+# All memory is freed when the scope exits.
+# On GC targets (TS, Python), allocator blocks are ignored.
+
+incipit {
+    cura arena fit mem {
+        # All allocations in this block use the arena
+        varia textus[] items = [&quot;hello&quot;, &quot;world&quot;]
+        scribe items
+    }
+    # Arena freed, all allocations released
+
+    # Page allocator variant
+    cura page fit pageMem {
+        scribe &quot;Using page allocator&quot;
+    }
+}
+</code></pre>
+<h2 id="custodi">custodi</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic custodi (guard clause) statement
+#
+# custodi { si &lt;condition&gt; { &lt;early-return&gt; } }
+#
+# Groups early-exit checks at function start to separate
+# validation from main logic.
+
+functio divide(a, b) -&gt; numerus {
+    custodi {
+        si b == 0 {
+            redde 0
+        }
+    }
+
+    redde a / b
+}
+
+functio processValue(x) -&gt; numerus {
+    custodi {
+        si x &lt; 0 {
+            redde -1
+        }
+        si x &gt; 100 {
+            redde -1
+        }
+    }
+
+    # Main logic, clearly separated from guards
+    redde x * 2
+}
+
+functio clamp(value, min, max) -&gt; numerus {
+    custodi {
+        si value &lt; min {
+            redde min
+        }
+        si value &gt; max {
+            redde max
+        }
+    }
+
+    redde value
+}
+
+incipit {
+    scribe divide(10, 2)
+    scribe divide(10, 0)
+
+    scribe processValue(50)
+    scribe processValue(-10)
+    scribe processValue(150)
+
+    scribe clamp(5, 0, 10)
+    scribe clamp(-5, 0, 10)
+    scribe clamp(15, 0, 10)
+}
+</code></pre>
+<h3 id="validation">validation</h3>
+<pre><code class="language-faber"># Input validation patterns with custodi
+#
+# Use custodi to group related precondition checks.
+# Each guard should return early or throw on invalid input.
+
+functio processAge(age) -&gt; textus {
+    custodi {
+        si age &lt; 0 {
+            redde &quot;Invalid: negative age&quot;
+        }
+        si age &gt; 150 {
+            redde &quot;Invalid: age too high&quot;
+        }
+    }
+
+    si age &lt; 18 {
+        redde &quot;Minor&quot;
+    }
+    secus {
+        redde &quot;Adult&quot;
+    }
+}
+
+functio createUser(name, email, age, curator alloc) -&gt; textus {
+    custodi {
+        si name == nihil aut name == &quot;&quot; {
+            redde &quot;Error: name required&quot;
+        }
+        si email == nihil aut email == &quot;&quot; {
+            redde &quot;Error: email required&quot;
+        }
+        si age &lt; 13 {
+            redde &quot;Error: must be 13 or older&quot;
+        }
+        si age &gt; 120 {
+            redde &quot;Error: invalid age&quot;
+        }
+    }
+
+    redde scriptum(&quot;User created: §&quot;, name)
+}
+
+# Guards can throw instead of returning
+functio sqrt(n) -&gt; numerus {
+    custodi {
+        si n &lt; 0 {
+            iace &quot;Cannot compute square root of negative number&quot;
+        }
+    }
+
+    redde n
+}
+
+incipit ergo cura arena {
+    scribe processAge(-5)
+    scribe processAge(200)
+    scribe processAge(25)
+    scribe processAge(12)
+
+    scribe createUser(&quot;Marcus&quot;, &quot;marcus@roma.com&quot;, 30)
+    scribe createUser(&quot;&quot;, &quot;test@test.com&quot;, 25)
+    scribe createUser(&quot;Julia&quot;, &quot;julia@roma.com&quot;, 10)
+
+    scribe sqrt(16)
+}
+</code></pre>
+<h2 id="de-pro">de-pro</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic de...pro (for-in) key iteration
+#
+# de &lt;object&gt; pro &lt;key&gt; { &lt;body&gt; }
+# de &lt;array&gt; pro &lt;index&gt; { &lt;body&gt; }
+
+incipit ergo cura arena {
+    # Iterate over object keys
+    fixum persona = { nomen: &quot;Marcus&quot;, aetas: 30, urbs: &quot;Roma&quot; }
+
+    de persona pro clavis {
+        scribe clavis
+    }
+
+    # Access values using the key
+    de persona pro clavis {
+        scribe scriptum(&quot;§: §&quot;, clavis, persona[clavis])
+    }
+
+    # Iterate over array indices
+    fixum numeri = [10, 20, 30]
+
+    de numeri pro index {
+        scribe scriptum(&quot;Index §: §&quot;, index, numeri[index])
+    }
+
+    # One-liner form with ergo
+    fixum data = { alpha: 1, beta: 2 }
+    de data pro k ergo scribe k
+}
+</code></pre>
+<h2 id="destructure">destructure</h2>
+<h3 id="array">array</h3>
+<pre><code class="language-faber"># Array destructuring patterns
+#
+# fixum [a, b, c] = array         -- destructure into immutable bindings
+# varia [x, y, z] = array         -- destructure into mutable bindings
+# fixum [first, ceteri rest] = arr -- with rest pattern
+# fixum [_, second, _] = arr      -- skip elements with underscore
+
+incipit {
+    # Basic array destructuring
+    fixum numbers = [1, 2, 3]
+    fixum [a, b, c] = numbers
+
+    scribe a
+    scribe b
+    scribe c
+
+    # Destructure inline array literal
+    fixum [first, second, third] = [10, 20, 30]
+
+    scribe first
+    scribe second
+    scribe third
+
+    # Mutable destructuring with varia
+    fixum coords = [100, 200]
+    varia [x, y] = coords
+
+    scribe x
+    scribe y
+
+    x = x + 50
+    y = y + 50
+
+    scribe x
+    scribe y
+
+    # Partial destructuring (fewer variables than elements)
+    fixum values = [1, 2, 3, 4, 5]
+    fixum [one, two] = values
+
+    scribe one
+    scribe two
+
+    # Rest pattern with ceteri
+    fixum items = [1, 2, 3, 4, 5]
+    fixum [head, ceteri tail] = items
+
+    scribe head
+    scribe tail
+
+    # Skip elements with underscore
+    fixum triple = [10, 20, 30]
+    fixum [_, middle, _] = triple
+
+    scribe middle
+
+    # Nested arrays
+    fixum matrix = [[1, 2], [3, 4]]
+    fixum [row1, row2] = matrix
+
+    scribe row1
+    scribe row2
+}
+</code></pre>
+<h3 id="object">object</h3>
+<pre><code class="language-faber"># Object destructuring patterns
+#
+# ex obj fixum field1, field2     -- extract fields into immutable bindings
+# ex obj varia field1, field2     -- extract into mutable bindings
+# ex obj fixum field ut alias     -- extract with alias (rename)
+# ex obj fixum field, ceteri rest -- extract with rest pattern
+
+incipit {
+    # Basic field extraction
+    fixum person = { name: &quot;Marcus&quot;, age: 30, city: &quot;Roma&quot; }
+    ex person fixum name, age
+
+    scribe name
+    scribe age
+
+    # Extract with alias using &#39;ut&#39;
+    fixum user = { name: &quot;Julia&quot;, email: &quot;julia@roma.com&quot; }
+    ex user fixum name ut userName, email ut userEmail
+
+    scribe userName
+    scribe userEmail
+
+    # Mutable destructuring with varia
+    fixum data = { count: 100, active: verum }
+    ex data varia count, active
+
+    scribe count
+    scribe active
+
+    count = 200
+    active = falsum
+
+    scribe count
+    scribe active
+
+    # Mixed alias and regular fields
+    fixum config = { host: &quot;localhost&quot;, port: 8080, secure: verum }
+    ex config fixum host, port ut serverPort, secure
+
+    scribe host
+    scribe serverPort
+    scribe secure
+
+    # Rest pattern with ceteri
+    fixum fullUser = { id: 1, name: &quot;Gaius&quot;, email: &quot;g@roma.com&quot;, role: &quot;admin&quot; }
+    ex fullUser fixum id, ceteri details
+
+    scribe id
+    scribe details
+
+    # Destructure from nested access
+    fixum response = { data: { user: { name: &quot;Claudia&quot;, verified: verum } } }
+    ex response.data.user fixum name ut nestedName, verified
+
+    scribe nestedName
+    scribe verified
+
+    # Single field extraction
+    fixum settings = { theme: &quot;dark&quot;, lang: &quot;la&quot; }
+    ex settings fixum theme
+
+    scribe theme
+}
+</code></pre>
+<h2 id="discerne">discerne</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Pattern matching with discerne (discriminate/distinguish)
+#
+# discerne &lt;value&gt; {
+#     casu &lt;Variant&gt; { &lt;body&gt; }
+#     casu &lt;Variant&gt; ut &lt;alias&gt; { &lt;body&gt; }
+#     casu &lt;Variant&gt; pro &lt;bindings&gt; { &lt;body&gt; }
+# }
+
+# Define discretio (tagged union) types
+discretio Status {
+    Active,
+    Inactive,
+    Pending
+}
+
+discretio Event {
+    Click { numerus x, numerus y },
+    Keypress { textus key },
+    Quit
+}
+
+# Functions demonstrating discerne
+functio describe_status(Status s) -&gt; textus {
+    discerne s {
+        casu Active { redde &quot;active&quot; }
+        casu Inactive { redde &quot;inactive&quot; }
+        casu Pending { redde &quot;pending&quot; }
+    }
+}
+
+functio handle_event(Event e) -&gt; nihil {
+    discerne e {
+        casu Click pro x, y {
+            scribe scriptum(&quot;Clicked at §, §&quot;, x, y)
+        }
+        casu Keypress pro key {
+            scribe scriptum(&quot;Key: §&quot;, key)
+        }
+        casu Quit {
+            scribe &quot;quit&quot;
+        }
+    }
+}
+
+incipit {
+    scribe &quot;discerne patterns defined&quot;
+}
+</code></pre>
+<h2 id="discretio">discretio</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic discretio (discriminated union/tagged union)
+#
+# discretio Name {
+#     Variant1 { type field1, type field2 }
+#     Variant2 { type field }
+#     Variant3
+# }
+
+# Discretio with payload variants
+discretio Result {
+    Success { textus message }
+    Failure { textus error }
+}
+
+# Discretio with mixed unit and payload variants
+discretio Event {
+    Click { numerus x, numerus y }
+    Keypress { textus key }
+    Quit
+}
+
+# Discretio with many fields per variant
+discretio Shape {
+    Rectangle { numerus x, numerus y, numerus width, numerus height }
+    Circle { numerus cx, numerus cy, numerus radius }
+    Point { numerus x, numerus y }
+}
+
+incipit {
+    scribe &quot;Discretio types defined&quot;
+}
+</code></pre>
+<h2 id="dum">dum</h2>
+<h3 id="in-functio">in-functio</h3>
+<pre><code class="language-faber"># While loops inside functions
+
+functio factorial(numerus n) -&gt; numerus {
+    varia numerus result = 1
+    varia numerus current = n
+
+    dum current &gt; 1 {
+        result = result * current
+        current = current - 1
+    }
+
+    redde result
+}
+
+functio nextPowerOf2(numerus n) -&gt; numerus {
+    varia numerus power = 1
+
+    dum power &lt;= n {
+        power = power * 2
+    }
+
+    redde power
+}
+
+incipit {
+    scribe &quot;5! =&quot;, factorial(5)
+    scribe &quot;10! =&quot;, factorial(10)
+
+    scribe &quot;Next power of 2 after 100:&quot;, nextPowerOf2(100)
+    scribe &quot;Next power of 2 after 1000:&quot;, nextPowerOf2(1000)
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic dum (while) loop with counter
+#
+# dum &lt;condition&gt; { &lt;body&gt; }
+
+incipit {
+    varia numerus counter = 0
+
+    dum counter &lt; 5 {
+        scribe counter
+        counter = counter + 1
+    }
+
+    # Countdown example
+    varia numerus countdown = 3
+
+    dum countdown &gt; 0 {
+        scribe &quot;Countdown:&quot;, countdown
+        countdown = countdown - 1
+    }
+
+    scribe &quot;Done!&quot;
+}
+</code></pre>
+<h3 id="complex-condition">complex-condition</h3>
+<pre><code class="language-faber"># Dum with compound conditions
+#
+# dum &lt;cond1&gt; et &lt;cond2&gt; { }   -- both must be true
+# dum &lt;cond1&gt; aut &lt;cond2&gt; { }  -- either must be true
+
+incipit {
+    # Using &quot;et&quot; (and) - loop while running AND attempts &lt; limit
+    varia bivalens running = verum
+    varia numerus attempts = 0
+
+    dum running et attempts &lt; 5 {
+        scribe &quot;Attempt:&quot;, attempts
+        attempts = attempts + 1
+
+        si attempts &gt;= 3 {
+            running = falsum
+        }
+    }
+
+    # Using &quot;aut&quot; (or) - loop while either condition holds
+    varia numerus a = 5
+    varia numerus b = 3
+
+    dum a &gt; 0 aut b &gt; 0 {
+        scribe &quot;a:&quot;, a, &quot;b:&quot;, b
+        a = a - 1
+        b = b - 1
+    }
+}
+</code></pre>
+<h2 id="elige">elige</h2>
+<h3 id="in-functio">in-functio</h3>
+<pre><code class="language-faber"># Elige with early returns in functions
+#
+# elige &lt;expr&gt; {
+#     casu &lt;value&gt; { redde ... }
+#     casu &lt;value&gt; { redde ... }
+#     ceterum { redde ... }
+# }
+
+functio getGreeting(textus language) fit textus {
+    elige language {
+        casu &quot;latin&quot; {
+            redde &quot;Salve&quot;
+        }
+        casu &quot;english&quot; {
+            redde &quot;Hello&quot;
+        }
+        casu &quot;spanish&quot; {
+            redde &quot;Hola&quot;
+        }
+        casu &quot;french&quot; {
+            redde &quot;Bonjour&quot;
+        }
+    }
+
+    redde &quot;Hi&quot;
+}
+
+functio getHttpMessage(numerus code) fit textus {
+    elige code {
+        casu 200 {
+            redde &quot;OK&quot;
+        }
+        casu 201 {
+            redde &quot;Created&quot;
+        }
+        casu 400 {
+            redde &quot;Bad Request&quot;
+        }
+        casu 404 {
+            redde &quot;Not Found&quot;
+        }
+        casu 500 {
+            redde &quot;Internal Server Error&quot;
+        }
+    }
+
+    redde &quot;Unknown&quot;
+}
+
+incipit {
+    scribe getGreeting(&quot;latin&quot;)
+    scribe getGreeting(&quot;spanish&quot;)
+    scribe getGreeting(&quot;unknown&quot;)
+
+    scribe getHttpMessage(200)
+    scribe getHttpMessage(404)
+    scribe getHttpMessage(999)
+}
+</code></pre>
+<h3 id="with-aliter">with-aliter</h3>
+<pre><code class="language-faber"># Elige with default case (ceterum)
+#
+# elige &lt;expr&gt; {
+#     casu &lt;value&gt; { &lt;body&gt; }
+#     ceterum { &lt;default&gt; }
+# }
+
+incipit ergo cura arena {
+    # ceterum handles unmatched cases
+    fixum day = &quot;wednesday&quot;
+
+    elige day {
+        casu &quot;monday&quot; {
+            scribe &quot;Start of week&quot;
+        }
+        casu &quot;friday&quot; {
+            scribe &quot;End of week&quot;
+        }
+        ceterum {
+            scribe &quot;Midweek&quot;
+        }
+    }
+
+    # ceterum with error handling
+    fixum command = &quot;unknown&quot;
+
+    elige command {
+        casu &quot;start&quot; {
+            scribe &quot;Starting...&quot;
+        }
+        casu &quot;stop&quot; {
+            scribe &quot;Stopping...&quot;
+        }
+        casu &quot;restart&quot; {
+            scribe &quot;Restarting...&quot;
+        }
+        ceterum {
+            scribe &quot;Unknown command&quot;
+        }
+    }
+
+    # Multiple statements in ceterum
+    fixum level = 99
+
+    elige level {
+        casu 1 {
+            scribe &quot;Beginner&quot;
+        }
+        casu 2 {
+            scribe &quot;Intermediate&quot;
+        }
+        casu 3 {
+            scribe &quot;Advanced&quot;
+        }
+        ceterum {
+            scribe &quot;Custom level&quot;
+            scribe scriptum(&quot;Level: §&quot;, level)
+        }
+    }
+}
+</code></pre>
+<h3 id="with-reddit">with-reddit</h3>
+<pre><code class="language-faber"># Elige with reddit syntax
+#
+# &#39;reddit&#39; is syntactic sugar for &#39;ergo redde&#39; - a one-liner return.
+# Use it when each case simply returns a value.
+#
+# casu &lt;value&gt; reddit &lt;expression&gt;
+# ceterum reddit &lt;expression&gt;
+
+# HTTP status code lookup using reddit
+functio getStatusText(numerus code) -&gt; textus {
+    elige code {
+        casu 200 reddit &quot;OK&quot;
+        casu 201 reddit &quot;Created&quot;
+        casu 204 reddit &quot;No Content&quot;
+        casu 400 reddit &quot;Bad Request&quot;
+        casu 401 reddit &quot;Unauthorized&quot;
+        casu 403 reddit &quot;Forbidden&quot;
+        casu 404 reddit &quot;Not Found&quot;
+        casu 500 reddit &quot;Internal Server Error&quot;
+        casu 502 reddit &quot;Bad Gateway&quot;
+        casu 503 reddit &quot;Service Unavailable&quot;
+        ceterum reddit &quot;Unknown Status&quot;
+    }
+}
+
+# Type mapping using reddit
+functio getTypeCode(textus name) -&gt; numerus {
+    elige name {
+        casu &quot;textus&quot; reddit 1
+        casu &quot;numerus&quot; reddit 2
+        casu &quot;fractus&quot; reddit 3
+        casu &quot;bivalens&quot; reddit 4
+        ceterum reddit 0
+    }
+}
+
+# Mixed reddit and blocks
+# Use reddit for simple returns, blocks for complex logic
+functio processCode(numerus code) -&gt; textus {
+    elige code {
+        casu 1 reddit &quot;simple&quot;
+        casu 2 {
+            scribe &quot;Processing code 2...&quot;
+            redde &quot;complex&quot;
+        }
+        casu 3 reddit &quot;also simple&quot;
+        ceterum reddit &quot;default&quot;
+    }
+}
+
+incipit {
+    scribe getStatusText(200)    # OK
+    scribe getStatusText(404)    # Not Found
+    scribe getStatusText(999)    # Unknown Status
+
+    scribe getTypeCode(&quot;textus&quot;)   # 1
+    scribe getTypeCode(&quot;unknown&quot;)  # 0
+
+    scribe processCode(1)  # simple
+    scribe processCode(2)  # Processing code 2... complex
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic elige (switch) statement
+#
+# elige &lt;expr&gt; {
+#     casu &lt;value&gt; { &lt;body&gt; }
+#     casu &lt;value&gt; { &lt;body&gt; }
+#     ceterum { &lt;body&gt; }
+# }
+
+incipit {
+    # String matching
+    fixum status = &quot;active&quot;
+
+    elige status {
+        casu &quot;pending&quot; {
+            scribe &quot;Waiting...&quot;
+        }
+        casu &quot;active&quot; {
+            scribe &quot;Running&quot;
+        }
+        casu &quot;done&quot; {
+            scribe &quot;Completed&quot;
+        }
+    }
+
+    # Number matching
+    fixum code = 200
+
+    elige code {
+        casu 200 {
+            scribe &quot;OK&quot;
+        }
+        casu 404 {
+            scribe &quot;Not Found&quot;
+        }
+        casu 500 {
+            scribe &quot;Server Error&quot;
+        }
+    }
+
+    # Multiple statements per case
+    fixum mode = &quot;production&quot;
+
+    elige mode {
+        casu &quot;development&quot; {
+            scribe &quot;Dev mode enabled&quot;
+            scribe &quot;Verbose logging on&quot;
+        }
+        casu &quot;production&quot; {
+            scribe &quot;Production mode&quot;
+            scribe &quot;Optimizations enabled&quot;
+        }
+    }
+}
+</code></pre>
+<h2 id="ex">ex</h2>
+<h3 id="nested">nested</h3>
+<pre><code class="language-faber"># Nested ex...pro loops
+
+incipit {
+    # Nested array iteration
+    fixum rows = [1, 2, 3]
+    fixum cols = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;]
+
+    ex rows pro row {
+        ex cols pro col {
+            scribe row, col
+        }
+    }
+
+    # Multiplication table
+    ex 1..4 pro i {
+        ex 1..4 pro j {
+            scribe i, &quot;*&quot;, j, &quot;=&quot;, i * j
+        }
+    }
+
+    # Nested ranges
+    ex 0..3 pro x {
+        ex 0..3 pro y {
+            scribe x, y
+        }
+    }
+}
+</code></pre>
+<h3 id="in-functio">in-functio</h3>
+<pre><code class="language-faber"># Using ex...pro inside functions
+
+# Sum all numbers in an array
+functio sumArray(numerus[] nums) -&gt; numerus {
+    varia numerus total = 0
+
+    ex nums pro n {
+        total = total + n
+    }
+
+    redde total
+}
+
+# Find the maximum value
+functio maxValue(numerus[] nums) -&gt; numerus {
+    varia numerus max = nums[0]
+
+    ex nums pro n {
+        si n &gt; max {
+            max = n
+        }
+    }
+
+    redde max
+}
+
+# Count items matching a condition
+functio countAbove(numerus[] nums, numerus threshold) -&gt; numerus {
+    varia numerus count = 0
+
+    ex nums pro n {
+        si n &gt; threshold {
+            count = count + 1
+        }
+    }
+
+    redde count
+}
+
+incipit {
+    fixum numbers = [1, 2, 3, 4, 5]
+
+    scribe sumArray(numbers)
+    scribe maxValue(numbers)
+    scribe countAbove(numbers, 3)
+
+    scribe sumArray([10, 20, 30])
+    scribe maxValue([5, 12, 8, 20, 3])
+}
+</code></pre>
+<h3 id="array">array</h3>
+<pre><code class="language-faber"># Iterating over arrays with ex...pro
+#
+# ex &lt;collection&gt; pro &lt;item&gt; { &lt;body&gt; }
+
+incipit {
+    # Iterate over number array
+    fixum numbers = [1, 2, 3, 4, 5]
+
+    ex numbers pro n {
+        scribe n
+    }
+
+    # Iterate over string array
+    fixum names = [&quot;Marcus&quot;, &quot;Julia&quot;, &quot;Claudia&quot;]
+
+    ex names pro name {
+        scribe name
+    }
+
+    # Process items
+    fixum values = [10, 20, 30]
+
+    ex values pro v {
+        fixum doubled = v * 2
+        scribe doubled
+    }
+}
+</code></pre>
+<h3 id="fiunt-iteration">fiunt-iteration</h3>
+<pre><code class="language-faber"># Iterating over fiunt/fient function returns with ex...pro
+#
+# This demonstrates that fiunt/fient functions produce iterable results
+# that can be consumed with ex...pro loops
+
+# Multi-value sync function that yields values via cede
+functio rangeSync(numerus n) fiunt numerus {
+    ex 0..n pro i {
+        cede i
+    }
+}
+
+# Multi-value async function that yields values via cede
+functio rangeAsync(numerus n) fient numerus {
+    ex 0..n pro i {
+        cede i
+    }
+}
+
+incipit {
+    # Iterate over sync fiunt function results
+    scribe &quot;Sync fiunt iteration:&quot;
+    ex rangeSync(3) pro num {
+        scribe scriptum(&quot;  num: {num}&quot;)
+    }
+
+    # Collect all results from fiunt function
+    varia syncResults = []
+    ex rangeSync(5) pro num {
+        syncResults.adde(num * 2)
+    }
+    scribe(&quot;Sync collected:&quot;)
+    scribe(syncResults)
+
+    # Note: Async iteration would require async context
+    # ex rangeAsync(3) fiunt num {
+    #     scribe num
+    # }
+}
+</code></pre>
+<h3 id="range-step">range-step</h3>
+<pre><code class="language-faber"># Ranges with step using per
+#
+# ex &lt;start&gt;..&lt;end&gt; per &lt;step&gt; pro &lt;item&gt; { }
+# ex &lt;start&gt; usque &lt;end&gt; per &lt;step&gt; pro &lt;item&gt; { }
+
+incipit {
+    # Step by 2 (exclusive: 0, 2, 4, 6, 8)
+    ex 0..10 per 2 pro i {
+        scribe i
+    }
+
+    # Step by 2 (inclusive: 0, 2, 4, 6, 8, 10)
+    ex 0 usque 10 per 2 pro i {
+        scribe i
+    }
+
+    # Step by 3
+    ex 0..15 per 3 pro i {
+        scribe i
+    }
+
+    # Countdown with negative step
+    ex 10..0 per -1 pro i {
+        scribe i
+    }
+
+    # Countdown by 2
+    ex 10..0 per -2 pro i {
+        scribe i
+    }
+}
+</code></pre>
+<h3 id="range">range</h3>
+<pre><code class="language-faber"># Range expressions with ex...pro
+#
+# ex &lt;start&gt;..&lt;end&gt; pro &lt;item&gt; { }      # exclusive (end not included)
+# ex &lt;start&gt; ante &lt;end&gt; pro &lt;item&gt; { }  # explicit exclusive
+# ex &lt;start&gt; usque &lt;end&gt; pro &lt;item&gt; { } # inclusive (end included)
+
+incipit {
+    # Basic range (exclusive: 0, 1, 2, 3, 4)
+    ex 0..5 pro i {
+        scribe i
+    }
+
+    # Explicit exclusive with ante (same as ..)
+    ex 0 ante 5 pro i {
+        scribe i
+    }
+
+    # Inclusive range with usque (0, 1, 2, 3, 4, 5)
+    ex 0 usque 5 pro i {
+        scribe i
+    }
+
+    # Range starting from non-zero
+    ex 5..10 pro i {
+        scribe i
+    }
+
+    # Countdown (negative direction)
+    ex 5..0 pro i {
+        scribe i
+    }
+}
+</code></pre>
+<h2 id="expressions">expressions</h2>
+<h3 id="scriptum">scriptum</h3>
+<pre><code class="language-faber"># Format string expressions using scriptum()
+
+incipit ergo cura arena {
+    fixum name = &quot;Marcus&quot;
+    fixum age = 30
+
+    # Single placeholder
+    fixum greeting = scriptum(&quot;Salve, §!&quot;, name)
+    scribe greeting
+
+    # Multiple placeholders
+    fixum info = scriptum(&quot;§ is § years old&quot;, name, age)
+    scribe info
+
+    # With expression
+    fixum calc = scriptum(&quot;10 + 20 = §&quot;, 10 + 20)
+    scribe calc
+}
+</code></pre>
+<h3 id="regex">regex</h3>
+<pre><code class="language-faber"># Regex literals using sed keyword
+# Syntax: sed &quot;pattern&quot; [flags]
+
+incipit {
+    # Simple patterns
+    fixum digits = sed &quot;\d+&quot;
+    fixum word = sed &quot;\w+&quot;
+
+    # With flags (i = case insensitive, m = multiline)
+    fixum insensitive = sed &quot;hello&quot; i
+    fixum multiline = sed &quot;^start&quot; im
+
+    # Complex patterns
+    fixum email = sed &quot;[^@]+@[^@]+&quot;
+    fixum paths = sed &quot;/usr/local/.*&quot;
+}
+</code></pre>
+<h3 id="qua">qua</h3>
+<pre><code class="language-faber"># Type casting with qua: converts values between types
+
+functio getData() -&gt; lista&lt;numerus&gt; {
+    redde [1, 2, 3]
+}
+
+functio getResponse() -&gt; objectum {
+    redde { body: &quot;body&quot; }
+}
+
+functio getValue() -&gt; numerus {
+    redde 42
+}
+
+incipit {
+    # Cast to string
+    fixum data = 42
+    fixum asText = data qua textus
+    scribe asText
+
+    # Cast to number
+    fixum input = &quot;100&quot;
+    fixum asNum = input qua numerus
+    scribe asNum
+
+    # Cast to boolean
+    fixum value = 1
+    fixum asBool = value qua bivalens
+    scribe asBool
+
+    # Cast to nullable type
+    fixum num = 10
+    fixum maybe = num qua numerus?
+    scribe maybe
+
+    # Cast to array type
+    fixum raw = getData()
+    fixum items = raw qua lista&lt;textus&gt;
+    scribe items
+
+    # Cast with member access
+    fixum response = getResponse()
+    fixum body = response.body qua textus
+    scribe body
+
+    # Cast call result directly
+    fixum result = getValue() qua textus
+    scribe result
+
+    # Cast in parenthesized expression for chaining
+    fixum len = (data qua textus).length
+    scribe len
+}
+</code></pre>
+<h3 id="literal">literal</h3>
+<pre><code class="language-faber"># Literal expressions: numbers, strings, booleans, null, templates
+
+incipit {
+    # Numbers
+    fixum integer = 42
+    fixum decimal = 3.14
+    fixum negative = -100
+
+    # Strings
+    fixum greeting = &quot;hello&quot;
+    fixum single = &#39;single quotes&#39;
+
+    # Booleans
+    fixum yes = verum
+    fixum no = falsum
+
+    # Null
+    fixum nothing = nihil
+
+    # Template literals
+    fixum name = &quot;Mundus&quot;
+    fixum message = `Hello ${name}`
+}
+</code></pre>
+<h3 id="ab">ab</h3>
+<pre><code class="language-faber"># Ab expression - collection filtering DSL
+# &#39;ab&#39; provides declarative filtering with optional transforms
+
+incipit {
+    # Sample data - users with boolean properties
+    fixum users = [
+        { nomen: &quot;Marcus&quot;, activus: verum, aetas: 25 },
+        { nomen: &quot;Julia&quot;, activus: falsum, aetas: 30 },
+        { nomen: &quot;Gaius&quot;, activus: verum, aetas: 17 }
+    ]
+
+    fixum items = [
+        { valor: 10, visibilis: verum },
+        { valor: 20, visibilis: falsum },
+        { valor: 30, visibilis: verum },
+        { valor: 40, visibilis: verum }
+    ]
+
+    # Boolean property shorthand - filter where property is true
+    fixum active = ab users activus
+    scribe(active)
+
+    # Negated filter - filter where property is false
+    fixum inactive = ab users non activus
+    scribe(inactive)
+
+    # Filter with prima transform (first N elements)
+    fixum top2 = ab items visibilis, prima 2
+    scribe(top2)
+
+    # Filter with ultima transform (last N elements)
+    fixum last2 = ab items visibilis, ultima 2
+    scribe(last2)
+
+    # Filter with summa transform (sum of results)
+    fixum prices = [
+        { pretium: 100, validum: verum },
+        { pretium: 200, validum: verum },
+        { pretium: 50, validum: falsum }
+    ]
+    fixum validPrices = ab prices validum
+    scribe(validPrices)
+
+    # Multiple transforms chained
+    fixum result = ab items visibilis, prima 3, ultima 2
+    scribe(result)
+
+    # Without filter - just apply transforms to collection
+    fixum nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    fixum firstFive = ab nums, prima 5
+    scribe(firstFive)
+
+    # Chain transforms without filter
+    fixum sumFirst = ab nums, prima 5, summa
+    scribe(sumFirst)
+
+    # Complex source - member expression
+    fixum data = { users: users }
+    fixum dataActive = ab data.users activus
+    scribe(dataActive)
+}
+</code></pre>
+<h3 id="novum">novum</h3>
+<pre><code class="language-faber"># Novum (instantiation) expressions
+# Creates new instances of genus types
+
+genus Point {
+    numerus x
+    numerus y
+}
+
+genus Person {
+    textus name
+    numerus age: 0
+}
+
+incipit {
+    # Instantiate with all fields
+    fixum p1 = novum Point { x: 10, y: 20 }
+    scribe p1.x
+    scribe p1.y
+
+    # With default value
+    fixum person = novum Person { name: &quot;Marcus&quot; }
+    scribe person.name
+    scribe person.age
+}
+</code></pre>
+<h3 id="member">member</h3>
+<pre><code class="language-faber"># Member access expressions: dot, bracket, chained, optional
+
+incipit {
+    # Object with dot access
+    fixum point = { x: 10, y: 20 }
+    scribe point.x
+    scribe point.y
+
+    # Array with bracket access
+    fixum numbers = [1, 2, 3]
+    scribe numbers[0]
+    scribe numbers[2]
+
+    # Object with bracket access (string key)
+    fixum config = { name: &quot;test&quot;, value: 42 }
+    scribe config[&quot;name&quot;]
+    scribe config[&quot;value&quot;]
+
+    # Chained member access
+    fixum nested = { outer: { inner: { deep: &quot;found&quot; } } }
+    scribe nested.outer.inner.deep
+
+    # Mixed dot and bracket access
+    fixum data = { items: [&quot;first&quot;, &quot;second&quot;, &quot;third&quot;] }
+    scribe data.items[0]
+    scribe data.items[2]
+
+    # Optional chaining
+    fixum maybe = { present: { value: 100 } }
+    scribe maybe?.present?.value
+
+    # Optional chaining with nihil
+    fixum empty = nihil
+    scribe empty?.missing
+}
+</code></pre>
+<h3 id="inter">inter</h3>
+<pre><code class="language-faber"># Set membership operator: inter
+
+fixum status = &quot;active&quot;
+fixum age = 21
+
+# Basic inter with string array
+si status inter [&quot;pending&quot;, &quot;active&quot;, &quot;paused&quot;] {
+    scribe &quot;valid status&quot;
+}
+
+# inter with numeric array
+si age inter [18, 21, 65] {
+    scribe &quot;milestone age&quot;
+}
+
+incipit {
+    scribe &quot;inter operator examples&quot;
+}
+</code></pre>
+<h3 id="array">array</h3>
+<pre><code class="language-faber"># Array literal expressions: empty, typed, nested, and spread
+
+incipit {
+    # Empty array
+    fixum empty = []
+
+    # Number array
+    fixum numbers = [1, 2, 3, 4, 5]
+
+    # String array
+    fixum names = [&quot;Marcus&quot;, &quot;Julia&quot;, &quot;Gaius&quot;]
+
+    # Boolean array
+    fixum flags = [verum, falsum, verum]
+
+    # Nested arrays
+    fixum matrix = [[1, 2], [3, 4], [5, 6]]
+
+    # Spread operator: combine arrays
+    fixum first = [1, 2, 3]
+    fixum second = [4, 5, 6]
+    fixum combined = [sparge first, sparge second]
+
+    # Spread with additional elements
+    fixum extended = [0, sparge first, 99]
+
+    scribe numbers
+    scribe names
+    scribe matrix
+    scribe combined
+}
+</code></pre>
+<h3 id="lambda">lambda</h3>
+<pre><code class="language-faber"># Lambda expressions (arrow functions)
+# Pattern: pro param: expr
+# Pattern: pro param -&gt; &lt;type&gt;: expr
+
+incipit {
+    # Simple lambda with single parameter
+    fixum double = pro x: x * 2
+    scribe(double(5))
+
+    # Multi-parameter lambda
+    fixum add = pro a, b -&gt; numerus: a + b
+    scribe(add(3, 4))
+
+    # Lambda with array map
+    fixum numbers = [1, 2, 3]
+    fixum doubled = numbers.map(pro x: x * 2)
+    scribe(doubled)
+
+    # Lambda with array filter
+    fixum evens = numbers.filter(pro x: x % 2 == 0)
+    scribe(evens)
+
+    # Lambda stored and reused
+    fixum isPositive = pro n -&gt; bivalens: n &gt; 0
+    scribe(isPositive(10))
+    scribe(isPositive(-5))
+}
+</code></pre>
+<h3 id="binary">binary</h3>
+<pre><code class="language-faber"># ============================================================================
+# Binary Expressions
+# ============================================================================
+#
+# Binary expressions combine two operands with an operator. This file covers
+# arithmetic, comparison, logical, bitwise, and nullish coalescing operations.
+#
+# ----------------------------------------------------------------------------
+# PRECEDENCE (lowest to highest)
+# ----------------------------------------------------------------------------
+#
+# The precedence chain determines parsing order. Lower precedence binds last:
+#
+#   assignment &lt; ternary &lt; or &lt; and &lt; equality &lt; comparison
+#   &lt; bitwiseOr &lt; bitwiseXor &lt; bitwiseAnd &lt; shift &lt; range
+#   &lt; additive &lt; multiplicative &lt; unary &lt; call &lt; primary
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Assignment
+# ----------------------------------------------------------------------------
+#
+#   assignment := ternary ((&#39;=&#39; | &#39;+=&#39; | &#39;-=&#39; | &#39;*=&#39; | &#39;/=&#39; | &#39;&amp;=&#39; | &#39;|=&#39;) assignment)?
+#
+# Assignment is right-associative: a = b = c parses as a = (b = c).
+# Compound assignment operators combine operation with assignment.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Ternary
+# ----------------------------------------------------------------------------
+#
+#   ternary := or ((&#39;?&#39; expression &#39;:&#39; | &#39;sic&#39; expression &#39;secus&#39;) ternary)?
+#
+# Two styles supported (do not mix within one expression):
+#   - Symbolic: condition ? consequent : alternate
+#   - Latin: condition sic consequent secus alternate
+#
+# Latin &#39;sic&#39; means &quot;thus/so&quot;, &#39;secus&#39; means &quot;otherwise&quot;.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Logical Or
+# ----------------------------------------------------------------------------
+#
+#   or := and ((&#39;||&#39; | &#39;aut&#39;) and)* | and (&#39;vel&#39; and)*
+#
+# PREFER: &#39;aut&#39; over &#39;||&#39; for logical or.
+# PREFER: &#39;vel&#39; for nullish coalescing (replaces JavaScript&#39;s &#39;??&#39;).
+#
+# &#39;aut&#39; and &#39;vel&#39; cannot be mixed without parentheses (same restriction as
+# JavaScript&#39;s || and ?? to prevent precedence confusion).
+#
+# Latin: &#39;aut&#39; = &quot;or&quot; (exclusive sense), &#39;vel&#39; = &quot;or&quot; (either/or, nullable).
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Logical And
+# ----------------------------------------------------------------------------
+#
+#   and := equality (&#39;&amp;&amp;&#39; equality | &#39;et&#39; equality)*
+#
+# PREFER: &#39;et&#39; over &#39;&amp;&amp;&#39; for logical and.
+#
+# Latin: &#39;et&#39; = &quot;and&quot;.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Equality
+# ----------------------------------------------------------------------------
+#
+#   equality := comparison ((&#39;==&#39; | &#39;!=&#39; | &#39;===&#39; | &#39;!==&#39; | &#39;est&#39; | &#39;non&#39; &#39;est&#39;) comparison)*
+#
+# Use &#39;===&#39; and &#39;!==&#39; for value equality (strict).
+# Use &#39;est&#39; for type checking (instanceof/typeof).
+# Use &#39;non est&#39; for negative type checking.
+# Use &#39;nihil x&#39; or &#39;nonnihil x&#39; as unary prefix for null checks.
+#
+# Latin: &#39;est&#39; = &quot;is&quot; (type), &#39;non&#39; = &quot;not&quot;.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Comparison
+# ----------------------------------------------------------------------------
+#
+#   comparison := bitwiseOr ((&#39;&lt;&#39; | &#39;&gt;&#39; | &#39;&lt;=&#39; | &#39;&gt;=&#39;) bitwiseOr)*
+#
+# Standard comparison operators. Chains left-to-right: a &lt; b &lt; c is valid.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Bitwise Operators
+# ----------------------------------------------------------------------------
+#
+#   bitwiseOr  := bitwiseXor (&#39;|&#39; bitwiseXor)*
+#   bitwiseXor := bitwiseAnd (&#39;^&#39; bitwiseAnd)*
+#   bitwiseAnd := shift (&#39;&amp;&#39; shift)*
+#   shift      := range ((&#39;&lt;&lt;&#39; | &#39;&gt;&gt;&#39;) range)*
+#
+# Bitwise precedence is ABOVE comparison (unlike C), so:
+#   flags &amp; MASK == 0  parses as  (flags &amp; MASK) == 0
+#
+# This matches programmer intent and avoids subtle bugs.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Range
+# ----------------------------------------------------------------------------
+#
+#   range := additive ((&#39;..&#39; | &#39;ante&#39; | &#39;usque&#39;) additive (&#39;per&#39; additive)?)?
+#
+# Range operators for numeric iteration:
+#   - &#39;..&#39; and &#39;ante&#39;: exclusive end (0..10 yields 0-9)
+#   - &#39;usque&#39;: inclusive end (0 usque 10 yields 0-10)
+#   - &#39;per&#39;: step value (0..10 per 2 yields 0, 2, 4, 6, 8)
+#
+# Latin: &#39;ante&#39; = &quot;before&quot;, &#39;usque&#39; = &quot;up to&quot;, &#39;per&#39; = &quot;by/through&quot;.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Additive
+# ----------------------------------------------------------------------------
+#
+#   additive := multiplicative ((&#39;+&#39; | &#39;-&#39;) multiplicative)*
+#
+# Standard addition and subtraction.
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Multiplicative
+# ----------------------------------------------------------------------------
+#
+#   multiplicative := unary ((&#39;*&#39; | &#39;/&#39; | &#39;%&#39;) unary)*
+#
+# Standard multiplication, division, and modulo.
+#
+# ============================================================================
+# LLM GUIDANCE
+# ============================================================================
+#
+# ALWAYS prefer Latin keywords over symbols:
+#   - &#39;et&#39; over &#39;&amp;&amp;&#39;
+#   - &#39;aut&#39; over &#39;||&#39;
+#   - &#39;vel&#39; over &#39;??&#39; (nullish coalescing)
+#   - &#39;non&#39; over &#39;!&#39; (see unary.fab)
+#   - &#39;sic...secus&#39; over &#39;?:&#39; (ternary, when clarity helps)
+#
+# NEVER use JavaScript/TypeScript patterns:
+#   - &#39;??&#39; does not exist — use &#39;vel&#39;
+#   - &#39;&amp;&amp;&#39; and &#39;||&#39; work but &#39;et&#39; and &#39;aut&#39; are preferred
+#
+# ============================================================================
+# EXAMPLES
+# ============================================================================
+
+incipit {
+    # --------------------------------------------------------------------------
+    # Arithmetic operators: + - * / %
+    # --------------------------------------------------------------------------
+
+    fixum sum = 10 + 5
+    scribe sum
+
+    fixum diff = 10 - 5
+    scribe diff
+
+    fixum prod = 10 * 5
+    scribe prod
+
+    fixum quot = 10 / 5
+    scribe quot
+
+    fixum rem = 10 % 3
+    scribe rem
+
+    # --------------------------------------------------------------------------
+    # Compound assignment: += -= *= /= &amp;= |=
+    # --------------------------------------------------------------------------
+
+    varia counter = 0
+    counter += 10
+    counter -= 3
+    counter *= 2
+    scribe counter
+
+    # --------------------------------------------------------------------------
+    # Comparison operators: &lt; &gt; &lt;= &gt;= == != === !==
+    # --------------------------------------------------------------------------
+
+    fixum isEqual = 10 == 10
+    scribe isEqual
+
+    fixum isNotEqual = 10 != 5
+    scribe isNotEqual
+
+    fixum isStrictEqual = 10 === 10
+    scribe isStrictEqual
+
+    fixum isLess = 5 &lt; 10
+    scribe isLess
+
+    fixum isGreater = 10 &gt; 5
+    scribe isGreater
+
+    fixum isLessOrEqual = 5 &lt;= 5
+    scribe isLessOrEqual
+
+    fixum isGreaterOrEqual = 10 &gt;= 10
+    scribe isGreaterOrEqual
+
+    # Comparison chaining
+    fixum inRange = 0 &lt; 5 et 5 &lt; 10
+    scribe inRange
+
+    # --------------------------------------------------------------------------
+    # Logical operators: et (and), aut (or), non (not)
+    # --------------------------------------------------------------------------
+    # PREFER: &#39;et&#39; over &#39;&amp;&amp;&#39;, &#39;aut&#39; over &#39;||&#39;
+
+    fixum both = verum et verum
+    scribe both
+
+    fixum either = falsum aut verum
+    scribe either
+
+    fixum neither = falsum et falsum
+    scribe neither
+
+    # Short-circuit evaluation works as expected
+    fixum shortCircuit = falsum et expensiveCheck()
+    scribe shortCircuit
+
+    # --------------------------------------------------------------------------
+    # Nullish coalescing: vel (replaces ??)
+    # --------------------------------------------------------------------------
+    # PREFER: &#39;vel&#39; — the &#39;??&#39; operator does not exist in Faber
+
+    fixum textus? maybeName = nihil
+    fixum name = maybeName vel &quot;default&quot;
+    scribe name
+
+    # Chain multiple fallbacks
+    fixum textus? first = nihil
+    fixum textus? second = nihil
+    fixum textus third = &quot;fallback&quot;
+    fixum result = first vel second vel third
+    scribe result
+
+    # --------------------------------------------------------------------------
+    # Ternary: condition ? then : else  OR  condition sic then secus else
+    # --------------------------------------------------------------------------
+    # Both forms work. Latin form preferred when it improves readability.
+
+    fixum age = 25
+    fixum symbolic = age &gt;= 18 ? &quot;adult&quot; : &quot;minor&quot;
+    scribe symbolic
+
+    fixum latin = age &gt;= 18 sic &quot;adult&quot; secus &quot;minor&quot;
+    scribe latin
+
+    # Nested ternary (right-associative)
+    fixum score = 85
+    fixum grade = score &gt;= 90 ? &quot;A&quot; : score &gt;= 80 ? &quot;B&quot; : score &gt;= 70 ? &quot;C&quot; : &quot;F&quot;
+    scribe grade
+
+    # --------------------------------------------------------------------------
+    # Bitwise operators: &amp; | ^ &lt;&lt; &gt;&gt;
+    # --------------------------------------------------------------------------
+    # Note: Bitwise has higher precedence than comparison (unlike C)
+
+    fixum flags = 0b1010
+    fixum mask = 0b1100
+
+    fixum bitwiseAnd = flags &amp; mask
+    scribe bitwiseAnd
+
+    fixum bitwiseOr = flags | mask
+    scribe bitwiseOr
+
+    fixum bitwiseXor = flags ^ mask
+    scribe bitwiseXor
+
+    fixum leftShift = 1 &lt;&lt; 4
+    scribe leftShift
+
+    fixum rightShift = 16 &gt;&gt; 2
+    scribe rightShift
+
+    # Precedence: (flags &amp; mask) == 0, not flags &amp; (mask == 0)
+    fixum checkMask = flags &amp; mask == 0
+    scribe checkMask
+}
+
+# --------------------------------------------------------------------------
+# Helper function for short-circuit demonstration
+# --------------------------------------------------------------------------
+
+functio expensiveCheck() -&gt; bivalens {
+    scribe &quot;This should not print if short-circuited&quot;
+    redde verum
+}
+</code></pre>
+<h3 id="call">call</h3>
+<pre><code class="language-faber"># Call expressions: simple, with arguments, method calls, chaining, spread
+
+functio greet() {
+    scribe &quot;Salve!&quot;
+}
+
+functio add(numerus a, numerus b) fit numerus {
+    redde a + b
+}
+
+functio multiply(numerus x, numerus y) fit numerus {
+    redde x * y
+}
+
+genus Calculator {
+    numerus value: 0
+
+    functio setValue(numerus n) fit Calculator {
+        ego.value = n
+        redde ego
+    }
+
+    functio double() fit Calculator {
+        ego.value = ego.value * 2
+        redde ego
+    }
+
+    functio getResult() fit numerus {
+        redde ego.value
+    }
+}
+
+incipit {
+    # Simple call (no arguments)
+    greet()
+
+    # Call with arguments
+    fixum sum = add(10, 20)
+    scribe sum  # 30
+
+    # Multiple arguments
+    fixum product = multiply(5, 6)
+    scribe product  # 30
+
+    # Method call on object
+    varia calc = novum Calculator()
+    calc.setValue(10)
+    scribe calc.getResult()  # 10
+
+    # Chained method calls
+    varia calc2 = novum Calculator()
+    fixum result = calc2.setValue(5).double().double().getResult()
+    scribe result  # 20
+
+    # Call with spread operator
+    fixum numerus[] numbers = [3, 7]
+    fixum spreadSum = add(sparge numbers)
+    scribe spreadSum  # 10
+}
+</code></pre>
+<h3 id="intra">intra</h3>
+<pre><code class="language-faber"># Range containment operator: intra
+
+fixum age = 25
+
+# Basic intra with .. operator (exclusive end)
+si age intra 0..100 {
+    scribe &quot;age is in valid range&quot;
+}
+
+# intra with usque (inclusive end)
+si age intra 18 usque 65 {
+    scribe &quot;working age&quot;
+}
+
+# intra with ante (explicit exclusive)
+si age intra 0 ante 18 {
+    scribe &quot;minor&quot;
+}
+
+incipit {
+    scribe &quot;intra operator examples&quot;
+}
+</code></pre>
+<h3 id="object">object</h3>
+<pre><code class="language-faber"># Object literal expressions
+
+incipit {
+    # Empty object
+    fixum empty = {}
+    scribe(empty)
+
+    # Simple object with numeric values
+    fixum point = { x: 10, y: 20 }
+    scribe(point)
+
+    # String keys
+    fixum value = 42
+    fixum withStringKey = { &quot;key&quot;: value }
+    scribe(withStringKey)
+
+    # Properties from variables
+    fixum name = &quot;Marcus&quot;
+    fixum age = 30
+    fixum person = { name: name, age: age }
+    scribe(person)
+
+    # Nested objects
+    fixum nested = { outer: { inner: 1 } }
+    scribe(nested)
+
+    # Spread operator
+    fixum base = { a: 1, b: 2 }
+    fixum extended = { sparge base, c: 3 }
+    scribe(extended)
+}
+</code></pre>
+<h3 id="finge">finge</h3>
+<pre><code class="language-faber"># Finge (variant construction) expressions
+# Creates discretio variant instances
+
+# Define discretio types
+discretio Status {
+    Active,
+    Inactive,
+    Pending
+}
+
+discretio Event {
+    Click { numerus x, numerus y },
+    Keypress { textus key },
+    Quit
+}
+
+discretio Result {
+    Success { textus message },
+    Failure { textus error }
+}
+
+incipit {
+    # Unit variants with explicit type
+    fixum Status s1 = finge Active qua Status
+    fixum Status s2 = finge Pending qua Status
+
+    # Payload variants with explicit type
+    fixum Event e1 = finge Click { x: 100, y: 200 } qua Event
+    fixum Event e2 = finge Keypress { key: &quot;Enter&quot; } qua Event
+    fixum Event e3 = finge Quit qua Event
+
+    # Result variants
+    fixum Result r1 = finge Success { message: &quot;Operation completed&quot; } qua Result
+    fixum Result r2 = finge Failure { error: &quot;Something went wrong&quot; } qua Result
+
+    scribe &quot;Finge expressions created&quot;
+}
+</code></pre>
+<h3 id="unary">unary</h3>
+<pre><code class="language-faber"># Unary operators: negation, logical not, and null/sign checks
+
+incipit {
+    # Numeric negation
+    fixum x = 5
+    fixum neg = -x
+    scribe neg  # -5
+
+    # Logical negation
+    fixum flag = verum
+    fixum notFlag = non flag
+    scribe notFlag  # falsum
+
+    # Positive/negative checks
+    fixum a = 10
+    fixum b = -3
+    scribe positivum a   # verum
+    scribe negativum a   # falsum
+    scribe positivum b   # falsum
+    scribe negativum b   # verum
+
+    # Null checks
+    fixum textus? maybe = nihil
+    scribe nulla maybe      # verum (is null)
+    scribe nonnulla maybe   # falsum (is not null)
+
+    fixum textus? present = &quot;salve&quot;
+    scribe nulla present    # falsum
+    scribe nonnulla present # verum
+}
+</code></pre>
+<h3 id="range">range</h3>
+<pre><code class="language-faber"># Range expressions
+# Demonstrates exclusive, inclusive, stepped, and descending ranges
+
+incipit {
+    # Exclusive range: 0..10 (0 to 9)
+    ex 0..5 pro i {
+        scribe i
+    }
+
+    # Inclusive range: 0 usque 10 (0 to 10)
+    ex 0 usque 5 pro i {
+        scribe i
+    }
+
+    # Explicit exclusive: 0 ante 10 (same as 0..10)
+    ex 0 ante 5 pro i {
+        scribe i
+    }
+
+    # With step: 0..10 per 2 (0, 2, 4, 6, 8)
+    ex 0..10 per 2 pro i {
+        scribe i
+    }
+
+    # Descending: 10..0 per -1 (10, 9, 8, ..., 1)
+    ex 10..0 per -1 pro i {
+        scribe i
+    }
+
+    # Descending with larger step
+    ex 10 usque 0 per -2 pro i {
+        scribe i
+    }
+}
+</code></pre>
+<h3 id="est">est</h3>
+<pre><code class="language-faber"># Type checking with est, boolean checking with verum/falsum
+#
+# est = &quot;is&quot; (type check, like instanceof)
+# verum x = &quot;x is true&quot; (strict boolean check)
+# falsum x = &quot;x is false&quot; (strict boolean check)
+
+incipit {
+    # Null checking with est
+    fixum numerus? maybeValue = nihil
+    fixum isNull = maybeValue est nihil
+    scribe isNull
+
+    # Boolean true check with verum prefix
+    fixum enabled = verum
+    fixum isTrue = verum enabled
+    scribe isTrue
+
+    # Boolean false check with falsum prefix
+    fixum disabled = falsum
+    fixum isFalse = falsum disabled
+    scribe isFalse
+
+    # Chained with logical operators
+    fixum textus? name = nihil
+    fixum needsDefault = name est nihil et verum enabled
+    scribe needsDefault
+
+    # Parenthesized for clarity
+    fixum bothNull = (maybeValue est nihil) et (name est nihil)
+    scribe bothNull
+}
+</code></pre>
+<h3 id="assignment">assignment</h3>
+<pre><code class="language-faber"># Assignment expressions
+# Simple and compound assignment operators
+
+incipit {
+    varia numerus x = 10
+
+    # Simple assignment
+    x = 20
+    scribe x  # 20
+
+    # Compound assignments
+    x += 5
+    scribe x  # 25
+
+    x -= 10
+    scribe x  # 15
+
+    x *= 2
+    scribe x  # 30
+
+    x /= 3
+    scribe x  # 10
+
+    # String concatenation
+    varia textus s = &quot;hello&quot;
+    s += &quot; world&quot;
+    scribe s  # hello world
+}
+</code></pre>
+<h2 id="fac">fac</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic fac (do) scope blocks
+#
+# fac { &lt;body&gt; }
+
+incipit {
+    # Simple scope block
+    fac {
+        fixum x = 42
+        scribe x
+    }
+
+    # Scope block isolates variables
+    fac {
+        fixum message = &quot;Hello from fac block&quot;
+        scribe message
+    }
+
+    # Multiple statements in scope
+    fac {
+        fixum a = 10
+        fixum b = 20
+        fixum sum = a + b
+        scribe sum
+    }
+}
+</code></pre>
+<h3 id="with-cape">with-cape</h3>
+<pre><code class="language-faber"># Fac blocks with error handling (cape)
+#
+# fac { &lt;body&gt; } cape &lt;error&gt; { &lt;handler&gt; }
+
+incipit {
+    # Basic fac with cape for error handling
+    fac {
+        fixum x = 10
+        scribe x
+    } cape err {
+        scribe err
+    }
+
+    # Scope block that might throw
+    fac {
+        fixum value = 42
+        scribe value
+    } cape error {
+        scribe &quot;Error occurred:&quot;
+        scribe error
+    }
+}
+</code></pre>
+<h2 id="functio">functio</h2>
+<h3 id="optional">optional</h3>
+<pre><code class="language-faber"># Optional parameters with si and vel
+#
+# si marks a parameter as optional
+# vel provides a default value
+#
+# GRAMMAR:
+#   parameter := (preposition)? &#39;si&#39;? type name (&#39;ut&#39; alias)? (&#39;vel&#39; default)?
+
+# Optional parameter without default (receives nihil if omitted)
+functio greet(textus nomen, si textus titulus) -&gt; textus {
+    si titulus est nihil {
+        redde scriptum(&quot;Salve, §!&quot;, nomen)
+    }
+    redde scriptum(&quot;Salve, § §!&quot;, titulus, nomen)
+}
+
+# Optional parameter with default value
+functio paginate(si numerus pagina vel 1, si numerus per_pagina vel 10) -&gt; textus {
+    redde scriptum(&quot;Page § with § items&quot;, pagina, per_pagina)
+}
+
+# Preposition with optional: de si (borrowed, optional without default)
+functio analyze(textus source, de si numerus depth) -&gt; numerus {
+    si depth est nihil {
+        redde 3
+    }
+    redde depth
+}
+
+# Mixed required and optional parameters
+functio createUser(textus nomen, si numerus aetas vel 0, si bivalens activus vel verum) -&gt; textus {
+    redde scriptum(&quot;User: §, age: §, active: §&quot;, nomen, aetas, activus)
+}
+
+incipit {
+    # Without optional arg
+    scribe greet(&quot;Marcus&quot;)
+
+    # With optional arg
+    scribe greet(&quot;Marcus&quot;, &quot;Dominus&quot;)
+
+    # Default pagination
+    scribe paginate()
+
+    # Custom pagination
+    scribe paginate(2, 25)
+
+    # Partial defaults
+    scribe paginate(5)
+
+    # With borrowed optional
+    scribe analyze(&quot;code&quot;)
+    scribe analyze(&quot;code&quot;, 5)
+
+    # Mixed args
+    scribe createUser(&quot;Julia&quot;)
+    scribe createUser(&quot;Julia&quot;, 25)
+    scribe createUser(&quot;Julia&quot;, 25, falsum)
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic function declarations
+#
+# functio &lt;name&gt;() { &lt;body&gt; }
+# functio &lt;name&gt;() -&gt; &lt;type&gt; { &lt;body&gt; }
+
+# Function with no parameters, no return
+functio saluta() {
+    scribe &quot;Salve, Mundus!&quot;
+}
+
+# Function with parameter, no explicit return type
+functio dic(verbum) {
+    scribe verbum
+}
+
+# Function with return type
+functio nomen() -&gt; textus {
+    redde &quot;Marcus Aurelius&quot;
+}
+
+# Function with parameter and return type
+functio duplica(n) -&gt; numerus {
+    redde n * 2
+}
+
+incipit {
+    saluta()
+
+    dic(&quot;Bonum diem!&quot;)
+
+    fixum rex = nomen()
+    scribe rex
+
+    scribe duplica(21)
+}
+</code></pre>
+<h3 id="recursion">recursion</h3>
+<pre><code class="language-faber"># Recursive functions
+#
+# Functions that call themselves with a base case
+
+# Factorial: n! = n * (n-1)!
+functio factorial(numerus n) -&gt; numerus {
+    si n &lt;= 1 {
+        redde 1
+    }
+    redde n * factorial(n - 1)
+}
+
+# Fibonacci: fib(n) = fib(n-1) + fib(n-2)
+functio fibonacci(numerus n) -&gt; numerus {
+    si n &lt;= 0 {
+        redde 0
+    }
+    si n == 1 {
+        redde 1
+    }
+    redde fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+# Sum from 1 to n
+functio summatio(numerus n) -&gt; numerus {
+    si n &lt;= 0 {
+        redde 0
+    }
+    redde n + summatio(n - 1)
+}
+
+incipit {
+    # Factorial examples
+    scribe factorial(0)
+    scribe factorial(1)
+    scribe factorial(5)
+    scribe factorial(10)
+
+    # Fibonacci examples
+    scribe fibonacci(0)
+    scribe fibonacci(1)
+    scribe fibonacci(10)
+
+    # Sum examples
+    scribe summatio(5)
+    scribe summatio(10)
+}
+</code></pre>
+<h3 id="typed">typed</h3>
+<pre><code class="language-faber"># Functions with typed parameters
+#
+# functio &lt;name&gt;(type param, type param) -&gt; type { &lt;body&gt; }
+
+# Single typed parameter
+functio quadratum(numerus n) -&gt; numerus {
+    redde n * n
+}
+
+# Multiple typed parameters
+functio adde(numerus a, numerus b) -&gt; numerus {
+    redde a + b
+}
+
+# Mixed types
+functio describe(textus nomen, numerus aetas) -&gt; textus {
+    redde scriptum(&quot;§ habet § annos&quot;, nomen, aetas)
+}
+
+# Boolean parameter and return
+functio nega(bivalens valor) -&gt; bivalens {
+    redde non valor
+}
+
+# Function with fractus (float) type
+functio media(fractus a, fractus b) -&gt; fractus {
+    redde (a + b) / 2.0
+}
+
+incipit {
+    scribe quadratum(7)
+
+    scribe adde(100, 200)
+
+    scribe describe(&quot;Julius&quot;, 30)
+
+    scribe nega(verum)
+    scribe nega(falsum)
+
+    scribe media(3.0, 7.0)
+}
+</code></pre>
+<h2 id="genus">genus</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic genus (class/struct) with properties
+#
+# genus &lt;Name&gt; {
+#     &lt;type&gt; &lt;property&gt;
+#     &lt;type&gt; &lt;property&gt;: &lt;default&gt;
+# }
+
+genus Punctum {
+    numerus x
+    numerus y
+}
+
+genus Persona {
+    textus nomen
+    numerus aetas: 0
+    bivalens activus: verum
+}
+
+incipit {
+    # Instantiate with all required fields
+    fixum p = novum Punctum {
+        x: 10,
+        y: 20
+    }
+
+    scribe p.x
+    scribe p.y
+
+    # Instantiate with required + optional defaults
+    fixum marcus = novum Persona {
+        nomen: &quot;Marcus&quot;
+    }
+
+    scribe marcus.nomen
+    scribe marcus.aetas
+    scribe marcus.activus
+
+    # Override defaults
+    fixum julia = novum Persona {
+        nomen: &quot;Julia&quot;,
+        aetas: 25,
+        activus: falsum
+    }
+
+    scribe julia.nomen
+    scribe julia.aetas
+    scribe julia.activus
+}
+</code></pre>
+<h3 id="methods">methods</h3>
+<pre><code class="language-faber"># Genus with methods using ego (self) reference
+#
+# genus &lt;Name&gt; {
+#     &lt;type&gt; &lt;property&gt;
+#     functio &lt;method&gt;() -&gt; &lt;type&gt; { ... ego.&lt;property&gt; ... }
+# }
+
+genus Rectangle {
+    numerus width: 1
+    numerus height: 1
+
+    functio area() -&gt; numerus {
+        redde ego.width * ego.height
+    }
+
+    functio perimeter() -&gt; numerus {
+        redde 2 * (ego.width + ego.height)
+    }
+
+    functio isSquare() -&gt; bivalens {
+        redde ego.width == ego.height
+    }
+}
+
+genus Counter {
+    numerus count: 0
+
+    functio increment() {
+        ego.count = ego.count + 1
+    }
+
+    functio getValue() -&gt; numerus {
+        redde ego.count
+    }
+}
+
+incipit {
+    # Methods that return values
+    fixum rect = novum Rectangle {
+        width: 10,
+        height: 5
+    }
+
+    scribe rect.area()
+    scribe rect.perimeter()
+    scribe rect.isSquare()
+
+    # Methods that modify state
+    varia counter = novum Counter
+
+    scribe counter.getValue()
+
+    counter.increment()
+    scribe counter.getValue()
+
+    counter.increment()
+    counter.increment()
+    scribe counter.getValue()
+}
+</code></pre>
+<h3 id="creo">creo</h3>
+<pre><code class="language-faber"># Genus with constructor hook (creo)
+#
+# genus &lt;Name&gt; {
+#     &lt;type&gt; &lt;property&gt;: &lt;default&gt;
+#     functio creo() { ... }
+# }
+#
+# creo() runs after defaults and overrides are merged.
+# Use for validation, clamping, or derived initialization.
+
+genus BoundedValue {
+    numerus value: 0
+
+    functio creo() {
+        si ego.value &lt; 0 {
+            ego.value = 0
+        }
+
+        si ego.value &gt; 100 {
+            ego.value = 100
+        }
+    }
+
+    functio getValue() -&gt; numerus {
+        redde ego.value
+    }
+}
+
+genus Circle {
+    numerus radius: 1
+    numerus diameter: 0
+    numerus area: 0
+
+    functio creo() {
+        ego.diameter = ego.radius * 2
+        ego.area = 3.14159 * ego.radius * ego.radius
+    }
+}
+
+incipit {
+    # Validation in creo
+    fixum normal = novum BoundedValue {
+        value: 50
+    }
+
+    scribe normal.getValue()
+
+    fixum clamped = novum BoundedValue {
+        value: 200
+    }
+
+    scribe clamped.getValue()
+
+    # Derived initialization in creo
+    fixum c = novum Circle {
+        radius: 5
+    }
+
+    scribe c.radius
+    scribe c.diameter
+    scribe c.area
+}
+</code></pre>
+<h2 id="iace">iace</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic iace (throw) statement
+#
+# iace &lt;expression&gt;
+
+incipit {
+    # Throw with string literal
+    tempta {
+        iace &quot;Something went wrong&quot;
+    }
+    cape err {
+        scribe &quot;Caught:&quot;, err
+    }
+
+    # Throw with formatted message
+    fixum code = 404
+    tempta {
+        iace scriptum(&quot;Error code: §&quot;, code)
+    }
+    cape err {
+        scribe &quot;Caught:&quot;, err
+    }
+
+    # Throw from conditional
+    fixum value = -5
+    tempta {
+        si value &lt; 0 {
+            iace &quot;Value must be non-negative&quot;
+        }
+        scribe &quot;Value is valid&quot;
+    }
+    cape err {
+        scribe &quot;Validation failed:&quot;, err
+    }
+}
+</code></pre>
+<h2 id="importa">importa</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Import statements (importa)
+#
+# ex &lt;source&gt; importa &lt;names&gt;           - named imports
+# ex &lt;source&gt; importa &lt;name&gt; ut &lt;alias&gt; - import with alias
+# ex &lt;source&gt; importa * ut &lt;alias&gt;      - wildcard import with alias
+
+# Named imports
+ex &quot;lodash&quot; importa map
+ex &quot;@hono/hono&quot; importa Hono, Context
+ex &quot;utils&quot; importa helper ut h
+ex &quot;db&quot; importa connect, query ut q, close
+
+# Wildcard import (alias required for TypeScript target)
+ex &quot;@std/crypto&quot; importa * ut crypto
+
+# Multiple imports from different sources
+ex &quot;@oak/oak&quot; importa Application
+ex &quot;std/path&quot; importa join, resolve
+
+# Relative imports
+ex &quot;./utils&quot; importa helper
+ex &quot;../shared/utils&quot; importa formatter
+
+# Many named items
+ex &quot;helpers&quot; importa a, b, c, d, e, f
+
+# Multiple aliases
+ex &quot;mod&quot; importa foo ut f, bar ut b, baz ut z
+
+incipit {
+    scribe &quot;Import statements are declarations at module scope&quot;
+}
+</code></pre>
+<h2 id="importa-local">importa-local</h2>
+<h3 id="main">main</h3>
+<pre><code class="language-faber"># Example of local file imports
+
+# Import specific symbols from local file
+ex &quot;./utils&quot; importa greet, ANSWER, Point
+
+# Use the imported function
+fixum textus message = greet(&quot;World&quot;)
+scribe message
+
+# Use the imported constant
+scribe scriptum(&quot;The answer is §&quot;, ANSWER)
+
+# Use the imported genus
+fixum Point p = { x: 10, y: 20 } qua Point
+</code></pre>
+<h3 id="utils">utils</h3>
+<pre><code class="language-faber"># Example utility module for local import testing
+
+# A simple greeting function
+functio greet(textus name) -&gt; textus {
+    redde scriptum(&quot;Hello, §!&quot;, name)
+}
+
+# A constant value
+fixum numerus ANSWER = 42
+
+# A genus for testing
+genus Point {
+    numerus x
+    numerus y
+}
+</code></pre>
+<h2 id="in">in</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic in (mutation block) statements
+#
+# in &lt;object&gt; { &lt;assignments&gt; }
+
+incipit {
+    # Create an object with initial values
+    varia user = { nomen: &quot;&quot;, aetas: 0, active: falsum }
+
+    # Mutation block: set multiple fields at once
+    in user {
+        nomen = &quot;Marcus&quot;
+        aetas = 42
+        active = verum
+    }
+
+    scribe user.nomen
+    scribe user.aetas
+
+    # Single-line mutation block
+    varia stats = { count: 0 }
+    in stats { count = 1 }
+
+    scribe stats.count
+
+    # Mutation with computed values
+    fixum width = 10
+    fixum height = 20
+    varia rect = { w: 0, h: 0, area: 0 }
+
+    in rect {
+        w = width
+        h = height
+        area = width * height
+    }
+
+    scribe rect.area
+
+    # Nested object mutation
+    varia config = { server: { host: &quot;&quot;, port: 0 } }
+
+    in config.server {
+        host = &quot;localhost&quot;
+        port = 8080
+    }
+
+    scribe config.server.host
+}
+</code></pre>
+<h2 id="incipit">incipit</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic incipit (entry point)
+#
+# incipit { &lt;body&gt; }
+
+incipit {
+    scribe &quot;Salve, Munde!&quot;
+}
+</code></pre>
+<h3 id="with-functions">with-functions</h3>
+<pre><code class="language-faber"># Entry point with functions defined outside
+#
+# Functions declared outside incipit become module-level declarations.
+# The incipit block calls them as needed.
+
+functio greet(textus name) -&gt; textus {
+    redde scriptum(&quot;Salve, §!&quot;, name)
+}
+
+functio add(numerus a, numerus b) -&gt; numerus {
+    redde a + b
+}
+
+incipit {
+    scribe greet(&quot;Marcus&quot;)
+    scribe &quot;Sum:&quot;, add(3, 5)
+}
+</code></pre>
+<h2 id="ordo">ordo</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic ordo (enum) declaration
+#
+# ordo Name { Member1, Member2, Member3 }
+# ordo Name { Member1 = value1, Member2 = value2 }
+
+ordo Color { rubrum, viridis, caeruleum }
+
+ordo Status { pendens = 0, actum = 1, finitum = 2 }
+
+incipit {
+    # Using enum values
+    fixum color = Color.rubrum
+    fixum status = Status.actum
+
+    # Switch on enum
+    elige color {
+        casu Color.rubrum {
+            scribe &quot;Red&quot;
+        }
+        casu Color.viridis {
+            scribe &quot;Green&quot;
+        }
+        casu Color.caeruleum {
+            scribe &quot;Blue&quot;
+        }
+    }
+
+    # Switch on enum with numeric values
+    elige status {
+        casu Status.pendens {
+            scribe &quot;Pending&quot;
+        }
+        casu Status.actum {
+            scribe &quot;Active&quot;
+        }
+        casu Status.finitum {
+            scribe &quot;Finished&quot;
+        }
+    }
+}
+</code></pre>
+<h2 id="pactum">pactum</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic pactum (interface) definition and implementation
+#
+# pactum &lt;Name&gt; { functio &lt;method&gt;(&lt;params&gt;) -&gt; &lt;returnType&gt; }
+# genus &lt;Name&gt; implet &lt;Pactum&gt; { &lt;implementation&gt; }
+
+pactum Drawable {
+    functio draw() -&gt; vacuum
+}
+
+genus Circle implet Drawable {
+    numerus radius: 10
+
+    functio draw() {
+        scribe scriptum(&quot;Drawing circle with radius §&quot;, ego.radius)
+    }
+}
+
+genus Square implet Drawable {
+    numerus side: 5
+
+    functio draw() {
+        scribe scriptum(&quot;Drawing square with side §&quot;, ego.side)
+    }
+}
+
+incipit {
+    fixum circle = novum Circle { radius: 25 }
+    fixum square = novum Square { side: 15 }
+
+    circle.draw()
+    square.draw()
+}
+</code></pre>
+<h2 id="perge">perge</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Continue (perge) in loops
+#
+# perge skips to the next iteration of the innermost loop
+
+incipit ergo cura arena {
+    # Skip even numbers
+    varia i = 0
+
+    dum i &lt; 10 {
+        i = i + 1
+
+        si i % 2 == 0 {
+            perge
+        }
+
+        scribe i
+    }
+
+    # Continue in nested loop (affects inner only)
+    varia outer = 0
+
+    dum outer &lt; 3 {
+        varia inner = 0
+
+        dum inner &lt; 5 {
+            inner = inner + 1
+
+            si inner == 3 {
+                perge
+            }
+
+            scribe scriptum(&quot;outer=§, inner=§&quot;, outer, inner)
+        }
+
+        outer = outer + 1
+    }
+}
+</code></pre>
+<h2 id="proba">proba</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic proba (test) statements
+#
+# proba &quot;name&quot; { body }
+
+# Simple test with single assertion
+proba &quot;one plus one equals two&quot; {
+    adfirma 1 + 1 == 2
+}
+
+# Test with multiple assertions
+proba &quot;validates arithmetic&quot; {
+    adfirma 2 + 2 == 4
+    adfirma 10 - 3 == 7
+    adfirma 3 * 4 == 12
+}
+
+# Test with variables
+proba &quot;string concatenation works&quot; {
+    fixum greeting = &quot;hello&quot;
+    fixum name = &quot;world&quot;
+    fixum result = scriptum(&quot;§ §&quot;, greeting, name)
+    adfirma result == &quot;hello world&quot;
+}
+
+# Test boolean conditions
+proba &quot;comparison operators&quot; {
+    fixum x = 10
+    adfirma x &gt; 5
+    adfirma x &lt; 20
+    adfirma x &gt;= 10
+    adfirma x &lt;= 10
+}
+
+# Test with negation
+proba &quot;negated assertions&quot; {
+    adfirma non falsum
+    adfirma non (1 == 2)
+}
+
+# Test with complex logical assertion
+proba &quot;complex assertion&quot; {
+    fixum x = 50
+    adfirma x &gt; 0 et x &lt; 100
+}
+</code></pre>
+<h3 id="modifiers">modifiers</h3>
+<pre><code class="language-faber"># Test modifiers: omitte (skip) and futurum (todo)
+#
+# proba omitte &quot;reason&quot; &quot;name&quot; { body }
+# proba futurum &quot;reason&quot; &quot;name&quot; { body }
+
+# Skip a test with reason and name
+proba omitte &quot;blocked by issue #42&quot; &quot;database connection test&quot; {
+    adfirma falsum
+}
+
+# Todo test with reason and name
+proba futurum &quot;needs async support&quot; &quot;async file operations&quot; {
+    adfirma verum
+}
+
+# Regular test alongside modifiers
+proba &quot;this test runs normally&quot; {
+    adfirma 1 + 1 == 2
+}
+
+# Multiple skipped tests
+proba omitte &quot;flaky on CI&quot; &quot;network timeout test&quot; {
+    adfirma falsum
+}
+
+proba omitte &quot;platform specific&quot; &quot;windows-only behavior&quot; {
+    adfirma falsum
+}
+
+# Multiple todo tests
+proba futurum &quot;needs new API&quot; &quot;graphql mutations&quot; {
+    adfirma verum
+}
+
+proba futurum &quot;depends on feature X&quot; &quot;caching layer&quot; {
+    adfirma verum
+}
+
+# Skipped test with complex body
+proba omitte &quot;external service down&quot; &quot;api integration&quot; {
+    fixum status = 500
+    adfirma status == 200
+}
+
+# Todo test with setup
+proba futurum &quot;needs database fixtures&quot; &quot;user creation flow&quot; {
+    varia userId = 0
+    adfirma userId &gt; 0
+}
+</code></pre>
+<h2 id="redde">redde</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic redde (return) statements
+#
+# redde &lt;expression&gt;   -- return a value
+# redde                -- void return
+
+functio add(numerus a, numerus b) fit numerus {
+    redde a + b
+}
+
+functio greet(textus name) fit textus {
+    redde &quot;Hello, &quot; + name
+}
+
+functio getFortyTwo() fit numerus {
+    redde 42
+}
+
+functio doNothing() fit vacuum {
+    redde
+}
+
+functio earlyExit(numerus x) fit numerus {
+    si x &lt; 0 {
+        redde 0
+    }
+    redde x * 2
+}
+
+incipit {
+    scribe add(10, 20)
+    scribe greet(&quot;World&quot;)
+    scribe getFortyTwo()
+    doNothing()
+    scribe earlyExit(-5)
+    scribe earlyExit(10)
+}
+</code></pre>
+<h2 id="rumpe">rumpe</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Break (rumpe) in loops
+#
+# rumpe exits the innermost loop immediately
+
+incipit ergo cura arena {
+    # Break when reaching 5
+    varia i = 0
+
+    dum i &lt; 10 {
+        si i == 5 {
+            rumpe
+        }
+        scribe i
+        i = i + 1
+    }
+
+    # Break in nested loop (exits inner only)
+    varia outer = 0
+
+    dum outer &lt; 3 {
+        varia inner = 0
+
+        dum inner &lt; 10 {
+            si inner == 2 {
+                rumpe
+            }
+            scribe scriptum(&quot;outer=§, inner=§&quot;, outer, inner)
+            inner = inner + 1
+        }
+
+        outer = outer + 1
+    }
+}
+</code></pre>
+<h2 id="scribe">scribe</h2>
+<h3 id="levels">levels</h3>
+<pre><code class="language-faber"># Output statements with different log levels
+#
+# scribe &lt;expr&gt;  -&gt; console.log (standard output)
+# vide &lt;expr&gt;    -&gt; console.debug (debug output)
+# mone &lt;expr&gt;    -&gt; console.warn (warning output)
+
+incipit {
+    fixum status = &quot;running&quot;
+    fixum count = 42
+
+    # Standard output (console.log)
+    scribe &quot;Application started&quot;
+    scribe &quot;Status:&quot;, status
+
+    # Debug output (console.debug)
+    vide &quot;Debug: entering main loop&quot;
+    vide &quot;Debug: count =&quot;, count
+
+    # Warning output (console.warn)
+    mone &quot;Warning: deprecated feature used&quot;
+    mone &quot;Warning: count exceeds threshold:&quot;, count
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic scribe (print) statements
+#
+# scribe &lt;expr&gt;
+# scribe &lt;expr&gt;, &lt;expr&gt;, ...
+
+incipit {
+    # Simple string output
+    scribe &quot;Hello, world!&quot;
+
+    # Variable output
+    fixum nomen = &quot;Marcus&quot;
+    scribe nomen
+
+    # Multiple arguments
+    fixum aetas = 30
+    scribe &quot;Name:&quot;, nomen
+    scribe &quot;Age:&quot;, aetas
+
+    # Expressions
+    fixum x = 10
+    fixum y = 20
+    scribe &quot;Sum:&quot;, x + y
+
+    # Multiple values in one statement
+    scribe &quot;Coordinates:&quot;, x, y
+}
+</code></pre>
+<h2 id="si">si</h2>
+<h3 id="nested">nested</h3>
+<pre><code class="language-faber"># Nested si conditionals
+
+incipit {
+    fixum isLoggedIn = verum
+    fixum hasPermission = verum
+
+    si isLoggedIn {
+        si hasPermission {
+            scribe &quot;Access granted&quot;
+        }
+        secus {
+            scribe &quot;Permission denied&quot;
+        }
+    }
+    secus {
+        scribe &quot;Please log in&quot;
+    }
+}
+</code></pre>
+<h3 id="with-reddit">with-reddit</h3>
+<pre><code class="language-faber"># Si with reddit syntax
+#
+# &#39;reddit&#39; is syntactic sugar for &#39;ergo redde&#39; - a one-liner return.
+# Use it for early returns and guard clauses.
+#
+# si &lt;condition&gt; reddit &lt;expression&gt;
+# sin &lt;condition&gt; reddit &lt;expression&gt;
+# secus reddit &lt;expression&gt;
+
+# Early return pattern
+functio classify(numerus x) -&gt; textus {
+    si x &lt; 0 reddit &quot;negative&quot;
+    si x == 0 reddit &quot;zero&quot;
+    redde &quot;positive&quot;
+}
+
+# Guard clause pattern
+functio divide(numerus a, numerus b) -&gt; numerus? {
+    si b == 0 reddit nihil
+    redde a / b
+}
+
+# Sin/secus chain with reddit
+functio grade(numerus score) -&gt; textus {
+    si score &gt;= 90 reddit &quot;A&quot;
+    sin score &gt;= 80 reddit &quot;B&quot;
+    sin score &gt;= 70 reddit &quot;C&quot;
+    sin score &gt;= 60 reddit &quot;D&quot;
+    secus reddit &quot;F&quot;
+}
+
+# Find first in list (early return from loop)
+functio findFirst(lista&lt;numerus&gt; items, numerus target) -&gt; numerus? {
+    ex items pro item {
+        si item == target reddit item
+    }
+    redde nihil
+}
+
+# Check if key exists (early return from iteration)
+functio hasKey(tabula&lt;textus, numerus&gt; obj, textus key) -&gt; bivalens {
+    de obj pro k {
+        si k == key reddit verum
+    }
+    redde falsum
+}
+
+incipit {
+    scribe classify(-5)   # negative
+    scribe classify(0)    # zero
+    scribe classify(10)   # positive
+
+    scribe divide(10, 2)  # 5
+    scribe divide(10, 0)  # nihil
+
+    scribe grade(95)  # A
+    scribe grade(85)  # B
+    scribe grade(55)  # F
+
+    fixum nums = [1, 2, 3, 4, 5]
+    scribe findFirst(nums, 3)  # 3
+    scribe findFirst(nums, 9)  # nihil
+}
+</code></pre>
+<h3 id="si-aliter">si-aliter</h3>
+<pre><code class="language-faber"># si-secus (if-else) conditionals
+#
+# si &lt;condition&gt; { &lt;body&gt; } secus { &lt;body&gt; }
+# si &lt;cond1&gt; { } sin &lt;cond2&gt; { } secus { }
+
+incipit {
+    # Simple if-else
+    fixum score = 85
+
+    si score &gt;= 90 {
+        scribe &quot;Grade: A&quot;
+    }
+    secus {
+        scribe &quot;Grade: B or lower&quot;
+    }
+
+    # Multiple statements in branches
+    fixum temperature = 22
+
+    si temperature &gt; 30 {
+        scribe &quot;Hot&quot;
+        scribe &quot;Stay hydrated&quot;
+    }
+    secus {
+        scribe &quot;Comfortable&quot;
+        scribe &quot;Enjoy the weather&quot;
+    }
+
+    # If-else-if chain
+    fixum grade = 75
+
+    si grade &gt;= 90 {
+        scribe &quot;A - Excellent&quot;
+    }
+    sin grade &gt;= 80 {
+        scribe &quot;B - Good&quot;
+    }
+    sin grade &gt;= 70 {
+        scribe &quot;C - Satisfactory&quot;
+    }
+    sin grade &gt;= 60 {
+        scribe &quot;D - Passing&quot;
+    }
+    secus {
+        scribe &quot;F - Failing&quot;
+    }
+}
+</code></pre>
+<h3 id="ergo">ergo</h3>
+<pre><code class="language-faber"># One-liner conditionals with ergo
+#
+# si &lt;condition&gt; ergo &lt;statement&gt;
+# si &lt;condition&gt; ergo &lt;statement&gt; secus &lt;statement&gt;
+#
+# ergo = &quot;therefore, thus&quot; (logical consequence)
+
+incipit {
+    fixum x = 10
+
+    # Simple one-liner
+    si x &gt; 5 ergo scribe &quot;x is big&quot;
+
+    # One-liner if-else
+    fixum age = 25
+    si age &gt;= 18 ergo scribe &quot;Adult&quot; secus scribe &quot;Minor&quot;
+
+    # Multiple conditions
+    fixum score = 85
+    si score &gt;= 90 ergo scribe &quot;A&quot; secus scribe &quot;Not A&quot;
+
+    # Simple validation
+    fixum valid = verum
+    si valid ergo scribe &quot;OK&quot;
+}
+</code></pre>
+<h3 id="si-sin-secus">si-sin-secus</h3>
+<pre><code class="language-faber"># si-sin-secus (poetic if-else-if chain)
+#
+# Poetic alternative to si/sin/secus:
+#   si   = if
+#   sin  = else if (&quot;but if&quot;)
+#   secus = else (&quot;otherwise&quot;)
+
+incipit {
+    fixum hour = 14
+
+    si hour &lt; 6 {
+        scribe &quot;Late night&quot;
+    }
+    sin hour &lt; 12 {
+        scribe &quot;Morning&quot;
+    }
+    sin hour &lt; 18 {
+        scribe &quot;Afternoon&quot;
+    }
+    sin hour &lt; 22 {
+        scribe &quot;Evening&quot;
+    }
+    secus {
+        scribe &quot;Night&quot;
+    }
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic si (if) conditionals
+#
+# si &lt;condition&gt; { &lt;body&gt; }
+
+incipit {
+    fixum x = 10
+
+    si x &gt; 5 {
+        scribe &quot;x is greater than 5&quot;
+    }
+
+    si x &gt; 20 {
+        scribe &quot;x is greater than 20&quot;
+    }
+
+    # Multiple statements in block
+    fixum age = 25
+
+    si age &gt;= 18 {
+        scribe &quot;Adult&quot;
+        scribe &quot;Can vote&quot;
+    }
+}
+</code></pre>
+<h3 id="est">est</h3>
+<pre><code class="language-faber"># Type and boolean checking
+#
+# est = &quot;is&quot; (type check)
+# verum x = strict boolean true check
+# falsum x = strict boolean false check
+
+functio checkValue(x) -&gt; textus {
+    si x est nihil { redde &quot;is null&quot; }
+    si verum x { redde &quot;is true&quot; }
+    si falsum x { redde &quot;is false&quot; }
+    redde &quot;is something else&quot;
+}
+
+incipit {
+    scribe checkValue(nihil)
+    scribe checkValue(verum)
+    scribe checkValue(42)
+}
+</code></pre>
+<h2 id="statements">statements</h2>
+<h3 id="si">si</h3>
+<pre><code class="language-faber"># ============================================================================
+# Si Statement (Conditionals)
+# ============================================================================
+#
+# The &#39;si&#39; statement provides conditional execution. It supports block form,
+# one-liner form (ergo), else-if chains (sin), else clauses (secus), and
+# inline error handling (cape).
+#
+# ----------------------------------------------------------------------------
+# GRAMMAR: Si Statement
+# ----------------------------------------------------------------------------
+#
+#   ifStmt := &#39;si&#39; expression (blockStmt | &#39;ergo&#39; statement)
+#             (&#39;cape&#39; IDENTIFIER blockStmt)?
+#             (elseClause | &#39;sin&#39; ifStmt)?
+#
+#   elseClause := &#39;secus&#39; (ifStmt | blockStmt | statement)
+#
+# Components:
+#   - &#39;si&#39; expression { }        — basic conditional
+#   - &#39;si&#39; expression ergo stmt  — one-liner form
+#   - &#39;cape&#39; err { }             — inline error handling
+#   - &#39;sin&#39; expression { }       — else-if branch
+#   - &#39;secus&#39; { }                — else branch
+#
+# ----------------------------------------------------------------------------
+# KEYWORDS
+# ----------------------------------------------------------------------------
+#
+#   si     = &quot;if&quot; (Latin: &quot;if&quot;)
+#   sin    = &quot;else if&quot; (Latin: &quot;but if&quot;, contraction of &#39;si&#39; + &#39;non&#39;)
+#   secus  = &quot;else&quot; (Latin: &quot;otherwise&quot;)
+#   ergo   = &quot;therefore&quot; (Latin: enables one-liner consequent)
+#   cape   = &quot;catch&quot; (Latin: &quot;seize&quot;, inline error handling)
+#
+# ----------------------------------------------------------------------------
+# READING THE CHAIN
+# ----------------------------------------------------------------------------
+#
+# A complete conditional chain reads as classical Latin:
+#
+#   si x &gt; 0 { positive() }      — &quot;if x &gt; 0...&quot;
+#   sin x &lt; 0 { negative() }     — &quot;but if x &lt; 0...&quot;
+#   secus { zero() }             — &quot;otherwise...&quot;
+#
+# &#39;sin&#39; is a contraction of &#39;si non&#39; (if not / but if), common in Latin prose.
+#
+# ============================================================================
+# LLM GUIDANCE
+# ============================================================================
+#
+# ALWAYS use Latin keywords:
+#   - &#39;si&#39; not &#39;if&#39;
+#   - &#39;sin&#39; not &#39;else if&#39; or &#39;elif&#39;
+#   - &#39;secus&#39; not &#39;else&#39;
+#   - &#39;ergo&#39; for one-liners (no equivalent in JS/TS)
+#
+# NEVER use JavaScript/TypeScript patterns:
+#   - &#39;if&#39; does not exist
+#   - &#39;else if&#39; does not exist — use &#39;sin&#39;
+#   - &#39;else&#39; does not exist — use &#39;secus&#39;
+#   - Parentheses around condition are NOT required: si x &gt; 5 { }
+#
+# PREFER:
+#   - Block form for multiple statements
+#   - &#39;ergo&#39; form for simple one-liners
+#   - &#39;sin&#39; chains over nested &#39;si&#39; when checking related conditions
+#
+# ============================================================================
+# EXAMPLES
+# ============================================================================
+
+incipit {
+    # ==========================================================================
+    # SECTION: Basic Conditionals
+    # ==========================================================================
+    #
+    # si &lt;condition&gt; { &lt;body&gt; }
+    #
+    # The simplest form. Condition is evaluated, block executes if truthy.
+    # No parentheses required around the condition.
+
+    fixum x = 10
+
+    si x &gt; 5 {
+        scribe &quot;x is greater than 5&quot;
+    }
+
+    si x &gt; 20 {
+        scribe &quot;x is greater than 20&quot;
+    }
+
+    # Multiple statements in block
+    fixum age = 25
+
+    si age &gt;= 18 {
+        scribe &quot;Adult&quot;
+        scribe &quot;Can vote&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: One-liner Form (ergo)
+    # ==========================================================================
+    #
+    # si &lt;condition&gt; ergo &lt;statement&gt;
+    # si &lt;condition&gt; ergo &lt;statement&gt; secus &lt;statement&gt;
+    #
+    # &#39;ergo&#39; (therefore) enables concise single-statement consequents.
+    # Can be combined with &#39;secus&#39; for one-liner if-else.
+
+    # Simple one-liner
+    si x &gt; 5 ergo scribe &quot;x is big&quot;
+
+    # One-liner if-else
+    si age &gt;= 18 ergo scribe &quot;Adult&quot; secus scribe &quot;Minor&quot;
+
+    # Multiple conditions with ergo
+    fixum score = 85
+    si score &gt;= 90 ergo scribe &quot;A&quot; secus scribe &quot;Not A&quot;
+
+    # Simple validation
+    fixum valid = verum
+    si valid ergo scribe &quot;OK&quot;
+
+    # ==========================================================================
+    # SECTION: If-Else (secus)
+    # ==========================================================================
+    #
+    # si &lt;condition&gt; { } secus { }
+    #
+    # &#39;secus&#39; (otherwise) provides the else branch.
+
+    si score &gt;= 90 {
+        scribe &quot;Grade: A&quot;
+    }
+    secus {
+        scribe &quot;Grade: B or lower&quot;
+    }
+
+    # Multiple statements in branches
+    fixum temperature = 22
+
+    si temperature &gt; 30 {
+        scribe &quot;Hot&quot;
+        scribe &quot;Stay hydrated&quot;
+    }
+    secus {
+        scribe &quot;Comfortable&quot;
+        scribe &quot;Enjoy the weather&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: If-Elseif-Else Chain (sin/secus)
+    # ==========================================================================
+    #
+    # si &lt;cond1&gt; { } sin &lt;cond2&gt; { } sin &lt;cond3&gt; { } secus { }
+    #
+    # &#39;sin&#39; (but if) chains multiple conditions. More readable than nested si.
+    # Evaluates top-to-bottom, first match wins.
+
+    fixum grade = 75
+
+    si grade &gt;= 90 {
+        scribe &quot;A - Excellent&quot;
+    }
+    sin grade &gt;= 80 {
+        scribe &quot;B - Good&quot;
+    }
+    sin grade &gt;= 70 {
+        scribe &quot;C - Satisfactory&quot;
+    }
+    sin grade &gt;= 60 {
+        scribe &quot;D - Passing&quot;
+    }
+    secus {
+        scribe &quot;F - Failing&quot;
+    }
+
+    # Time of day example
+    fixum hour = 14
+
+    si hour &lt; 6 {
+        scribe &quot;Late night&quot;
+    }
+    sin hour &lt; 12 {
+        scribe &quot;Morning&quot;
+    }
+    sin hour &lt; 18 {
+        scribe &quot;Afternoon&quot;
+    }
+    sin hour &lt; 22 {
+        scribe &quot;Evening&quot;
+    }
+    secus {
+        scribe &quot;Night&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: Type Checking (est / non est)
+    # ==========================================================================
+    #
+    # &#39;est&#39; performs type/identity checks (like === for primitives).
+    # &#39;non est&#39; negates the check.
+    # For null checks, prefer &#39;nihil x&#39; or &#39;nonnihil x&#39; unary forms.
+
+    fixum textus? maybeName = nihil
+
+    si maybeName est nihil {
+        scribe &quot;Name is null&quot;
+    }
+
+    fixum active = verum
+
+    si verum active {
+        scribe &quot;Is exactly true&quot;
+    }
+
+    si non falsum active {
+        scribe &quot;Is not false&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: Nested Conditionals
+    # ==========================================================================
+    #
+    # Conditionals can be nested, but prefer sin chains when checking
+    # related conditions to reduce nesting depth.
+
+    fixum isLoggedIn = verum
+    fixum hasPermission = verum
+
+    si isLoggedIn {
+        si hasPermission {
+            scribe &quot;Access granted&quot;
+        }
+        secus {
+            scribe &quot;Permission denied&quot;
+        }
+    }
+    secus {
+        scribe &quot;Please log in&quot;
+    }
+
+    # Better: use &#39;et&#39; to combine conditions when possible
+    si isLoggedIn et hasPermission {
+        scribe &quot;Access granted (combined check)&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: Inline Error Handling (cape)
+    # ==========================================================================
+    #
+    # si &lt;condition&gt; { } cape &lt;error&gt; { }
+    #
+    # &#39;cape&#39; (catch/seize) provides inline error handling for expressions
+    # that might throw. The error is bound to the identifier.
+
+    si riskyOperation() {
+        scribe &quot;Operation succeeded&quot;
+    }
+    cape err {
+        scribe &quot;Operation failed&quot;
+        scribe err
+    }
+
+    # Combined with else
+    si anotherRiskyOp() {
+        scribe &quot;Success&quot;
+    }
+    cape err {
+        scribe &quot;Caught error&quot;
+    }
+    secus {
+        scribe &quot;Condition was falsy but no error&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: Unary Condition Operators
+    # ==========================================================================
+    #
+    # Faber provides Latin unary operators for common condition patterns.
+    # These read more naturally and reduce symbolic noise.
+    #
+    # GRAMMAR (from unary):
+    #   unary := (&#39;non&#39; | &#39;nulla&#39; | &#39;nonnulla&#39; | &#39;nihil&#39; | &#39;nonnihil&#39;
+    #           | &#39;negativum&#39; | &#39;positivum&#39; | ...) unary
+    #
+    # Operators:
+    #   non x       — logical not (replaces !x)
+    #   nihil x     — x is null (replaces x === null)
+    #   nonnihil x  — x is not null (replaces x !== null)
+    #   nulla x     — x is empty/none (empty string, empty list, 0)
+    #   nonnulla x  — x is non-empty/some
+    #   negativum x — x &lt; 0
+    #   positivum x — x &gt; 0
+
+    fixum value = 42
+
+    # Numeric sign checks
+    si positivum value {
+        scribe &quot;value is positive&quot;
+    }
+
+    si negativum value {
+        scribe &quot;value is negative&quot;
+    }
+
+    # Compare: si value &gt; 0 vs si positivum value
+    # The unary form is more declarative
+
+    # Null checks
+    fixum textus? optionalName = nihil
+
+    si nihil optionalName {
+        scribe &quot;name is null&quot;
+    }
+
+    si nonnihil optionalName {
+        scribe &quot;name has a value&quot;
+    }
+
+    # Empty checks
+    fixum items = [] qua lista&lt;numerus&gt;
+
+    si nulla items {
+        scribe &quot;list is empty&quot;
+    }
+
+    fixum message = &quot;hello&quot;
+
+    si nonnulla message {
+        scribe &quot;message is not empty&quot;
+    }
+
+    # ==========================================================================
+    # SECTION: Logical Operators in Conditions
+    # ==========================================================================
+    #
+    # Use &#39;et&#39; (and), &#39;aut&#39; (or), &#39;non&#39; (not) in conditions.
+    # PREFER Latin operators over &amp;&amp; || !
+
+    fixum a = verum
+    fixum b = falsum
+
+    si a et b {
+        scribe &quot;Both true&quot;
+    }
+
+    si a aut b {
+        scribe &quot;At least one true&quot;
+    }
+
+    si non b {
+        scribe &quot;b is false&quot;
+    }
+
+    # Combined conditions
+    fixum userAge = 25
+    fixum hasID = verum
+
+    si userAge &gt;= 21 et hasID {
+        scribe &quot;Can purchase alcohol&quot;
+    }
+
+    si userAge &lt; 13 aut userAge &gt;= 65 {
+        scribe &quot;Eligible for discount&quot;
+    }
+}
+
+# ==========================================================================
+# Helper functions for error handling examples
+# ==========================================================================
+
+functio riskyOperation() -&gt; bivalens {
+    redde verum
+}
+
+functio anotherRiskyOp() -&gt; bivalens {
+    redde falsum
+}
+</code></pre>
+<h2 id="tempta-cape">tempta-cape</h2>
+<h3 id="in-functio">in-functio</h3>
+<pre><code class="language-faber"># Error handling in functions
+#
+# Functions can use tempta-cape to handle errors internally
+# or let errors propagate to callers
+
+functio safeDivide(numerus a, numerus b) -&gt; numerus {
+    tempta {
+        si b == 0 {
+            iace &quot;Division by zero&quot;
+        }
+        redde a / b
+    }
+    cape err {
+        scribe &quot;Error:&quot;, err
+        redde 0
+    }
+}
+
+functio validatePositive(numerus value) -&gt; numerus {
+    tempta {
+        si value &lt; 0 {
+            iace &quot;Negative value not allowed&quot;
+        }
+        redde value * 2
+    }
+    cape err {
+        scribe &quot;Validation failed:&quot;, err
+        redde 0
+    }
+}
+
+functio processWithCleanup(textus name) {
+    varia resource = &quot;pending&quot;
+
+    tempta {
+        scribe &quot;Opening:&quot;, name
+        resource = name
+
+        si name == &quot;&quot; {
+            iace &quot;Empty name&quot;
+        }
+
+        scribe &quot;Processing:&quot;, resource
+    }
+    cape err {
+        scribe &quot;Error:&quot;, err
+    }
+    demum {
+        scribe &quot;Closing:&quot;, resource
+    }
+}
+
+functio withReturnInDemum() -&gt; textus {
+    tempta {
+        scribe &quot;Starting operation&quot;
+        redde &quot;success&quot;
+    }
+    cape err {
+        redde &quot;error&quot;
+    }
+    demum {
+        scribe &quot;Demum runs before return&quot;
+    }
+}
+
+incipit {
+    scribe &quot;Safe divide 10/2:&quot;, safeDivide(10, 2)
+    scribe &quot;Safe divide 10/0:&quot;, safeDivide(10, 0)
+
+    scribe &quot;Validate 5:&quot;, validatePositive(5)
+    scribe &quot;Validate -3:&quot;, validatePositive(-3)
+
+    processWithCleanup(&quot;data.txt&quot;)
+    processWithCleanup(&quot;&quot;)
+
+    scribe &quot;Result:&quot;, withReturnInDemum()
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic tempta-cape (try-catch) with iace (throw)
+#
+# tempta { &lt;body&gt; }
+# cape &lt;errorName&gt; { &lt;handler&gt; }
+# iace &lt;expression&gt;
+
+incipit {
+    # Basic try-catch
+    tempta {
+        scribe &quot;Attempting operation...&quot;
+        iace &quot;Something went wrong&quot;
+        scribe &quot;This line never runs&quot;
+    }
+    cape err {
+        scribe &quot;Caught error:&quot;, err
+    }
+
+    # tempta-cape-demum (try-catch-finally)
+    tempta {
+        scribe &quot;Opening resource...&quot;
+        iace &quot;Failed to open&quot;
+    }
+    cape err {
+        scribe &quot;Error occurred:&quot;, err
+    }
+    demum {
+        scribe &quot;Cleanup: always runs&quot;
+    }
+
+    # demum without cape
+    tempta {
+        scribe &quot;Operation succeeds&quot;
+    }
+    demum {
+        scribe &quot;Cleanup runs anyway&quot;
+    }
+
+    # Nested tempta blocks
+    tempta {
+        scribe &quot;Outer try&quot;
+
+        tempta {
+            scribe &quot;Inner try&quot;
+            iace &quot;Inner error&quot;
+        }
+        cape inner {
+            scribe &quot;Caught inner:&quot;, inner
+        }
+
+        scribe &quot;Continues after inner catch&quot;
+    }
+    cape outer {
+        scribe &quot;Outer catch:&quot;, outer
+    }
+}
+</code></pre>
+<h2 id="typealias">typealias</h2>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic type aliases
+#
+# typus Name = Type
+
+# Primitive type aliases
+typus UserId = numerus
+typus Username = textus
+typus IsActive = bivalens
+
+# Generic type aliases
+typus Names = lista&lt;textus&gt;
+typus Scores = lista&lt;numerus&gt;
+typus UserCache = tabula&lt;textus, numerus&gt;
+
+# Nullable type alias
+typus OptionalName = textus?
+
+incipit {
+    # Using the type aliases
+    fixum UserId id = 42
+    fixum Username name = &quot;Marcus&quot;
+    fixum IsActive active = verum
+
+    scribe id
+    scribe name
+    scribe active
+
+    # Using generic type aliases
+    fixum Names friends = [&quot;Gaius&quot;, &quot;Lucius&quot;, &quot;Titus&quot;]
+    scribe friends
+
+    fixum Scores points = [100, 95, 87]
+    scribe points
+}
+</code></pre>
+<h2 id="varia">varia</h2>
+<h3 id="destructure">destructure</h3>
+<pre><code class="language-faber"># Array destructuring declarations
+#
+# fixum [a, b, c] = array   -- destructure into immutable bindings
+# varia [x, y, z] = array   -- destructure into mutable bindings
+
+incipit {
+    # Basic array destructuring
+    fixum numbers = [1, 2, 3]
+    fixum [a, b, c] = numbers
+
+    scribe a
+    scribe b
+    scribe c
+
+    # Destructure inline array
+    fixum [first, second, third] = [10, 20, 30]
+
+    scribe first
+    scribe second
+    scribe third
+
+    # Mutable destructuring
+    fixum coords = [100, 200]
+    varia [x, y] = coords
+
+    scribe x
+    scribe y
+
+    x = x + 50
+    y = y + 50
+
+    scribe x
+    scribe y
+
+    # Destructure with fewer variables (partial)
+    fixum values = [1, 2, 3, 4, 5]
+    fixum [one, two] = values
+
+    scribe one
+    scribe two
+
+    # Nested arrays
+    fixum matrix = [[1, 2], [3, 4]]
+    fixum [row1, row2] = matrix
+
+    scribe row1
+    scribe row2
+}
+</code></pre>
+<h3 id="basic">basic</h3>
+<pre><code class="language-faber"># Basic varia and fixum declarations
+#
+# varia &lt;name&gt; = &lt;expr&gt;   -- mutable binding
+# fixum &lt;name&gt; = &lt;expr&gt;   -- immutable binding
+
+incipit {
+    # Mutable variable with varia
+    varia counter = 0
+    scribe counter
+
+    counter = 1
+    scribe counter
+
+    counter = counter + 10
+    scribe counter
+
+    # Immutable variable with fixum
+    fixum greeting = &quot;Salve, Mundus!&quot;
+    scribe greeting
+
+    # Multiple declarations
+    fixum x = 10
+    fixum y = 20
+    fixum sum = x + y
+    scribe sum
+
+    # Mutable reassignment
+    varia message = &quot;Hello&quot;
+    message = &quot;Goodbye&quot;
+    scribe message
+}
+</code></pre>
+<h3 id="typed">typed</h3>
+<pre><code class="language-faber"># Typed variable declarations
+#
+# varia &lt;type&gt; &lt;name&gt; = &lt;expr&gt;   -- typed mutable
+# fixum &lt;type&gt; &lt;name&gt; = &lt;expr&gt;   -- typed immutable
+
+incipit {
+    # Typed immutable declarations
+    fixum numerus age = 30
+    fixum textus name = &quot;Marcus&quot;
+    fixum bivalens active = verum
+
+    scribe age
+    scribe name
+    scribe active
+
+    # Typed mutable declarations
+    varia numerus count = 0
+    varia textus status = &quot;pending&quot;
+    varia bivalens running = falsum
+
+    scribe count
+    scribe status
+    scribe running
+
+    # Reassign mutable typed variables
+    count = 100
+    status = &quot;complete&quot;
+    running = verum
+
+    scribe count
+    scribe status
+    scribe running
+
+    # Fractional numbers
+    fixum fractus pi = 3.14159
+    varia fractus rate = 0.05
+
+    scribe pi
+    scribe rate
+
+    rate = 0.10
+    scribe rate
+}
+</code></pre>
+
+    </main>
+  </div>
+</body>
+</html>

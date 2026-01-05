@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Errores - Faber</title>
+  <meta name="description" content="Faber programming language documentation">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html" class="active">Errores</a>
+  <div class="nav-subheadings">
+    <a href="/docs/errores.html#exempla">Exempla</a>
+    <a href="/docs/errores.html#syntax">Syntax</a>
+    <a href="/docs/errores.html#fac-block-statement" class="nav-h3">Fac Block Statement</a>
+  </div>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="errores">Errores</h1>
+<p>Error handling: try/catch, throw, panic, and scoped error handling.</p>
+<h2 id="exempla">Exempla</h2>
+<ul>
+<li><code>exempla/errores/</code></li>
+</ul>
+<hr>
+<h2 id="syntax">Syntax</h2>
+<h3 id="fac-block-statement">Fac Block Statement</h3>
+<pre><code class="language-ebnf">facBlockStmt := &#39;fac&#39; blockStmt (&#39;cape&#39; IDENTIFIER blockStmt)? (&#39;dum&#39; expression)?
+</code></pre>
+<blockquote>
+<p>&#39;fac&#39; (do/make) creates an explicit scope boundary for grouping
+statements with optional error handling via &#39;cape&#39; (catch).
+When followed by &#39;dum&#39;, creates a do-while loop where the body
+executes at least once before the condition is checked.
+Useful for:</p>
+<ul>
+<li>Scoped variable declarations</li>
+<li>Grouping related operations with shared error handling</li>
+<li>Creating IIFE-like constructs</li>
+<li>Do-while loops (body executes first, then condition checked)</li>
+</ul>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">fac { fixum x = computeValue() }
+fac { riskyOperation() } cape e { scribe e }
+fac { process() } dum hasMore()
+fac { process() } cape e { log(e) } dum hasMore()
+</code></pre>
+<hr>
+<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundamenta - Faber</title>
+  <meta name="description" content="Faber programming language documentation">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html" class="active">Fundamenta</a>
+  <div class="nav-subheadings">
+    <a href="/docs/fundamenta.html#exempla">Exempla</a>
+    <a href="/docs/fundamenta.html#syntax">Syntax</a>
+    <a href="/docs/fundamenta.html#object-pattern" class="nav-h3">Object Pattern</a>
+  </div>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="fundamenta">Fundamenta</h1>
+<p>Basic language elements: variables, constants, literals, and output.</p>
+<h2 id="exempla">Exempla</h2>
+<ul>
+<li><code>exempla/fundamenta/</code></li>
+</ul>
+<hr>
+<h2 id="syntax">Syntax</h2>
+<h3 id="object-pattern">Object Pattern</h3>
+<pre><code class="language-ebnf">objectPattern := &#39;{&#39; patternProperty (&#39;,&#39; patternProperty)* &#39;}&#39;
+patternProperty := &#39;ceteri&#39;? IDENTIFIER (&#39;:&#39; IDENTIFIER)?
+</code></pre>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">{ nomen, aetas }              // extract nomen and aetas
+{ nomen: localName, aetas }   // rename nomen to localName
+{ nomen, ceteri rest }        // extract nomen, collect rest
+
+T SUPPORTED (will produce parser errors):
+{ ...rest }    // JS spread syntax
+{ *rest }      // Python unpack syntax
+{ **rest }     // Python kwargs syntax
+</code></pre>
+<hr>
+<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+
+    </main>
+  </div>
+</body>
+</html>

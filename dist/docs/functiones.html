@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functiones - Faber</title>
+  <meta name="description" content="Faber programming language documentation">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html" class="active">Functiones</a>
+  <div class="nav-subheadings">
+    <a href="/docs/functiones.html#exempla">Exempla</a>
+    <a href="/docs/functiones.html#syntax">Syntax</a>
+    <a href="/docs/functiones.html#parameter-list" class="nav-h3">Parameter List</a>
+    <a href="/docs/functiones.html#parameter" class="nav-h3">Parameter</a>
+  </div>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="functiones">Functiones</h1>
+<p>Function declarations: basic functions, typed parameters, async, generators, and lambdas.</p>
+<h2 id="exempla">Exempla</h2>
+<ul>
+<li><code>exempla/functiones/</code></li>
+</ul>
+<hr>
+<h2 id="syntax">Syntax</h2>
+<h3 id="parameter-list">Parameter List</h3>
+<pre><code class="language-ebnf">paramList := (parameter (&#39;,&#39; parameter)*)?
+</code></pre>
+<h3 id="parameter">Parameter</h3>
+<pre><code class="language-ebnf">parameter := (&#39;de&#39; | &#39;in&#39; | &#39;ex&#39;)? &#39;si&#39;? &#39;ceteri&#39;? (typeAnnotation IDENTIFIER | IDENTIFIER) (&#39;ut&#39; IDENTIFIER)? (&#39;vel&#39; expression)?
+</code></pre>
+<blockquote>
+<p>Type-first syntax: &quot;textus name&quot; or &quot;de textus source&quot;
+Prepositional prefixes indicate semantic roles:
+de = from/concerning (borrowed, read-only),
+in = in/into (mutable borrow),
+ex = from/out of (source)</p>
+<p>OPTIONAL PARAMETERS:
+&#39;si&#39; marks a parameter as optional. Without &#39;vel&#39;, type becomes ignotum<T>.
+With &#39;vel&#39;, parameter has a default value and type stays T.
+Order: preposition, then si, then ceteri, then type, then name.</p>
+</blockquote>
+<hr>
+<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+
+    </main>
+  </div>
+</body>
+</html>

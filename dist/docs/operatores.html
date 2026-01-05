@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operatores - Faber</title>
+  <meta name="description" content="Faber programming language documentation">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html" class="active">Operatores</a>
+  <div class="nav-subheadings">
+    <a href="/docs/operatores.html#exempla">Exempla</a>
+    <a href="/docs/operatores.html#syntax">Syntax</a>
+    <a href="/docs/operatores.html#assignment" class="nav-h3">Assignment</a>
+    <a href="/docs/operatores.html#ternary" class="nav-h3">Ternary</a>
+    <a href="/docs/operatores.html#or" class="nav-h3">Or</a>
+    <a href="/docs/operatores.html#and" class="nav-h3">And</a>
+    <a href="/docs/operatores.html#equality" class="nav-h3">Equality</a>
+    <a href="/docs/operatores.html#comparison" class="nav-h3">Comparison</a>
+    <a href="/docs/operatores.html#range" class="nav-h3">Range</a>
+    <a href="/docs/operatores.html#additive" class="nav-h3">Additive</a>
+    <a href="/docs/operatores.html#multiplicative" class="nav-h3">Multiplicative</a>
+    <a href="/docs/operatores.html#unary" class="nav-h3">Unary</a>
+  </div>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <h1 id="operatores">Operatores</h1>
+<p>Operators: arithmetic, logical, comparison, ternary, nullish coalescing, and ranges.</p>
+<h2 id="exempla">Exempla</h2>
+<ul>
+<li><code>exempla/operatores/</code></li>
+</ul>
+<hr>
+<h2 id="syntax">Syntax</h2>
+<h3 id="assignment">Assignment</h3>
+<pre><code class="language-ebnf">assignment := ternary ((&#39;=&#39; | &#39;+=&#39; | &#39;-=&#39; | &#39;*=&#39; | &#39;/=&#39; | &#39;&amp;=&#39; | &#39;|=&#39;) assignment)?
+</code></pre>
+<h3 id="ternary">Ternary</h3>
+<pre><code class="language-ebnf">ternary := or ((&#39;?&#39; expression &#39;:&#39; | &#39;sic&#39; expression &#39;secus&#39;) ternary)?
+</code></pre>
+<blockquote>
+<p>Supports both symbolic (? :) and Latin (sic secus) syntax.
+The two forms cannot be mixed: use either ? : or sic secus.</p>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">verum ? 1 : 0              // symbolic style
+verum sic 1 secus 0        // Latin style
+a ? b ? c : d : e          // nested (right-associative)
+</code></pre>
+<h3 id="or">Or</h3>
+<pre><code class="language-ebnf">or := and ((&#39;||&#39; | &#39;aut&#39;) and)* | and (&#39;vel&#39; and)*
+</code></pre>
+<blockquote>
+<p>Latin &#39;aut&#39; (or) for logical OR, &#39;vel&#39; (or) for nullish coalescing.
+Mixing aut/|| with vel without parentheses is a syntax error
+(same as JavaScript&#39;s ?? and || restriction).</p>
+</blockquote>
+<h3 id="and">And</h3>
+<pre><code class="language-ebnf">and := equality (&#39;&amp;&amp;&#39; equality | &#39;et&#39; equality)*
+</code></pre>
+<blockquote>
+<p>Latin &#39;et&#39; (and) supported alongside &#39;&amp;&amp;&#39;.</p>
+</blockquote>
+<h3 id="equality">Equality</h3>
+<pre><code class="language-ebnf">equality := comparison ((&#39;==&#39; | &#39;!=&#39; | &#39;===&#39; | &#39;!==&#39; | &#39;est&#39; | &#39;non&#39; &#39;est&#39;) comparison)*
+</code></pre>
+<blockquote>
+<p>&#39;est&#39; always means type check (instanceof/typeof).
+Use &#39;===&#39; or &#39;!==&#39; for value equality.
+Use &#39;nihil x&#39; or &#39;nonnihil x&#39; for null checks.</p>
+</blockquote>
+<h3 id="comparison">Comparison</h3>
+<pre><code class="language-ebnf">comparison := bitwiseOr ((&#39;&lt;&#39; | &#39;&gt;&#39; | &#39;&lt;=&#39; | &#39;&gt;=&#39; | &#39;intra&#39; | &#39;inter&#39;) bitwiseOr)*
+</code></pre>
+<blockquote>
+<p>intra/inter at comparison level - same precedence as relational operators</p>
+</blockquote>
+<h3 id="range">Range</h3>
+<pre><code class="language-ebnf">range := additive ((&#39;..&#39; | &#39;ante&#39; | &#39;usque&#39;) additive (&#39;per&#39; additive)?)?
+</code></pre>
+<blockquote>
+<p>Range expressions provide concise numeric iteration.
+Three operators with different end semantics:</p>
+<ul>
+<li>&#39;..&#39; and &#39;ante&#39;: exclusive (0..10 / 0 ante 10 = 0-9)</li>
+<li>&#39;usque&#39;: inclusive (0 usque 10 = 0-10)
+Optional step via &#39;per&#39; keyword.</li>
+</ul>
+</blockquote>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-fab">0..10           -&gt; RangeExpression(0, 10, inclusive=false)
+0 ante 10       -&gt; RangeExpression(0, 10, inclusive=false)
+0 usque 10      -&gt; RangeExpression(0, 10, inclusive=true)
+0..10 per 2     -&gt; RangeExpression(0, 10, 2, inclusive=false)
+</code></pre>
+<h3 id="additive">Additive</h3>
+<pre><code class="language-ebnf">additive := multiplicative ((&#39;+&#39; | &#39;-&#39;) multiplicative)*
+</code></pre>
+<h3 id="multiplicative">Multiplicative</h3>
+<pre><code class="language-ebnf">multiplicative := unary ((&#39;*&#39; | &#39;/&#39; | &#39;%&#39;) unary)*
+</code></pre>
+<h3 id="unary">Unary</h3>
+<pre><code class="language-ebnf">unary := (&#39;!&#39; | &#39;-&#39; | &#39;non&#39; | &#39;nulla&#39; | &#39;nonnulla&#39; | &#39;nihil&#39; | &#39;nonnihil&#39; | &#39;negativum&#39; | &#39;positivum&#39; | &#39;cede&#39; | &#39;novum&#39; | &#39;finge&#39;) unary | cast
+</code></pre>
+<blockquote>
+<p>Latin &#39;non&#39; (not), &#39;nulla&#39; (none/empty), &#39;nonnulla&#39; (some/non-empty),
+&#39;nihil&#39; (is null), &#39;nonnihil&#39; (is not null),
+&#39;negativum&#39; (&lt; 0), &#39;positivum&#39; (&gt; 0), &#39;cede&#39; (await), &#39;novum&#39; (new),
+&#39;finge&#39; (form variant).</p>
+</blockquote>
+<hr>
+<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+
+    </main>
+  </div>
+</body>
+</html>

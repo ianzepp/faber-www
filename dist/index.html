@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faber - Faber</title>
+  <meta name="description" content="A Latin programming language designed for LLM consumption">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
+  <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
+</head>
+<body>
+  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <div class="container">
+    <nav class="site-nav">
+  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">docs</div>
+  <a href="/docs/index.html">Documentation</a>
+  <a href="/docs/grammar.html">Grammar Reference</a>
+  <a href="/docs/examples.html">Examples</a>
+  <a href="/docs/examples-full.html">All Examples</a>
+  <a href="/docs/fundamenta.html">Fundamenta</a>
+  <a href="/docs/typi.html">Typi</a>
+  <a href="/docs/operatores.html">Operatores</a>
+  <a href="/docs/structurae.html">Structurae</a>
+  <a href="/docs/regimen.html">Regimen</a>
+  <a href="/docs/functiones.html">Functiones</a>
+  <a href="/docs/importa.html">Importa</a>
+  <a href="/docs/errores.html">Errores</a>
+  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Research</a>
+  <a href="/research/results.html">Research Results</a>
+</nav>
+    <main class="content">
+      <div class="hero">
+
+<h1 id="faber">Faber</h1>
+<p class="tagline">A Latin programming language designed for LLM consumption</p>
+
+</div>
+
+<div class="install-block">
+curl -fsSL https://faberlang.dev/install.sh | sh
+</div>
+
+<p>Faber is an intermediate language where LLMs generate human-readable Latin code that humans can review before compilation to TypeScript, Python, Zig, C++, or Rust.</p>
+<h2 id="why-latin">Why Latin?</h2>
+<ul>
+<li><strong>Regular morphology</strong> - Latin&#39;s grammatical structure maps cleanly to programming constructs</li>
+<li><strong>LLM priors</strong> - Models trained on multilingual corpora have exposure to Latin patterns</li>
+<li><strong>Human readable</strong> - Unlike machine-optimized IRs, Faber code is reviewable by humans</li>
+<li><strong>Compilation targets</strong> - One source language, multiple output targets</li>
+</ul>
+<h2 id="quick-example">Quick Example</h2>
+<pre><code class="language-faber">functio summa(a: numerus, b: numerus) -&gt; numerus {
+    redde a + b
+}
+
+fixum x = summa(3, 4)
+scribe(x)
+</code></pre>
+<p>Compiles to TypeScript:</p>
+<pre><code class="language-typescript">function summa(a: number, b: number): number {
+    return a + b
+}
+
+const x = summa(3, 4)
+console.log(x)
+</code></pre>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="/docs/grammar.html">Grammar Reference</a> - Complete language specification</li>
+<li><a href="/docs/examples.html">Examples</a> - Code examples by feature</li>
+<li><a href="/research/results.html">Research</a> - LLM learnability evaluation</li>
+<li><a href="https://github.com/ianzepp/faber-romanus">GitHub</a> - Source code</li>
+</ul>
+
+    </main>
+  </div>
+</body>
+</html>
