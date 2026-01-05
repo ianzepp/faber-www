@@ -230,7 +230,9 @@ function computeModelStats(
     })
   }
 
-  return stats.sort((a, b) => b.accuracy - a.accuracy)
+  return stats
+    .filter(s => s.total >= 100)
+    .sort((a, b) => b.accuracy - a.accuracy)
 }
 
 function computeTaskStats(results: GradedResult[]): TaskStats[] {

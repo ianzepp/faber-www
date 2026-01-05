@@ -1588,16 +1588,15 @@ Results from the faber-trials evaluation harness. Testing whether LLMs can learn
 |--------|-------|
 | Framework version | 1.1 |
 | Total evaluations | 12,696 |
-| Models tested | 17 |
+| Models tested | 15 |
 | Total cost | $11.50 |
-| Total tokens | 9.0M in / 520K out |
-| Total time | 18088.3s |
+| Total tokens | 8.9M in / 519K out |
+| Total time | 18008.0s |
 
 ## Model Comparison: Cost vs Speed vs Accuracy
 
 | Model | Accuracy | Avg Latency | Cost | Tokens |
 |-------|----------|-------------|------|--------|
-| mistral-7b | 100% | 1.0s | <$0.01 | 10K |
 | gpt-4o | 91% | 711ms | $1.53 | 576K |
 | qwen3-coder | 90% | 1.4s | $0.20 | 842K |
 | gpt-5 | 89% | 6.7s | $4.37 | 584K |
@@ -1611,7 +1610,6 @@ Results from the faber-trials evaluation harness. Testing whether LLMs can learn
 | mercury-coder | 73% | 589ms | $0.22 | 834K |
 | llama-3.1-8b | 73% | 875ms | $0.03 | 663K |
 | claude-3-haiku | 69% | 950ms | $0.21 | 728K |
-| llama-3.2-3b | 55% | 2.8s | <$0.01 | 26K |
 | llama-3.2-1b | 16% | 480ms | $0.03 | 749K |
 | qwen2.5-coder-32b | 0% | 7.2s | $0.02 | 253K |
 
@@ -1621,7 +1619,6 @@ Results from the faber-trials evaluation harness. Testing whether LLMs can learn
 
 | Model | Tests | A (Typechecks) | B (Runs) | C (Correct) |
 |-------|-------|----------------|----------|-------------|
-| mistral-7b | 18 | 100% | 100% | 100% |
 | gpt-4o | 840 | 95% | 95% | 91% |
 | qwen3-coder | 1008 | 95% | 95% | 90% |
 | gpt-5 | 672 | 93% | 93% | 89% |
@@ -1635,7 +1632,6 @@ Results from the faber-trials evaluation harness. Testing whether LLMs can learn
 | mercury-coder | 840 | 76% | 76% | 73% |
 | llama-3.1-8b | 1008 | 90% | 90% | 73% |
 | claude-3-haiku | 924 | 92% | 92% | 69% |
-| llama-3.2-3b | 22 | 64% | 64% | 55% |
 | llama-3.2-1b | 1077 | 44% | 44% | 16% |
 | qwen2.5-coder-32b | 282 | 29% | 29% | 0% |
 
