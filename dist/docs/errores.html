@@ -29,10 +29,25 @@
   <a href="/docs/errores.html" class="active">Errores</a>
   <div class="nav-subheadings">
     <a href="/docs/errores.html#exempla">Exempla</a>
-    <a href="/docs/errores.html#syntax">Syntax</a>
-    <a href="/docs/errores.html#fac-block-statement" class="nav-h3">Fac Block Statement</a>
+    <a href="/docs/errores.html#try-catch">Try/Catch</a>
+    <a href="/docs/errores.html#tempta-try" class="nav-h3">tempta (Try)</a>
+    <a href="/docs/errores.html#cape-catch" class="nav-h3">cape (Catch)</a>
+    <a href="/docs/errores.html#demum-finally" class="nav-h3">demum (Finally)</a>
+    <a href="/docs/errores.html#nested-try-blocks" class="nav-h3">Nested Try Blocks</a>
+    <a href="/docs/errores.html#throwing-errors">Throwing Errors</a>
+    <a href="/docs/errores.html#iace-throw" class="nav-h3">iace (Throw)</a>
+    <a href="/docs/errores.html#mori-panic" class="nav-h3">mori (Panic)</a>
+    <a href="/docs/errores.html#when-to-use-each" class="nav-h3">When to Use Each</a>
+    <a href="/docs/errores.html#scoped-error-handling">Scoped Error Handling</a>
+    <a href="/docs/errores.html#fac-blocks" class="nav-h3">fac Blocks</a>
+    <a href="/docs/errores.html#adding-cape-to-fac" class="nav-h3">Adding cape to fac</a>
+    <a href="/docs/errores.html#do-while-with-errors" class="nav-h3">Do-While with Errors</a>
+    <a href="/docs/errores.html#error-handling-in-functions">Error Handling in Functions</a>
+    <a href="/docs/errores.html#internal-handling" class="nav-h3">Internal Handling</a>
+    <a href="/docs/errores.html#propagation" class="nav-h3">Propagation</a>
+    <a href="/docs/errores.html#cleanup-with-resources" class="nav-h3">Cleanup with Resources</a>
+    <a href="/docs/errores.html#design-philosophy">Design Philosophy</a>
   </div>
-  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
   <div class="nav-section">research</div>
   <a href="/research/index.html">Research</a>
   <a href="/research/results.html">Research Results</a>
@@ -40,37 +55,234 @@
 </nav>
     <main class="content">
       <h1 id="errores">Errores</h1>
-<p>Error handling: try/catch, throw, panic, and scoped error handling.</p>
+<p>Error handling in Faber distinguishes between two fundamentally different kinds of failure: recoverable errors that calling code can handle, and fatal errors that indicate unrecoverable conditions. This distinction, common in systems languages like Rust and Zig, makes error handling intentions explicit in the code itself.</p>
+<p>The Latin vocabulary reinforces these semantics: <code>iace</code> (throw) signals an error you expect callers to catch, while <code>mori</code> (die) signals that the program cannot meaningfully continue.</p>
 <h2 id="exempla">Exempla</h2>
 <ul>
-<li><code>exempla/errores/</code></li>
+<li><code>exempla/statements/tempta-cape/</code> - try/catch patterns</li>
+<li><code>exempla/statements/fac/</code> - scoped blocks with error handling</li>
+<li><code>exempla/statements/iace/</code> - throw statements</li>
 </ul>
 <hr>
-<h2 id="syntax">Syntax</h2>
-<h3 id="fac-block-statement">Fac Block Statement</h3>
-<pre><code class="language-ebnf">facBlockStmt := &#39;fac&#39; blockStmt (&#39;cape&#39; IDENTIFIER blockStmt)? (&#39;dum&#39; expression)?
+<h2 id="try-catch">Try/Catch</h2>
+<p>The <code>tempta</code>/<code>cape</code>/<code>demum</code> trio corresponds directly to try/catch/finally in other languages. Use this structure when you want to attempt an operation that might fail and handle the failure gracefully.</p>
+<h3 id="tempta-try">tempta (Try)</h3>
+<p>From Latin <em>temptare</em> (to attempt, to try). The <code>tempta</code> block wraps code that might throw an error.</p>
+<pre><code class="language-fab">tempta {
+    scribe &quot;Attempting operation...&quot;
+    riskyOperation()
+    scribe &quot;Operation succeeded&quot;
+}
 </code></pre>
-<blockquote>
-<p>&#39;fac&#39; (do/make) creates an explicit scope boundary for grouping
-statements with optional error handling via &#39;cape&#39; (catch).
-When followed by &#39;dum&#39;, creates a do-while loop where the body
-executes at least once before the condition is checked.
-Useful for:</p>
+<p>Code after the block only executes if no error occurs. If an error is thrown and not caught, it propagates to the caller.</p>
+<h3 id="cape-catch">cape (Catch)</h3>
+<p>From Latin <em>capere</em> (to seize, to catch). The <code>cape</code> clause binds the thrown error to a variable and executes handler code.</p>
+<pre><code class="language-fab">tempta {
+    iace &quot;Something went wrong&quot;
+    scribe &quot;This line never runs&quot;
+}
+cape err {
+    scribe &quot;Caught error:&quot;, err
+}
+</code></pre>
+<p>The error variable (<code>err</code> in this example) is scoped to the <code>cape</code> block. You can name it whatever makes sense for your context.</p>
+<p>A <code>tempta</code> block can omit <code>cape</code> if you only need cleanup behavior via <code>demum</code>:</p>
+<pre><code class="language-fab">tempta {
+    scribe &quot;Operation succeeds&quot;
+}
+demum {
+    scribe &quot;Cleanup runs anyway&quot;
+}
+</code></pre>
+<h3 id="demum-finally">demum (Finally)</h3>
+<p>From Latin <em>demum</em> (at last, finally). The <code>demum</code> block contains cleanup code that runs regardless of whether an error occurred.</p>
+<pre><code class="language-fab">tempta {
+    scribe &quot;Opening resource...&quot;
+    iace &quot;Failed to open&quot;
+}
+cape err {
+    scribe &quot;Error occurred:&quot;, err
+}
+demum {
+    scribe &quot;Cleanup: always runs&quot;
+}
+</code></pre>
+<p>The <code>demum</code> block executes after both the <code>tempta</code> body and any <code>cape</code> handler, whether the operation succeeded or failed. This is essential for resource cleanup: closing files, releasing locks, resetting state.</p>
+<p>When a function returns from within a <code>tempta</code> block, the <code>demum</code> block still executes before the return completes:</p>
+<pre><code class="language-fab">functio withReturnInDemum() -&gt; textus {
+    tempta {
+        scribe &quot;Starting operation&quot;
+        redde &quot;success&quot;
+    }
+    cape err {
+        redde &quot;error&quot;
+    }
+    demum {
+        scribe &quot;Demum runs before return&quot;
+    }
+}
+</code></pre>
+<h3 id="nested-try-blocks">Nested Try Blocks</h3>
+<p><code>tempta</code> blocks can nest. Inner errors are caught by inner handlers; if uncaught, they propagate outward:</p>
+<pre><code class="language-fab">tempta {
+    scribe &quot;Outer try&quot;
+
+    tempta {
+        scribe &quot;Inner try&quot;
+        iace &quot;Inner error&quot;
+    }
+    cape inner {
+        scribe &quot;Caught inner:&quot;, inner
+    }
+
+    scribe &quot;Continues after inner catch&quot;
+}
+cape outer {
+    scribe &quot;Outer catch:&quot;, outer
+}
+</code></pre>
+<hr>
+<h2 id="throwing-errors">Throwing Errors</h2>
+<p>Faber provides two keywords for signaling errors, each with distinct semantics.</p>
+<h3 id="iace-throw">iace (Throw)</h3>
+<p>From Latin <em>iacere</em> (to throw, to hurl). Use <code>iace</code> for recoverable errors that calling code can catch and handle.</p>
+<pre><code class="language-fab">iace &quot;Something went wrong&quot;
+</code></pre>
+<p>The expression following <code>iace</code> becomes the error value. Typically this is a string message, but it can be any expression:</p>
+<pre><code class="language-fab">fixum code = 404
+iace scriptum(&quot;Error code: {}&quot;, code)
+</code></pre>
+<p><code>iace</code> throws from the current context and unwinds the stack until a <code>cape</code> clause catches it, or propagates to the program&#39;s top level.</p>
+<h3 id="mori-panic">mori (Panic)</h3>
+<p>From Latin <em>mori</em> (to die). Use <code>mori</code> for fatal errors that indicate the program cannot meaningfully continue.</p>
+<pre><code class="language-fab">mori &quot;Fatal: invariant violated&quot;
+</code></pre>
+<p>Unlike <code>iace</code>, a <code>mori</code> cannot be caught. It terminates execution immediately. Use this for conditions that represent bugs (violated invariants, impossible states) rather than expected failure modes.</p>
+<h3 id="when-to-use-each">When to Use Each</h3>
+<p><strong>Use <code>iace</code> when:</strong></p>
 <ul>
-<li>Scoped variable declarations</li>
-<li>Grouping related operations with shared error handling</li>
-<li>Creating IIFE-like constructs</li>
-<li>Do-while loops (body executes first, then condition checked)</li>
+<li>The caller might reasonably recover from this error</li>
+<li>The error represents an expected failure mode (file not found, invalid input, network timeout)</li>
+<li>You want to return error information to the caller</li>
+<li>The program state remains consistent after the error</li>
 </ul>
-</blockquote>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-fab">fac { fixum x = computeValue() }
-fac { riskyOperation() } cape e { scribe e }
-fac { process() } dum hasMore()
-fac { process() } cape e { log(e) } dum hasMore()
-</code></pre>
+<p><strong>Use <code>mori</code> when:</strong></p>
+<ul>
+<li>The error indicates a bug in the program</li>
+<li>An invariant has been violated that should never happen</li>
+<li>Continuing would corrupt data or produce undefined behavior</li>
+<li>The program has reached an impossible state</li>
+</ul>
+<p>The distinction follows Rust&#39;s philosophy: <code>iace</code> is for errors that are part of normal operation (like <code>Result::Err</code>), while <code>mori</code> is for programmer errors that indicate something has gone fundamentally wrong (like <code>panic!</code>).</p>
 <hr>
-<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+<h2 id="scoped-error-handling">Scoped Error Handling</h2>
+<p>Beyond the traditional try/catch pattern, Faber provides <code>fac</code> blocks for creating explicit scope boundaries with optional error handling.</p>
+<h3 id="fac-blocks">fac Blocks</h3>
+<p>From Latin <em>facere</em> (to do, to make). A <code>fac</code> block creates an explicit scope for grouping statements:</p>
+<pre><code class="language-fab">fac {
+    fixum x = 42
+    scribe x
+}
+# x is not accessible here
+</code></pre>
+<p>Variables declared inside a <code>fac</code> block are scoped to that block. This is useful for isolating temporary values or grouping related operations.</p>
+<h3 id="adding-cape-to-fac">Adding cape to fac</h3>
+<p>A <code>fac</code> block can include a <code>cape</code> clause to handle errors from the block&#39;s body:</p>
+<pre><code class="language-fab">fac {
+    fixum value = riskyComputation()
+    scribe value
+} cape err {
+    scribe &quot;Error occurred:&quot;, err
+}
+</code></pre>
+<p>This is more concise than <code>tempta</code>/<code>cape</code> when you also want scope isolation, and when you don&#39;t need a <code>demum</code> clause. The <code>fac</code> block with <code>cape</code> is equivalent to:</p>
+<pre><code class="language-fab">tempta {
+    fixum value = riskyComputation()
+    scribe value
+}
+cape err {
+    scribe &quot;Error occurred:&quot;, err
+}
+</code></pre>
+<h3 id="do-while-with-errors">Do-While with Errors</h3>
+<p>When a <code>fac</code> block is followed by <code>dum</code> (while), it creates a do-while loop where the body executes at least once before the condition is checked:</p>
+<pre><code class="language-fab">fac { process() } dum hasMore()
+</code></pre>
+<p>This pattern can combine with <code>cape</code> for do-while loops with error handling:</p>
+<pre><code class="language-fab">fac {
+    processNextItem()
+} cape err {
+    scribe &quot;Item failed:&quot;, err
+} dum hasMoreItems()
+</code></pre>
+<p>The loop continues as long as <code>hasMoreItems()</code> returns true. If an error occurs during <code>processNextItem()</code>, the <code>cape</code> clause handles it, and then the <code>dum</code> condition is checked.</p>
+<hr>
+<h2 id="error-handling-in-functions">Error Handling in Functions</h2>
+<p>Functions can handle errors internally or let them propagate to callers.</p>
+<h3 id="internal-handling">Internal Handling</h3>
+<p>When a function handles errors internally, it returns a fallback value:</p>
+<pre><code class="language-fab">functio safeDivide(numerus a, numerus b) -&gt; numerus {
+    tempta {
+        si b == 0 {
+            iace &quot;Division by zero&quot;
+        }
+        redde a / b
+    }
+    cape err {
+        scribe &quot;Error:&quot;, err
+        redde 0
+    }
+}
+</code></pre>
+<h3 id="propagation">Propagation</h3>
+<p>When a function doesn&#39;t catch an error, it propagates to the caller:</p>
+<pre><code class="language-fab">functio divide(numerus a, numerus b) -&gt; numerus {
+    si b == 0 {
+        iace &quot;Division by zero&quot;
+    }
+    redde a / b
+}
+
+# Caller must handle the error
+tempta {
+    fixum result = divide(10, 0)
+}
+cape err {
+    scribe &quot;Division failed:&quot;, err
+}
+</code></pre>
+<h3 id="cleanup-with-resources">Cleanup with Resources</h3>
+<p>The <code>tempta</code>/<code>cape</code>/<code>demum</code> pattern is particularly valuable when working with resources that need cleanup:</p>
+<pre><code class="language-fab">functio processWithCleanup(textus name) {
+    varia resource = &quot;pending&quot;
+
+    tempta {
+        scribe &quot;Opening:&quot;, name
+        resource = name
+
+        si name == &quot;&quot; {
+            iace &quot;Empty name&quot;
+        }
+
+        scribe &quot;Processing:&quot;, resource
+    }
+    cape err {
+        scribe &quot;Error:&quot;, err
+    }
+    demum {
+        scribe &quot;Closing:&quot;, resource
+    }
+}
+</code></pre>
+<p>The <code>demum</code> block ensures the resource is cleaned up whether the operation succeeds or fails.</p>
+<hr>
+<h2 id="design-philosophy">Design Philosophy</h2>
+<p>Faber&#39;s error handling reflects the &quot;compiler as tutor&quot; philosophy. The two-tier system (<code>iace</code> vs <code>mori</code>) makes the programmer&#39;s intent explicit:</p>
+<ul>
+<li>When you write <code>iace</code>, you&#39;re communicating: &quot;This might fail, and that&#39;s okay - handle it.&quot;</li>
+<li>When you write <code>mori</code>, you&#39;re communicating: &quot;This should never happen. If it does, we have a bug.&quot;</li>
+</ul>
+<p>This distinction helps both human readers and the compiler understand what kind of failure you&#39;re anticipating. The Latin vocabulary reinforces the semantics: throwing (iace) implies something catchable, while dying (mori) implies finality.</p>
 
     </main>
   </div>

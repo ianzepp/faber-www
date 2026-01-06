@@ -47,7 +47,7 @@ The grammar specification uses consistent patterns and explicit examples designe
 
 # Research
 
-Can LLMs learn Faber effectively? The [faber-trials](https://github.com/ianzepp/faber-trials) project evaluates this systematically.
+Can LLMs learn Faber effectively? The [faber-romanus](https://github.com/ianzepp/faber-romanus) project includes an evaluation harness to test this systematically.
 
 ## Hypothesis
 
@@ -72,7 +72,7 @@ See [Research Results](/research/results.html) for current data.
 - Reproducible: all prompts and responses logged
 - Transparent: raw JSONL data available
 
-Source: [faber-trials on GitHub](https://github.com/ianzepp/faber-trials)
+Source: [faber-romanus on GitHub](https://github.com/ianzepp/faber-romanus)
 
 
 ---
@@ -80,1499 +80,423 @@ Source: [faber-trials on GitHub](https://github.com/ianzepp/faber-trials)
 # Grammar Reference
 
 
-# Faber Romanus Grammar
+# Faber Language Specification
 
-Complete syntax reference for the Faber Romanus programming language.
-
-## For LLMs
-
-This document is designed for both human readers and LLM code generation. When generating Faber code:
-
-**Style preferences:**
-
-- PREFER Latin keywords over symbols: `et` over `&&`, `aut` over `||`, `non` over `!`
-- PREFER `pro x: expr` for short lambdas, `pro x redde expr` when clarity helps
-- ALWAYS use type-first syntax: `textus nomen` not `nomen: textus`
-- NEVER use JavaScript/TypeScript/Python syntax where Faber has its own
-
-**Common mistakes to avoid:**
-
-- `return` instead of `redde`
-- `const`/`let` instead of `fixum`/`varia`
-- `if`/`else` instead of `si`/`secus`
-- `for...of` instead of `ex...pro`
-- `string`/`number`/`boolean` instead of `textus`/`numerus`/`bivalens`
-- `null` instead of `nihil`
-- `this` instead of `ego`
-- `new` instead of `novum`
-- `await` instead of `cede`
-- `async function` instead of `futura functio`
+Formal grammar for the Faber programming language. This is the authoritative specification that both faber (TypeScript) and rivus (Faber) compilers implement.
 
 ---
 
-## Quick Reference
-
-### Types
-
-| Faber      | TypeScript   | Python     | Zig          | Meaning        |
-| ---------- | ------------ | ---------- | ------------ | -------------- |
-| `textus`   | `string`     | `str`      | `[]const u8` | text/string    |
-| `numerus`  | `number`     | `int`      | `i64`        | integer        |
-| `fractus`  | `number`     | `float`    | `f64`        | floating point |
-| `decimus`  | `number`     | `Decimal`  | -            | decimal        |
-| `magnus`   | `bigint`     | `int`      | `i128`       | big integer    |
-| `bivalens` | `boolean`    | `bool`     | `bool`       | boolean        |
-| `nihil`    | `null`       | `None`     | `null`       | null           |
-| `vacuum`   | `void`       | `None`     | `void`       | void           |
-| `numquam`  | `never`      | `NoReturn` | `noreturn`   | never          |
-| `ignotum`  | `unknown`    | `Any`      | -            | unknown        |
-| `octeti`   | `Uint8Array` | `bytes`    | `[]u8`       | bytes          |
-| `objectum` | `object`     | `object`   | -            | object         |
-
-### Generic Collections
-
-| Faber          | TypeScript    | Python         | Meaning        |
-| -------------- | ------------- | -------------- | -------------- |
-| `lista<T>`     | `T[]`         | `list[T]`      | array/list     |
-| `tabula<K,V>`  | `Map<K,V>`    | `dict[K,V]`    | map/dictionary |
-| `copia<T>`     | `Set<T>`      | `set[T]`       | set            |
-| `promissum<T>` | `Promise<T>`  | `Awaitable[T]` | promise/future |
-| `cursor<T>`    | `Iterator<T>` | `Iterator[T]`  | iterator       |
-| `unio<A,B>`    | `A \| B`      | `A \| B`       | union type     |
-
-### Literals
-
-| Faber    | Meaning   |
-| -------- | --------- |
-| `verum`  | true      |
-| `falsum` | false     |
-| `nihil`  | null      |
-| `ego`    | this/self |
-
-### Keywords by Category
-
-**Declarations:**
-
-- `fixum` — immutable binding (const)
-- `varia` — mutable binding (let)
-- `functio` — function
-- `genus` — class/struct
-- `pactum` — interface/protocol
-- `typus` — type alias
-- `ordo` — enum
-- `discretio` — tagged union
-
-**Control flow:**
-
-- `si` / `sin` / `secus` / `secus` — if / else-if / else
-- `dum` — while
-- `ex...pro` — for-of (iteration)
-- `de...pro` — for-in (keys)
-- `elige` — switch/match
-- `custodi` — guard clauses
-- `rumpe` — break
-- `perge` — continue
-
-**Functions:**
-
-- `redde` — return
-- `futura` — async modifier
-- `cede` — await
-- `cursor` — generator modifier
-- `pro x: expr` — lambda expression
-
-**Error handling:**
-
-- `tempta` — try
-- `cape` — catch
-- `demum` — finally
-- `iace` — throw (recoverable)
-- `mori` — panic (fatal)
-- `adfirma` — assert
-
-**Output:**
-
-- `scribe` — console.log
-- `vide` — console.debug
-- `mone` — console.warn
-
-**Operators:**
-
-- `et` — logical and (&&)
-- `aut` — logical or (||)
-- `non` — logical not (!)
-- `vel` — nullish coalescing (??)
-- `est` — instanceof/typeof check
-- `qua` — type cast (as)
-
-### Collection Methods (lista)
-
-Common array methods (see README for complete list):
-
-| Latin               | JavaScript          | Mutates? |
-| ------------------- | ------------------- | -------- |
-| `adde(x)`           | `push(x)`           | yes      |
-| `remove()`          | `pop()`             | yes      |
-| `primus`            | `[0]`               | no       |
-| `ultimus`           | `[arr.length-1]`    | no       |
-| `longitudo`         | `.length`           | no       |
-| `mappata(fn)`       | `.map(fn)`          | no       |
-| `filtrata(fn)`      | `.filter(fn)`       | no       |
-| `reducta(fn, init)` | `.reduce(fn, init)` | no       |
-| `inveni(fn)`        | `.find(fn)`         | no       |
-| `continet(x)`       | `.includes(x)`      | no       |
-| `coniunge(sep)`     | `.join(sep)`        | no       |
-
-### Collection Methods (tabula)
-
-| Latin        | JavaScript   | Mutates? |
-| ------------ | ------------ | -------- |
-| `pone(k, v)` | `.set(k, v)` | yes      |
-| `accipe(k)`  | `.get(k)`    | no       |
-| `habet(k)`   | `.has(k)`    | no       |
-| `dele(k)`    | `.delete(k)` | yes      |
-| `claves()`   | `.keys()`    | no       |
-| `valores()`  | `.values()`  | no       |
-
-### Collection Methods (copia)
-
-| Latin                | JavaScript       | Mutates? |
-| -------------------- | ---------------- | -------- |
-| `adde(x)`            | `.add(x)`        | yes      |
-| `habet(x)`           | `.has(x)`        | no       |
-| `dele(x)`            | `.delete(x)`     | yes      |
-| `unio(other)`        | set union        | no       |
-| `intersectio(other)` | set intersection | no       |
-
----
-
-## Complete Program Example
-
-```fab
-# A simple API handler demonstrating multiple features
-ex hono importa Hono, Context
-
-genus UserService {
-    @ privatum
-    textus baseUrl
-
-    functio creo(textus url) {
-        ego.baseUrl = url
-    }
-
-    futura functio fetch(numerus id) fiet User? {
-        fixum response = cede ego.client.get(`${ego.baseUrl}/users/${id}`)
-
-        custodi {
-            si response.status !== 200 { redde nihil }
-        }
-
-        redde response.json() qua User
-    }
-
-    futura functio fetchAll() fiet lista<User> {
-        fixum response = cede ego.client.get(`${ego.baseUrl}/users`)
-        fixum users = cede response.json() qua User[]
-
-        redde users.filtrata(pro u: u.active)
-    }
-}
-
-fixum app = novum Hono()
-
-app.get("/users/:id", futura functio(Context ctx) {
-    fixum id = ctx.param("id") qua numerus
-    fixum service = novum UserService("https:#api.example.com")
-    fixum user = cede service.fetch(id)
-
-    si user === nihil {
-        redde ctx.json({ error: "Not found" }, 404)
-    }
-
-    redde ctx.json(user)
-})
-```
-
----
-
-## Table of Contents
-
-- [Fundamenta](#fundamenta) — basic language elements
-- [Typi](#typi) — type system
-- [Operatores](#operatores) — operators
-- [Functiones](#functiones) — function declarations
-- [Regimen](#regimen) — control flow
-- [Errores](#errores) — error handling
-- [Structurae](#structurae) — data structures
-- [Importa](#importa) — module system
-
----
-
-<a id="fundamenta"></a>
-
-## Fundamenta
-
-Basic language elements: variables, constants, literals, and output.
-
-### Object Pattern
+## Program Structure
 
 ```ebnf
-objectPattern := '{' patternProperty (',' patternProperty)* '}'
-patternProperty := 'ceteri'? IDENTIFIER (':' IDENTIFIER)?
-```
-
-**Examples:**
-
-```fab
-{ nomen, aetas }              // extract nomen and aetas
-{ nomen: localName, aetas }   // rename nomen to localName
-{ nomen, ceteri rest }        // extract nomen, collect rest
-
-T SUPPORTED (will produce parser errors):
-{ ...rest }    // JS spread syntax
-{ *rest }      // Python unpack syntax
-{ **rest }     // Python kwargs syntax
+program     := statement*
+statement   := importDecl | varDecl | funcDecl | genusDecl | pactumDecl
+             | typeAliasDecl | enumDecl | discretioDecl
+             | ifStmt | whileStmt | exStmt | deStmt | inStmt
+             | eligeStmt | discerneStmt | guardStmt | curaStmt
+             | tryStmt | returnStmt | breakStmt | continueStmt | throwStmt
+             | assertStmt | outputStmt | adStmt | incipitStmt
+             | probandumDecl | probaStmt | blockStmt | exprStmt
+blockStmt   := '{' statement* '}'
 ```
 
 ---
 
-<a id="typi"></a>
+## Declarations
 
-## Typi
+### Variables
 
-Type system: type annotations, aliases, enums, nullable types, and collections.
+```ebnf
+varDecl      := ('fixum' | 'varia' | 'figendum' | 'variandum') typeAnnotation? IDENTIFIER ('=' expression)?
+arrayDestruct := ('fixum' | 'varia') arrayPattern '=' expression
+objectDestruct := ('fixum' | 'varia') objectPattern '=' expression
+```
 
-### Type Alias Declaration
+- `fixum` = const, `varia` = let
+- `figendum`/`variandum` = const/let with await
+
+### Functions
+
+```ebnf
+funcDecl     := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause? blockStmt
+paramList    := (typeParamDecl ',')* (parameter (',' parameter)*)?
+typeParamDecl := 'prae' 'typus' IDENTIFIER
+parameter    := ('de' | 'in' | 'ex')? 'si'? 'ceteri'? typeAnnotation? IDENTIFIER ('ut' IDENTIFIER)? ('vel' expression)?
+funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
+returnClause := ('->' | 'fit' | 'fiet' | 'fiunt' | 'fient') typeAnnotation
+lambdaExpr   := ('pro' | 'fit' | 'fiet') params? ('->' type)? (':' expression | blockStmt)
+```
+
+- Return verbs: `fit` (sync), `fiet` (async), `fiunt` (generator), `fient` (async generator)
+- Parameter prefixes: `de` (read), `in` (mutate), `ex` (consume)
+- `si` marks optional, `ceteri` marks rest parameter
+
+### Classes
+
+```ebnf
+genusDecl    := 'abstractus'? 'genus' IDENTIFIER typeParams? ('sub' IDENTIFIER)? ('implet' IDENTIFIER (',' IDENTIFIER)*)? '{' genusMember* '}'
+genusMember  := annotation* (fieldDecl | methodDecl)
+fieldDecl    := 'generis'? 'nexum'? typeAnnotation IDENTIFIER (':' expression)?
+methodDecl   := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause? blockStmt?
+annotation   := '@' IDENTIFIER+
+```
+
+- `sub` = extends, `implet` = implements
+- `generis` = static, `nexum` = bound/property
+
+### Interfaces
+
+```ebnf
+pactumDecl   := 'pactum' IDENTIFIER typeParams? '{' pactumMethod* '}'
+pactumMethod := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause?
+```
+
+### Type Aliases
 
 ```ebnf
 typeAliasDecl := 'typus' IDENTIFIER '=' typeAnnotation
 ```
 
-> Enables creating named type aliases for complex types.
-
-**Examples:**
-
-```fab
-typus ID = textus
-typus UserID = numerus<32, Naturalis>
-typus ConfigTypus = typus config    // typeof
-```
-
-### Type Annotation
+### Enums
 
 ```ebnf
-typeAnnotation := ('de' | 'in')? IDENTIFIER typeParams? '?'? arrayBrackets*
-typeParams := '<' typeParameter (',' typeParameter)* '>'
-typeParameter := typeAnnotation | NUMBER | MODIFIER
-arrayBrackets := '[]' '?'?
-```
-
-> Supports generics (lista<textus>), nullable (?), union types (unio<A, B>),
-> and array shorthand (numerus[] desugars to lista<numerus>).
-
----
-
-<a id="operatores"></a>
-
-## Operatores
-
-Operators: arithmetic, logical, comparison, ternary, nullish coalescing, and ranges.
-
-### Assignment
-
-```ebnf
-assignment := ternary (('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=') assignment)?
-```
-
-### Ternary
-
-```ebnf
-ternary := or (('?' expression ':' | 'sic' expression 'secus') ternary)?
-```
-
-> Supports both symbolic (? :) and Latin (sic secus) syntax.
-> The two forms cannot be mixed: use either ? : or sic secus.
-
-**Examples:**
-
-```fab
-verum ? 1 : 0              // symbolic style
-verum sic 1 secus 0        // Latin style
-a ? b ? c : d : e          // nested (right-associative)
-```
-
-### Or
-
-```ebnf
-or := and (('||' | 'aut') and)* | and ('vel' and)*
-```
-
-> Latin 'aut' (or) for logical OR, 'vel' (or) for nullish coalescing.
-> Mixing aut/|| with vel without parentheses is a syntax error
-> (same as JavaScript's ?? and || restriction).
-
-### And
-
-```ebnf
-and := equality ('&&' equality | 'et' equality)*
-```
-
-> Latin 'et' (and) supported alongside '&&'.
-
-### Equality
-
-```ebnf
-equality := comparison (('==' | '!=' | '===' | '!==' | 'est' | 'non' 'est') comparison)*
-```
-
-> 'est' always means type check (instanceof/typeof).
-> Use '===' or '!==' for value equality.
-> Use 'nihil x' or 'nonnihil x' for null checks.
-
-### Comparison
-
-```ebnf
-comparison := bitwiseOr (('<' | '>' | '<=' | '>=' | 'intra' | 'inter') bitwiseOr)*
-```
-
-> intra/inter at comparison level - same precedence as relational operators
-
-### Range
-
-```ebnf
-range := additive (('..' | 'ante' | 'usque') additive ('per' additive)?)?
-```
-
-> Range expressions provide concise numeric iteration.
-> Three operators with different end semantics:
-> - '..' and 'ante': exclusive (0..10 / 0 ante 10 = 0-9)
-> - 'usque': inclusive (0 usque 10 = 0-10)
-> Optional step via 'per' keyword.
-
-**Examples:**
-
-```fab
-0..10           -> RangeExpression(0, 10, inclusive=false)
-0 ante 10       -> RangeExpression(0, 10, inclusive=false)
-0 usque 10      -> RangeExpression(0, 10, inclusive=true)
-0..10 per 2     -> RangeExpression(0, 10, 2, inclusive=false)
-```
-
-### Additive
-
-```ebnf
-additive := multiplicative (('+' | '-') multiplicative)*
-```
-
-### Multiplicative
-
-```ebnf
-multiplicative := unary (('*' | '/' | '%') unary)*
-```
-
-### Unary
-
-```ebnf
-unary := ('!' | '-' | 'non' | 'nulla' | 'nonnulla' | 'nihil' | 'nonnihil' | 'negativum' | 'positivum' | 'cede' | 'novum' | 'finge') unary | cast
-```
-
-> Latin 'non' (not), 'nulla' (none/empty), 'nonnulla' (some/non-empty),
-> 'nihil' (is null), 'nonnihil' (is not null),
-> 'negativum' (< 0), 'positivum' (> 0), 'cede' (await), 'novum' (new),
-> 'finge' (form variant).
-
----
-
-<a id="functiones"></a>
-
-## Functiones
-
-Function declarations: basic functions, typed parameters, async, generators, and lambdas.
-
-### Parameter List
-
-```ebnf
-paramList := (parameter (',' parameter)*)?
-```
-
-### Parameter
-
-```ebnf
-parameter := ('de' | 'in' | 'ex')? 'si'? 'ceteri'? (typeAnnotation IDENTIFIER | IDENTIFIER) ('ut' IDENTIFIER)? ('vel' expression)?
-```
-
-> Type-first syntax: "textus name" or "de textus source"
-> Prepositional prefixes indicate semantic roles:
-> de = from/concerning (borrowed, read-only),
-> in = in/into (mutable borrow),
-> ex = from/out of (source)
-> 
-> OPTIONAL PARAMETERS:
-> 'si' marks a parameter as optional. Without 'vel', type becomes ignotum<T>.
-> With 'vel', parameter has a default value and type stays T.
-> Order: preposition, then si, then ceteri, then type, then name.
-
----
-
-<a id="regimen"></a>
-
-## Regimen
-
-Control flow: conditionals, loops, guards, assertions, and program structure.
-
-### Annotation
-
-```ebnf
-annotation := '@' IDENTIFIER (expression)?
-```
-
-### Program
-
-```ebnf
-program := statement*
-```
-
-### Annotations
-
-```ebnf
-annotation := '@' IDENTIFIER+
-```
-
-> Annotations modify the following declaration with metadata like
-> visibility (publicum, privatum), async (futura), abstract (abstractum).
-
-### Statement
-
-```ebnf
-statement := importDecl | varDecl | funcDecl | typeAliasDecl | ifStmt | whileStmt | forStmt
-| returnStmt | throwStmt | tryStmt | blockStmt | exprStmt
-```
-
-> Uses lookahead to determine statement type via keyword inspection.
-
-### Specifier
-
-```ebnf
-specifier := 'ceteri'? IDENTIFIER ('ut' IDENTIFIER)?
-```
-
-> Shared between imports and destructuring.
-> 'ceteri' (rest) is only valid in destructuring contexts.
-> 'ut' provides aliasing: nomen ut n
-
-**Examples:**
-
-```fab
-scribe             -> imported=scribe, local=scribe
-scribe ut s        -> imported=scribe, local=s
-ceteri rest        -> imported=rest, local=rest, rest=true
-```
-
-### Importa Declaration
-
-```ebnf
-importDecl := 'ex' (STRING | IDENTIFIER) 'importa' (specifierList | '*')
-specifierList := specifier (',' specifier)*
-specifier := IDENTIFIER ('ut' IDENTIFIER)?
-```
-
-**Examples:**
-
-```fab
-ex norma importa scribe, lege
-ex norma importa scribe ut s, lege ut l
-ex "norma/tempus" importa nunc, dormi
-ex norma importa *
-```
-
-### Varia Declaration
-
-```ebnf
-varDecl := ('varia' | 'fixum' | 'figendum' | 'variandum') typeAnnotation? IDENTIFIER ('=' expression)?
-arrayDestruct := ('varia' | 'fixum' | 'figendum' | 'variandum') arrayPattern '=' expression
-```
-
-> Type-first syntax: "fixum textus nomen = value" or "fixum nomen = value"
-> Latin 'varia' (let it be) for mutable, 'fixum' (fixed) for immutable.
-
-### Array Pattern
-
-```ebnf
-arrayPattern := '[' arrayPatternElement (',' arrayPatternElement)* ']'
-arrayPatternElement := '_' | 'ceteri'? IDENTIFIER
-```
-
-**Examples:**
-
-```fab
-[a, b, c]                 // extract first three elements
-[first, ceteri rest]     // extract first, collect rest
-[_, second, _]           // skip first and third, extract second
-
-T SUPPORTED:
-[...rest]                // JS spread syntax
-[*rest]                  // Python unpack syntax
-```
-
-### Functio Declaration
-
-```ebnf
-funcDecl := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause? blockStmt
-paramList := (typeParamDecl ',')* (parameter (',' parameter)*)?
-typeParamDecl := 'prae' 'typus' IDENTIFIER
-funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
-returnClause := ('->' | 'fit' | 'fiet' | 'fiunt' | 'fient') typeAnnotation
-```
-
-> All function declarations start with 'functio' for consistent parsing.
-> Modifiers come after the parameter list, before the return clause.
-> 'futura' marks async functions (future/promise-based).
-> 'cursor' marks generator functions (yield-based).
-> 'curata NAME' marks managed functions (receives allocator as NAME).
-> 
-> TYPE PARAMETERS: 'prae typus T' declares compile-time type parameters.
-> functio max(prae typus T, T a, T b) -> T { ... }
-> Maps to: <T> (TS/Rust), TypeVar (Py), comptime T: type (Zig)
-> 
-> RETURN TYPE VERBS: Latin verb forms encode async/generator semantics directly:
-> '->'    neutral arrow (semantics from modifier only)
-> 'fit'   "it becomes" - sync, returns single value
-> 'fiet'  "it will become" - async, returns Promise<T>
-> 'fiunt' "they become" - sync generator, yields multiple values
-> 'fient' "they will become" - async generator, yields Promise values
-> 
-> When using verb forms, the futura/cursor modifier is NOT required - the verb
-> itself carries the semantic information. The modifier becomes redundant:
-> functio compute() -> numerus { ... }         // arrow: sync by default
-> functio compute() fit numerus { ... }        // verb: explicitly sync
-> functio fetch() futura -> textus { ... }     // modifier: async
-> functio fetch() fiet textus { ... }          // verb implies async
-> functio items() cursor -> numerus { ... }    // modifier: generator
-> functio items() fiunt numerus { ... }        // verb implies generator
-> functio stream() fient datum { ... }         // verb implies async generator
-> functio alloc(textus s) curata a -> T { ... } // managed, allocator bound as 'a'
-> 
-> Modifier is still allowed for emphasis, but verb/modifier conflicts are errors.
-> 
-> NOT SUPPORTED (will produce parser errors):
-> - TS-style param annotation: functio f(x: textus) (use: functio f(textus x))
-> - TS-style return type: functio f(): textus (use: functio f() -> textus)
-> - Trailing comma in params: functio f(a, b,)
-
-### Type And Parameter List
-
-```ebnf
-paramList := (typeParamDecl ',')* (parameter (',' parameter)*)?
-typeParamDecl := 'prae' 'typus' IDENTIFIER
-```
-
-> Type parameters (prae typus T) must come first, followed by regular params.
-> This matches the conventions of TypeScript, Rust, and Zig.
-
-**Examples:**
-
-```fab
-(prae typus T, T a, T b)     -> typeParams=[T], params=[a, b]
-(prae typus T, prae typus U) -> typeParams=[T, U], params=[]
-(numerus a, numerus b)       -> typeParams=[], params=[a, b]
-```
-
-### Ordo Declaration
-
-```ebnf
-enumDecl := 'ordo' IDENTIFIER '{' enumMember (',' enumMember)* ','? '}'
+enumDecl   := 'ordo' IDENTIFIER '{' enumMember (',' enumMember)* ','? '}'
 enumMember := IDENTIFIER ('=' ('-'? NUMBER | STRING))?
 ```
 
-> Latin 'ordo' (order/rank) for enumerated constants.
-
-**Examples:**
-
-```fab
-ordo color { rubrum, viridis, caeruleum }
-ordo status { pendens = 0, actum = 1, finitum = 2 }
-ordo offset { ante = -1, ad = 0, post = 1 }
-```
-
-### Discretio Declaration
+### Tagged Unions
 
 ```ebnf
 discretioDecl := 'discretio' IDENTIFIER typeParams? '{' variant (',' variant)* ','? '}'
-variant := IDENTIFIER ('{' variantFields '}')?
+variant       := IDENTIFIER ('{' variantFields '}')?
 variantFields := (typeAnnotation IDENTIFIER (',' typeAnnotation IDENTIFIER)*)?
 ```
 
-> Latin 'discretio' (distinction) for tagged unions.
-> Each variant has a compiler-managed tag for exhaustive pattern matching.
-
-**Examples:**
-
-```fab
-discretio Event {
-    Click { numerus x, numerus y }
-    Keypress { textus key }
-    Quit
-}
-
-discretio Option<T> {
-    Some { T value }
-    None
-}
-```
-
-### Variant Declaration
+### Imports
 
 ```ebnf
-variant := IDENTIFIER ('{' variantFields '}')?
-variantFields := (typeAnnotation IDENTIFIER (',' typeAnnotation IDENTIFIER)*)?
+importDecl    := 'ex' (STRING | IDENTIFIER) 'importa' (specifierList | '*')
+specifierList := specifier (',' specifier)*
+specifier     := IDENTIFIER ('ut' IDENTIFIER)?
 ```
 
-> Variant names are capitalized by convention (like type names).
-> Fields use type-first syntax like genus fields.
+---
 
-**Examples:**
-
-```fab
-Click { numerus x, numerus y }  -> fields with payload
-Quit                            -> unit variant (no payload)
-```
-
-### Si Statement
+## Types
 
 ```ebnf
-ifStmt := 'si' expression (blockStmt | 'ergo' statement | 'reddit' expression) ('cape' IDENTIFIER blockStmt)? (elseClause | 'sin' ifStmt)?
-elseClause := ('secus' | 'secus') (ifStmt | blockStmt | statement)
+typeAnnotation := ('de' | 'in')? IDENTIFIER typeParams? '?'? arrayBrackets*
+typeParams     := '<' typeParameter (',' typeParameter)* '>'
+typeParameter  := typeAnnotation | NUMBER | MODIFIER
+arrayBrackets  := '[]' '?'?
 ```
 
-> 'cape' (catch/seize) clause allows error handling within conditionals.
-> 'ergo' (therefore) for one-liner consequents.
-> 'reddit' (it returns) for early return one-liners.
-> 
-> TWO STYLE OPTIONS (both supported, can be mixed within the same chain):
-> 
-> Literal style: si / sin / secus
-> si x > 0 { positive() }
-> sin x < 0 { negative() }
-> secus { zero() }
-> 
-> Poetic style: si / sin / secus
-> si x > 0 { positive() }
-> sin x < 0 { negative() }    // "sin" = "but if" (classical Latin)
-> secus { zero() }            // "secus" = "otherwise"
-> 
-> Keywords are interchangeable at each branch point:
-> - 'sin' ≡ 'sin' (else-if)
-> - 'secus' ≡ 'secus' (else)
-> - Mixed: si ... sin ... secus { } is valid
+### Primitive Types
 
-**Examples:**
+| Faber | Meaning |
+|-------|---------|
+| `textus` | string |
+| `numerus` | integer |
+| `fractus` | float |
+| `bivalens` | boolean |
+| `nihil` | null |
+| `vacuum` | void |
+| `numquam` | never |
+| `ignotum` | unknown |
+| `octeti` | bytes |
 
-```fab
-si x > 5 ergo scribe("big")
-si x > 5 reddit verum            // early return
-si x > 5 { scribe("big") } secus scribe("small")
-si x < 0 { ... } sin x == 0 { ... } secus { ... }
+### Generic Collections
+
+| Faber | Meaning |
+|-------|---------|
+| `lista<T>` | array |
+| `tabula<K,V>` | map |
+| `copia<T>` | set |
+| `promissum<T>` | promise |
+| `cursor<T>` | iterator |
+| `unio<A,B>` | union |
+
+---
+
+## Control Flow
+
+### Conditionals
+
+```ebnf
+ifStmt     := 'si' expression (blockStmt | 'ergo' statement | 'reddit' expression)
+              ('cape' IDENTIFIER blockStmt)? (elseClause | 'sin' ifStmt)?
+elseClause := 'secus' (ifStmt | blockStmt | statement)
 ```
 
-### Dum Statement
+- `si` = if, `sin` = else-if, `secus` = else
+- `ergo` for one-liners, `reddit` for early return
+
+### Loops
 
 ```ebnf
 whileStmt := 'dum' expression (blockStmt | 'ergo' statement | 'reddit' expression) ('cape' IDENTIFIER blockStmt)?
-```
-
-> 'dum' (while/until) for while loops.
-
-**Examples:**
-
-```fab
-dum x > 0 { x = x - 1 }
-dum x > 0 ergo x = x - 1
-dum x > 0 reddit x
-```
-
-### Ex Statement
-
-```ebnf
-exStmt := 'ex' expression (forBinding | destructBinding | arrayDestructBinding)
+exStmt    := 'ex' expression (forBinding | destructBinding)
 forBinding := ('pro' | 'fit' | 'fiet') IDENTIFIER (blockStmt | 'ergo' statement | 'reddit' expression) catchClause?
-destructBinding := ('fixum' | 'varia' | 'figendum' | 'variandum') specifierList
-arrayDestructBinding := ('fixum' | 'varia' | 'figendum' | 'variandum') arrayPattern
-specifierList := specifier (',' specifier)*
-specifier := 'ceteri'? IDENTIFIER ('ut' IDENTIFIER)?
+deStmt    := 'de' expression ('pro' | 'fit' | 'fiet') IDENTIFIER (blockStmt | 'ergo' statement) catchClause?
 ```
 
-> 'ex' (from/out of) introduces both iteration and extraction:
-> - Iteration: ex items pro item { ... } (for each item from items)
-> - Object destructuring: ex persona fixum nomen, aetas (extract properties)
-> - Array destructuring: ex coords fixum [x, y, z] (extract by position)
-> - Async destructuring: ex promise figendum result (await + extract)
-> 
-> The binding keywords encode mutability and async semantics:
-> - fixum: immutable binding (const)
-> - varia: mutable binding (let)
-> - figendum: immutable + await (const with await)
-> - variandum: mutable + await (let with await)
+- `dum` = while
+- `ex...pro` = for-of (values)
+- `de...pro` = for-in (keys)
 
-**Examples:**
-
-```fab
-ex numeri pro n { ... }              // for-loop (sync)
-ex numeri fiet n { ... }             // for-await-of loop (async)
-ex persona fixum nomen, aetas        // object destructuring
-ex persona fixum nomen ut n          // object destructuring with alias
-ex persona fixum nomen, ceteri rest  // object destructuring with rest
-ex coords fixum [x, y, z]            // array destructuring
-ex fetchData() figendum result       // async destructuring
-
-llection DSL forms:
-ex items prima 5 pro item { }        // iteration with transforms
-ex items prima 5, ultima 2 pro x {}  // multiple transforms
-```
-
-### D S L Transforms
+### Switch/Match
 
 ```ebnf
-dslTransforms := dslTransform (',' dslTransform)*
-dslTransform := dslVerb expression?
-dslVerb := 'prima' | 'ultima' | 'summa'
+eligeStmt    := 'elige' expression '{' eligeCase* defaultCase? '}' catchClause?
+eligeCase    := 'casu' expression (blockStmt | 'ergo' statement | 'reddit' expression)
+defaultCase  := 'ceterum' (blockStmt | statement)
 ```
 
-> DSL provides concise syntax for common collection operations.
-> Transforms chain with commas: prima 5, ultima 3
-
-**Examples:**
-
-```fab
-prima 5           -> first 5 elements
-ultima 3          -> last 3 elements
-summa             -> sum (no argument)
-prima 5, ultima 2 -> first 5, then last 2 of those
-```
-
-### Collection D S L Expression
-
-```ebnf
-dslExpr := 'ex' expression dslTransform (',' dslTransform)*
-```
-
-> When 'ex' appears in expression context with DSL verbs (not pro/fit/fiet),
-> it creates a collection pipeline expression that can be assigned.
-
-**Examples:**
-
-```fab
-fixum top5 = ex items prima 5
-fixum total = ex prices summa
-fixum result = ex items prima 10, ultima 3
-```
-
-### Ab Expression
-
-```ebnf
-abExpr := 'ab' expression filter? (',' transform)*
-filter := ['non'] ('ubi' condition | identifier)
-condition := expression
-```
-
-> 'ab' (away from) is the dedicated DSL entry point for filtering.
-> The 'ex' preposition remains unchanged for iteration/import/destructuring.
-> Include/exclude is handled via 'non' keyword.
-
-**Examples:**
-
-```fab
-ab users activus                     // boolean property shorthand
-ab users non banned                  // negated boolean property
-ab users ubi aetas >= 18             // condition with ubi
-ab users non ubi banned et suspended // negated compound condition
-ab users activus, prima 10           // filter + transforms
-ab users activus pro user { }        // iteration form
-```
-
-### Regex Literal
-
-```ebnf
-regexLiteral := 'sed' STRING IDENTIFIER?
-```
-
-> 'sed' (the Unix stream editor) is synonymous with pattern matching.
-> The pattern string is passed through verbatim to the target.
-> Flags are a bare identifier after the pattern (no comma).
-
-**Examples:**
-
-```fab
-sed "\\d+"           // pattern only
-sed "hello" i        // case insensitive
-sed "^start" im      // multiple flags
-```
-
-### De Statement
-
-```ebnf
-deStmt := 'de' expression ('pro' | 'fit' | 'fiet') IDENTIFIER
-(blockStmt | 'ergo' statement | 'reddit' expression) catchClause?
-```
-
-> 'de' (from/concerning) for extracting keys from an object.
-> Semantically read-only - contrasts with 'in' for mutation.
-
-**Examples:**
-
-```fab
-de tabula pro clavis { ... }  // from table, for each key
-de object pro k ergo scribe k // one-liner form
-de object pro k reddit k      // return first key
-```
-
-### In Statement
-
-```ebnf
-inStmt := 'in' expression blockStmt
-```
-
-> 'in' (into) for reaching into an object to modify it.
-> Semantically mutable - contrasts with 'de' for read-only iteration.
-
-**Examples:**
-
-```fab
-in user { nomen = "Marcus" }  // mutation block
-```
-
-### Elige Statement
-
-```ebnf
-eligeStmt := 'elige' expression '{' eligeCase* defaultCase? '}' catchClause?
-eligeCase := 'casu' expression (blockStmt | 'ergo' statement | 'reddit' expression)
-defaultCase := 'ceterum' (blockStmt | statement)
-```
-
-> 'elige' (choose) for value-based switch.
-> 'ergo' (therefore) for one-liners, 'ceterum' (otherwise) for default.
-> 'reddit' (it returns) for early return one-liners.
-> For variant matching on discretio types, use 'discerne' instead.
-
-**Examples:**
-
-```fab
-elige status {
-    casu "pending" ergo scribe("waiting")
-    casu "active" reddit verum
-    ceterum iace "Unknown status"
-}
-```
-
-### Discerne Statement
+### Pattern Matching
 
 ```ebnf
 discerneStmt := 'discerne' discriminants '{' variantCase* '}'
 discriminants := expression (',' expression)*
-variantCase := 'casu' patterns (blockStmt | 'ergo' statement | 'reddit' expression)
-patterns := pattern (',' pattern)*
-pattern := '_' | (IDENTIFIER patternBind?)
-patternBind := ('ut' IDENTIFIER) | ('pro' IDENTIFIER (',' IDENTIFIER)*)
+variantCase  := 'casu' patterns (blockStmt | 'ergo' statement | 'reddit' expression)
+patterns     := pattern (',' pattern)*
+pattern      := '_' | (IDENTIFIER patternBind?)
+patternBind  := ('ut' IDENTIFIER) | ('pro' IDENTIFIER (',' IDENTIFIER)*)
 ```
 
-> 'discerne' (distinguish!) pairs with 'discretio' (the tagged union type).
-> Uses 'casu' for match arms, 'ut' to bind whole variants, and 'pro' for positional bindings.
-> Multi-discriminant matching reduces nesting when comparing multiple values.
-
-**Examples:**
-
-```fab
-# Single discriminant
-discerne event {
-    casu Click pro x, y { scribe "clicked at " + x + ", " + y }
-    casu Keypress pro key reddit key
-    casu Quit ergo mori "goodbye"
-}
-
-# Multi-discriminant
-discerne left, right {
-    casu Primitivum ut l, Primitivum ut r { redde l.nomen == r.nomen }
-    casu _, _ { redde falsum }
-}
-```
-
-### Variant Pattern
+### Guards
 
 ```ebnf
-pattern := '_' | (IDENTIFIER patternBind?)
-patternBind := ('ut' IDENTIFIER) | ('pro' IDENTIFIER (',' IDENTIFIER)*)
-```
-
-> Patterns match against discriminants in discerne statements.
-> Wildcard '_' matches any variant without binding.
-> 'ut' binds the whole variant, 'pro' destructures fields.
-> 
-> DISAMBIGUATION: After 'pro', commas separate bindings until we see:
-> - '_' (wildcard pattern)
-> - An identifier followed by 'ut' or 'pro' (new pattern with binding)
-> - '{', 'ergo', 'reddit' (end of patterns)
-
-### Custodi Statement
-
-```ebnf
-guardStmt := 'custodi' '{' guardClause+ '}'
+guardStmt   := 'custodi' '{' guardClause+ '}'
 guardClause := 'si' expression (blockStmt | 'ergo' statement | 'reddit' expression)
 ```
 
-> 'custodi' (guard!) groups early-exit conditions.
-> 'ergo' for one-liner actions, 'reddit' for early return one-liners.
-
-**Examples:**
-
-```fab
-custodi {
-    si user == nihil reddit nihil
-    si user.age < 0 ergo iace "Invalid age"
-    si user.name == "" { redde defaultUser() }
-}
-```
-
-### Adfirma Statement
+### Resource Management
 
 ```ebnf
-assertStmt := 'adfirma' expression (',' expression)?
+curaStmt    := 'cura' curatorKind? expression? ('pro' | 'fit' | 'fiet') typeAnnotation? IDENTIFIER blockStmt catchClause?
+curatorKind := 'arena' | 'page'
 ```
 
-> 'adfirma' (affirm/assert) for runtime invariant checks.
-
-**Examples:**
-
-```fab
-adfirma x > 0
-adfirma x > 0, "x must be positive"
-```
-
-### Redde Statement
+### Control Transfer
 
 ```ebnf
-returnStmt := 'redde' expression?
-```
-
-> 'redde' (give back/return) for return statements.
-
-### Rumpe Statement
-
-```ebnf
-breakStmt := 'rumpe'
-```
-
-> 'rumpe' (break!) exits the innermost loop.
-
-### Perge Statement
-
-```ebnf
+returnStmt   := 'redde' expression?
+breakStmt    := 'rumpe'
 continueStmt := 'perge'
 ```
 
-> 'perge' (continue/proceed!) skips to the next loop iteration.
+---
 
-### Iace Statement
+## Error Handling
 
 ```ebnf
-throwStmt := ('iace' | 'mori') expression
+tryStmt     := 'tempta' blockStmt ('cape' IDENTIFIER blockStmt)? ('demum' blockStmt)?
+throwStmt   := ('iace' | 'mori') expression
+catchClause := 'cape' IDENTIFIER blockStmt
+assertStmt  := 'adfirma' expression (',' expression)?
 ```
 
-> Two error severity levels:
-> iace (throw!) → recoverable, can be caught
-> mori (die!)   → fatal/panic, unrecoverable
+- `tempta` = try, `cape` = catch, `demum` = finally
+- `iace` = throw (recoverable), `mori` = panic (fatal)
 
-### Scribe Statement
+---
+
+## Expressions
+
+### Operators (by precedence, lowest to highest)
+
+```ebnf
+expression := assignment
+assignment := ternary (('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=') assignment)?
+ternary    := or (('?' expression ':' | 'sic' expression 'secus') ternary)?
+or         := and (('||' | 'aut') and)* | and ('vel' and)*
+and        := equality (('&&' | 'et') equality)*
+equality   := comparison (('==' | '!=' | '===' | '!==' | 'est' | 'non' 'est') comparison)*
+comparison := bitwiseOr (('<' | '>' | '<=' | '>=' | 'intra' | 'inter') bitwiseOr)*
+bitwiseOr  := bitwiseXor ('|' bitwiseXor)*
+bitwiseXor := bitwiseAnd ('^' bitwiseAnd)*
+bitwiseAnd := shift ('&' shift)*
+shift      := range (('<<' | '>>') range)*
+range      := additive (('..' | 'ante' | 'usque') additive ('per' additive)?)?
+additive   := multiplicative (('+' | '-') multiplicative)*
+multiplicative := unary (('*' | '/' | '%') unary)*
+unary      := ('!' | '-' | 'non' | 'nulla' | 'nonnulla' | 'nihil' | 'nonnihil' | 'negativum' | 'positivum' | 'cede' | 'novum' | 'finge') unary | cast
+cast       := call ('qua' typeAnnotation | 'innatum' typeAnnotation)*
+```
+
+### Call and Member Access
+
+```ebnf
+call          := primary (callSuffix | memberSuffix | optionalSuffix | nonNullSuffix)*
+callSuffix    := '(' argumentList ')'
+memberSuffix  := '.' IDENTIFIER | '[' expression ']'
+optionalSuffix := '?.' IDENTIFIER | '?[' expression ']' | '?(' argumentList ')'
+nonNullSuffix := '!.' IDENTIFIER | '![' expression ']' | '!(' argumentList ')'
+argumentList  := (argument (',' argument)*)?
+argument      := 'sparge'? expression
+```
+
+### Primary Expressions
+
+```ebnf
+primary := IDENTIFIER | NUMBER | STRING | TEMPLATE_STRING
+         | 'ego' | 'verum' | 'falsum' | 'nihil'
+         | arrayLiteral | objectLiteral
+         | '(' expression ')'
+```
+
+### Special Expressions
+
+```ebnf
+newExpr       := 'novum' IDENTIFIER ('(' argumentList ')')? (objectLiteral | 'de' expression)?
+fingeExpr     := 'finge' IDENTIFIER ('{' fieldList '}')? ('qua' IDENTIFIER)?
+praefixumExpr := 'praefixum' (blockStmt | '(' expression ')')
+scriptumExpr  := 'scriptum' '(' STRING (',' expression)* ')'
+legeExpr      := 'lege' 'lineam'?
+regexLiteral  := 'sed' STRING IDENTIFIER?
+```
+
+---
+
+## Patterns
+
+```ebnf
+objectPattern  := '{' patternProperty (',' patternProperty)* '}'
+patternProperty := 'ceteri'? IDENTIFIER (':' IDENTIFIER)?
+arrayPattern   := '[' arrayPatternElement (',' arrayPatternElement)* ']'
+arrayPatternElement := '_' | 'ceteri'? IDENTIFIER
+```
+
+---
+
+## Output
 
 ```ebnf
 outputStmt := ('scribe' | 'vide' | 'mone') expression (',' expression)*
 ```
 
-> Latin output keywords as statement forms:
-> scribe (write!) → console.log
-> vide (see!)     → console.debug
-> mone (warn!)    → console.warn
-
-**Examples:**
-
-```fab
-scribe "hello"
-vide "debugging:", value
-mone "warning:", message
-```
-
-### Tempta Statement
-
-```ebnf
-tryStmt := 'tempta' blockStmt ('cape' IDENTIFIER blockStmt)? ('demum' blockStmt)?
-```
-
-> 'tempta' (attempt/try), 'cape' (catch/seize), 'demum' (finally/at last).
-
-### Cape Clause
-
-```ebnf
-catchClause := 'cape' IDENTIFIER blockStmt
-```
-
-### Probandum Statement
-
-```ebnf
-probandumDecl := 'probandum' STRING '{' probandumBody '}'
-probandumBody := (curaBlock | probandumDecl | probaStmt)*
-```
-
-> Latin "probandum" (gerundive of probare) = "that which must be tested".
-> Analogous to describe() in Jest/Vitest.
-
-**Examples:**
-
-```fab
-probandum "Tokenizer" {
-    praepara { lexer = init() }
-    proba "parses numbers" { ... }
-}
-```
-
-### Proba Statement
-
-```ebnf
-probaStmt := 'proba' probaModifier? STRING blockStmt
-probaModifier := 'omitte' STRING | 'futurum' STRING
-```
-
-> Latin "proba" (imperative of probare) = "test!" / "prove!".
-> Analogous to test() or it() in Jest/Vitest.
-
-**Examples:**
-
-```fab
-proba "parses integers" { adfirma parse("42") est 42 }
-proba omitte "blocked by #42" { ... }
-proba futurum "needs async support" { ... }
-```
-
-### Ad Statement
-
-```ebnf
-adStmt := 'ad' STRING '(' argumentList ')' adBinding? blockStmt? catchClause?
-adBinding := adBindingVerb typeAnnotation? 'pro' IDENTIFIER ('ut' IDENTIFIER)?
-adBindingVerb := 'fit' | 'fiet' | 'fiunt' | 'fient'
-argumentList := (expression (',' expression)*)?
-```
-
-> Latin 'ad' (to/toward) dispatches to named endpoints:
-> - Stdlib syscalls: "fasciculus:lege", "console:log"
-> - External packages: "hono/Hono"
-> - Remote services: "https://api.example.com/users"
-> 
-> Binding verbs encode sync/async and single/plural:
-> - fit: sync, single ("it becomes")
-> - fiet: async, single ("it will become")
-> - fiunt: sync, plural ("they become")
-> - fient: async, plural ("they will become")
-
-**Examples:**
-
-```fab
-ad "console:log" ("hello")                           // fire-and-forget
-ad "fasciculus:lege" ("file.txt") fit textus pro c { }  // sync binding
-ad "http:get" (url) fiet Response pro r { }          // async binding
-ad "http:batch" (urls) fient Response[] pro rs { }   // async plural
-```
-
-### Praepara Block
-
-```ebnf
-praeparaBlock := ('praepara' | 'praeparabit' | 'postpara' | 'postparabit') 'omnia'? blockStmt
-```
-
-> Latin "praepara" (prepare!) for test setup, "postpara" (cleanup!) for teardown.
-> Uses -bit suffix for async (future tense), matching fit/fiet pattern.
-
-**Examples:**
-
-```fab
-praepara { lexer = init() }
-praepara omnia { db = connect() }
-praeparabit omnia { db = cede connect() }
-postpara { cleanup() }
-postpara omnia { db.close() }
-postparabit omnia { cede db.close() }
-```
-
-### Cura Statement
-
-```ebnf
-curaStmt := 'cura' curatorKind? expression? ('pro' | 'fit' | 'fiet') typeAnnotation? IDENTIFIER blockStmt catchClause?
-curatorKind := 'arena' | 'page'
-```
-
-> Latin "cura" (care) + binding verb for scoped resources.
-> - pro: neutral binding ("for")
-> - fit: sync binding ("it becomes")
-> - fiet: async binding ("it will become")
-> Curator kinds declare explicit allocator types (arena, page).
-> Guarantees cleanup via solve() on scope exit.
-
-**Examples:**
-
-```fab
-cura arena fit mem { ... }                    // arena allocator
-cura page fit mem { ... }                     // page allocator
-cura aperi("data.bin") fit fd { lege(fd) }   // generic resource
-cura connect(url) fiet conn { ... }          // async resource
-```
-
-### Incipit Statement
-
-```ebnf
-incipitStmt := 'incipit' (blockStmt | 'ergo' statement | 'reddit' expression)
-```
-
-> 'incipit' (it begins) marks the program entry point.
-> This is a pure structural marker with no magic injection.
-> The source is responsible for any setup (allocators via cura, etc.).
-> 
-> The 'ergo' (therefore) form chains to a single statement, typically
-> a cura block for allocator setup. This avoids extra nesting.
-> The 'reddit' form returns an exit code directly.
-
-**Examples:**
-
-```fab
-incipit {
-    scribe "Hello"
-}
-
-incipit ergo cura arena {
-```
-
-### Incipiet Statement
-
-```ebnf
-incipietStmt := 'incipiet' (blockStmt | 'ergo' statement | 'reddit' expression)
-```
-
-> 'incipiet' (it will begin) marks the async program entry point.
-> Mirrors the fit/fiet pattern: present for sync, future for async.
-> 
-> The 'ergo' form chains to a single statement for concise setup.
-> The 'reddit' form returns an exit code directly.
-
-**Examples:**
-
-```fab
-incipiet {
-    fixum data = cede fetchData()
-    scribe data
-}
-
-incipiet ergo cura arena {
-    fixum data = cede fetchData()
-}
-
-incipiet reddit 0
-```
-
-### Block Statement
-
-```ebnf
-blockStmt := '{' statement* '}'
-```
-
-### Expression Statement
-
-```ebnf
-exprStmt := expression
-```
-
-### Expression
-
-```ebnf
-expression := assignment
-```
-
-> Top-level expression delegates to assignment (lowest precedence).
-
-### Bitwise Or
-
-```ebnf
-bitwiseOr := bitwiseXor ('|' bitwiseXor)*
-```
-
-> Bitwise precedence is above comparison (unlike C), so
-> `flags & MASK == 0` parses as `(flags & MASK) == 0`.
-
-### Bitwise Xor
-
-```ebnf
-bitwiseXor := bitwiseAnd ('^' bitwiseAnd)*
-```
-
-### Bitwise And
-
-```ebnf
-bitwiseAnd := shift ('&' shift)*
-```
-
-### Shift
-
-```ebnf
-shift := range (('<<' | '>>') range)*
-```
-
-### Praefixum Expression
-
-```ebnf
-praefixumExpr := 'praefixum' (blockStmt | '(' expression ')')
-```
-
-> Latin 'praefixum' (pre-fixed) extends fixum vocabulary.
-> Block form: praefixum { ... } for multi-statement computation
-> Expression form: praefixum(expr) for simple expressions
-> 
-> TARGET SUPPORT:
-> Zig:    comptime { } or comptime (expr)
-> C++:    constexpr
-> Rust:   const (in const context)
-> TS/Py:  Semantic error - not supported
-
-**Examples:**
-
-```fab
-fixum size = praefixum(256 * 4)
-fixum table = praefixum {
-    varia result = []
-    ex 0..10 pro i { result.adde(i * i) }
-    redde result
-}
-```
-
-### Scriptum Expression
-
-```ebnf
-scriptumExpr := 'scriptum' '(' STRING (',' expression)* ')'
-```
-
-> "scriptum" (that which has been written) is the perfect passive participle
-> of scribere. While scribe outputs to console, scriptum returns a formatted string.
-> 
-> The § placeholder is converted to target-appropriate format specifiers.
-
-**Examples:**
-
-```fab
-scriptum("Hello, §", name)
-scriptum("§ + § = §", a, b, a + b)
-```
-
-### Lege Expression
-
-```ebnf
-legeExpr := 'lege' ('lineam')?
-```
-
-### Qua Expression
-
-```ebnf
-castExpr := call ('qua' typeAnnotation)*
-```
-
-> Latin 'qua' (as, in the capacity of) for type assertions.
-> Compile-time only — no runtime checking. Maps to:
-> - TypeScript: x as T
-> - Python: x (ignored, dynamic typing)
-> - Zig: @as(T, x)
-> - Rust: x as T
-> - C++: static_cast<T>(x)
-
-### Novum Expression
-
-```ebnf
-newExpr := 'novum' IDENTIFIER ('(' argumentList ')')? (objectLiteral | 'de' expression)?
-```
-
-> Two forms for property overrides:
-> - Inline literal: `novum Persona { nomen: "Marcus" }`
-> - From expression: `novum Persona de props` (props is variable/call/etc.)
-> 
-> The `de` (from) form allows dynamic overrides from variables or function results.
-
-### Finge Expression
-
-```ebnf
-fingeExpr := 'finge' IDENTIFIER ('{' fieldList '}')? ('qua' IDENTIFIER)?
-```
-
-> Latin 'finge' (form/shape) for constructing discretio variants.
-> Variant name comes first, optional fields in braces, optional qua for
-> explicit discretio type when not inferrable from context.
-
-**Examples:**
-
-```fab
-finge Click { x: 10, y: 20 }           - payload variant
-finge Click { x: 10, y: 20 } qua Event - with explicit type
-finge Active                            - unit variant
-finge Active qua Status                 - unit variant with explicit type
-```
-
-### Lambda Expression
-
-```ebnf
-lambdaExpr := ('pro' | 'fit' | 'fiet') params? ('->' type)? (':' expression | blockStmt)
-params := IDENTIFIER (',' IDENTIFIER)*
-```
-
-### Identifier Or Keyword
-
-```ebnf
-identifierOrKeyword := IDENTIFIER | KEYWORD
-```
-
-> Import specifiers can be keywords (ex norma importa scribe).
-> In this context, 'scribe' is a valid name, not a statement keyword.
+- `scribe` = log, `vide` = debug, `mone` = warn
 
 ---
 
-<a id="errores"></a>
+## Entry Points
 
-## Errores
+```ebnf
+incipitStmt  := 'incipit' (blockStmt | 'ergo' statement | 'reddit' expression)
+incipietStmt := 'incipiet' (blockStmt | 'ergo' statement | 'reddit' expression)
+```
 
-Error handling: try/catch, throw, panic, and scoped error handling.
+- `incipit` = sync entry, `incipiet` = async entry
 
-### Fac Block Statement
+---
+
+## Testing
+
+```ebnf
+probandumDecl := 'probandum' STRING '{' probandumBody '}'
+probandumBody := (praeparaBlock | probandumDecl | probaStmt)*
+probaStmt     := 'proba' probaModifier? STRING blockStmt
+probaModifier := 'omitte' STRING | 'futurum' STRING
+praeparaBlock := ('praepara' | 'praeparabit' | 'postpara' | 'postparabit') 'omnia'? blockStmt
+```
+
+---
+
+## Endpoint Dispatch
+
+```ebnf
+adStmt        := 'ad' STRING '(' argumentList ')' adBinding? blockStmt? catchClause?
+adBinding     := adBindingVerb typeAnnotation? 'pro' IDENTIFIER ('ut' IDENTIFIER)?
+adBindingVerb := 'fit' | 'fiet' | 'fiunt' | 'fient'
+```
+
+---
+
+## DSL Transforms
+
+```ebnf
+dslExpr      := 'ex' expression dslTransforms
+dslTransforms := dslTransform (',' dslTransform)*
+dslTransform := dslVerb expression?
+dslVerb      := 'prima' | 'ultima' | 'summa'
+
+abExpr := 'ab' expression filter? (',' dslTransform)*
+filter := 'non'? ('ubi' condition | IDENTIFIER)
+```
+
+---
+
+## Fac Block
 
 ```ebnf
 facBlockStmt := 'fac' blockStmt ('cape' IDENTIFIER blockStmt)? ('dum' expression)?
 ```
 
-> 'fac' (do/make) creates an explicit scope boundary for grouping
-> statements with optional error handling via 'cape' (catch).
-> When followed by 'dum', creates a do-while loop where the body
-> executes at least once before the condition is checked.
-> Useful for:
-> - Scoped variable declarations
-> - Grouping related operations with shared error handling
-> - Creating IIFE-like constructs
-> - Do-while loops (body executes first, then condition checked)
+- Creates scope, optionally with catch or do-while
 
-**Examples:**
+---
 
-```fab
-fac { fixum x = computeValue() }
-fac { riskyOperation() } cape e { scribe e }
-fac { process() } dum hasMore()
-fac { process() } cape e { log(e) } dum hasMore()
+## Mutation Block
+
+```ebnf
+inStmt := 'in' expression blockStmt
 ```
 
 ---
 
-<a id="structurae"></a>
+## Keyword Reference
 
-## Structurae
-
-Data structures: classes (genus), objects, member access, and instantiation.
-
-### Genus Declaration
-
-```ebnf
-genusDecl := 'abstractus'? 'genus' IDENTIFIER typeParams? ('sub' IDENTIFIER)? ('implet' IDENTIFIER (',' IDENTIFIER)*)? '{' genusMember* '}'
-typeParams := '<' IDENTIFIER (',' IDENTIFIER)* '>'
-genusMember := fieldDecl | methodDecl
-```
-
-> Latin 'genus' (kind/type) for data structures.
-> 'sub' (under) for inheritance - child is under parent.
-> 'implet' (fulfills) for implementing pactum interfaces.
-> 'abstractus' for abstract classes that cannot be instantiated.
-
-### Genus Member
-
-```ebnf
-genusMember := annotation* (fieldDecl | methodDecl)
-annotation := '@' IDENTIFIER+
-fieldDecl := 'generis'? 'nexum'? typeAnnotation IDENTIFIER (':' expression)?
-methodDecl := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause? blockStmt?
-funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
-```
-
-> Distinguishes between fields and methods by looking for 'functio' keyword.
-> Fields are public by default (struct semantics).
-> Use annotations for visibility: @ privatum, @ protectum.
-> Use annotations for abstract methods: @ abstracta (no body, must be overridden).
-
-### Pactum Declaration
-
-```ebnf
-pactumDecl := 'pactum' IDENTIFIER typeParams? '{' pactumMethod* '}'
-typeParams := '<' IDENTIFIER (',' IDENTIFIER)* '>'
-```
-
-> Latin 'pactum' (agreement/contract) for interfaces.
-> Defines method signatures that genus types can implement via 'implet'.
-
-**Examples:**
-
-```fab
-pactum Legibilis { functio lege() -> textus }
-pactum Mappabilis<T, U> { functio mappa(T valor) -> U }
-```
-
-### Pactum Method
-
-```ebnf
-pactumMethod := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause?
-funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
-returnClause := ('->' | 'fit' | 'fiet' | 'fiunt' | 'fient') typeAnnotation
-```
-
-> Method signatures without bodies. Same syntax as function declarations
-> but terminates after return type (no block).
-
-### Call
-
-```ebnf
-call := primary (callSuffix | memberSuffix | optionalSuffix | nonNullSuffix)*
-callSuffix := '(' argumentList ')'
-memberSuffix := '.' IDENTIFIER | '[' expression ']'
-optionalSuffix := '?.' IDENTIFIER | '?[' expression ']' | '?(' argumentList ')'
-nonNullSuffix := '!.' IDENTIFIER | '![' expression ']' | '!(' argumentList ')'
-```
-
-> Handles function calls, member access, and computed member access.
-> Left-associative via loop (obj.a.b parsed as (obj.a).b).
-> 
-> OPTIONAL CHAINING: ?. ?[ ?( return nihil if object is nihil
-> NON-NULL ASSERTION: !. ![ !( assert object is not nihil
-
-### Argument List
-
-```ebnf
-argumentList := (argument (',' argument)*)?
-argument := 'sparge' expression | expression
-```
-
-### Primary
-
-```ebnf
-primary := IDENTIFIER | NUMBER | STRING | TEMPLATE_STRING
-| 'ego' | 'verum' | 'falsum' | 'nihil'
-| '(' (expression | arrowFunction) ')'
-```
-
-> Latin literals: verum (true), falsum (false), nihil (null).
-> 'ego' (I/self) is the self-reference keyword (like 'this' in JS).
-> Parenthesized expressions require lookahead to distinguish from arrow functions.
-
-### Identifier
-
-```ebnf
-identifier := IDENTIFIER
-```
+| Category | Faber | Meaning |
+|----------|-------|---------|
+| **Declarations** | `fixum` | const |
+| | `varia` | let |
+| | `functio` | function |
+| | `genus` | class |
+| | `pactum` | interface |
+| | `typus` | type alias |
+| | `ordo` | enum |
+| | `discretio` | tagged union |
+| **Control Flow** | `si` / `sin` / `secus` | if / else-if / else |
+| | `dum` | while |
+| | `ex...pro` | for-of |
+| | `de...pro` | for-in |
+| | `elige` / `casu` | switch / case |
+| | `discerne` | pattern match |
+| | `custodi` | guard |
+| | `redde` | return |
+| | `rumpe` | break |
+| | `perge` | continue |
+| **Error Handling** | `tempta` | try |
+| | `cape` | catch |
+| | `demum` | finally |
+| | `iace` | throw |
+| | `mori` | panic |
+| | `adfirma` | assert |
+| **Async** | `futura` | async modifier |
+| | `cede` | await |
+| **Boolean** | `verum` | true |
+| | `falsum` | false |
+| | `et` | and |
+| | `aut` | or |
+| | `non` | not |
+| | `vel` | nullish coalescing |
+| **Objects** | `ego` | this/self |
+| | `novum` | new |
+| | `finge` | construct variant |
+| **Output** | `scribe` | log |
+| | `vide` | debug |
+| | `mone` | warn |
 
 ---
 
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
+## Critical Syntax Rules
+
+1. **Type-first parameters**: `functio f(numerus x)` NOT `functio f(x: numerus)`
+2. **Type-first declarations**: `fixum textus name` NOT `fixum name: textus`
+3. **For-of loops**: `ex collection pro item { }` (collection first)
+4. **Parentheses around conditions are valid but not idiomatic**: prefer `si x > 0 { }` or `si positivum x { }` over `si (x > 0) { }`
+5. **Output keywords are statements**, not functions — `scribe x` works, `scribe(x)` also works (parentheses group the expression), but `scribe` is not a callable value
+
 
 
 ---
@@ -1582,35 +506,35 @@ identifier := IDENTIFIER
 
 # Research Results
 
-Results from the faber-trials evaluation harness. Testing whether LLMs can learn Faber syntax from examples.
+Results from the Faber evaluation harness. Testing whether LLMs can learn Faber syntax from examples.
 
 | Metric | Value |
 |--------|-------|
 | Framework version | 1.1 |
-| Total evaluations | 12,696 |
+| Total evaluations | 13,270 |
 | Models tested | 15 |
-| Total cost | $11.50 |
-| Total tokens | 8.9M in / 519K out |
-| Total time | 18008.0s |
+| Total cost | $12.04 |
+| Total tokens | 9.5M in / 563K out |
+| Total time | 18980.8s |
 
 ## Model Comparison: Cost vs Speed vs Accuracy
 
 | Model | Accuracy | Avg Latency | Cost | Tokens |
 |-------|----------|-------------|------|--------|
-| gpt-4o | 91% | 711ms | $1.53 | 576K |
-| qwen3-coder | 90% | 1.4s | $0.20 | 842K |
+| gpt-4o | 89% | 829ms | $1.94 | 707K |
+| qwen3-coder | 89% | 1.4s | $0.22 | 926K |
+| gpt-3.5-turbo | 89% | 521ms | $0.40 | 762K |
 | gpt-5 | 89% | 6.7s | $4.37 | 584K |
-| gpt-4o-mini | 88% | 814ms | $0.09 | 576K |
+| gpt-4o-mini | 88% | 869ms | $0.10 | 630K |
 | claude-3.5-sonnet | 88% | 1.8s | $2.21 | 667K |
-| gpt-3.5-turbo | 88% | 490ms | $0.38 | 721K |
-| llama-3.1-70b | 86% | 1.1s | $0.21 | 584K |
-| codestral | 86% | 416ms | $0.18 | 580K |
-| deepseek-v3.1 | 85% | 2.0s | $0.09 | 582K |
+| llama-3.1-70b | 86% | 1.1s | $0.21 | 609K |
+| codestral | 86% | 541ms | $0.24 | 737K |
+| deepseek-v3.1 | 85% | 2.0s | $0.10 | 617K |
 | claude-4.5-sonnet | 77% | 1.5s | $1.74 | 518K |
 | mercury-coder | 73% | 589ms | $0.22 | 834K |
-| llama-3.1-8b | 73% | 875ms | $0.03 | 663K |
-| claude-3-haiku | 69% | 950ms | $0.21 | 728K |
-| llama-3.2-1b | 16% | 480ms | $0.03 | 749K |
+| llama-3.1-8b | 73% | 915ms | $0.04 | 717K |
+| claude-3-haiku | 70% | 970ms | $0.22 | 769K |
+| llama-3.2-1b | 15% | 486ms | $0.03 | 778K |
 | qwen2.5-coder-32b | 0% | 7.2s | $0.02 | 253K |
 
 ## Three-Level Grading Breakdown
@@ -1619,20 +543,20 @@ Results from the faber-trials evaluation harness. Testing whether LLMs can learn
 
 | Model | Tests | A (Typechecks) | B (Runs) | C (Correct) |
 |-------|-------|----------------|----------|-------------|
-| gpt-4o | 840 | 95% | 95% | 91% |
-| qwen3-coder | 1008 | 95% | 95% | 90% |
+| gpt-4o | 952 | 93% | 93% | 88% |
+| qwen3-coder | 1068 | 94% | 94% | 89% |
+| gpt-3.5-turbo | 1166 | 91% | 91% | 89% |
 | gpt-5 | 672 | 93% | 93% | 89% |
-| gpt-4o-mini | 840 | 93% | 93% | 88% |
+| gpt-4o-mini | 895 | 93% | 93% | 88% |
 | claude-3.5-sonnet | 840 | 95% | 95% | 88% |
-| gpt-3.5-turbo | 1133 | 91% | 91% | 88% |
-| llama-3.1-70b | 840 | 92% | 92% | 86% |
-| codestral | 840 | 93% | 93% | 86% |
-| deepseek-v3.1 | 840 | 94% | 94% | 85% |
+| llama-3.1-70b | 870 | 91% | 91% | 86% |
+| codestral | 964 | 93% | 92% | 86% |
+| deepseek-v3.1 | 862 | 95% | 94% | 85% |
 | claude-4.5-sonnet | 672 | 93% | 93% | 77% |
 | mercury-coder | 840 | 76% | 76% | 73% |
-| llama-3.1-8b | 1008 | 90% | 90% | 73% |
-| claude-3-haiku | 924 | 92% | 92% | 69% |
-| llama-3.2-1b | 1077 | 44% | 44% | 16% |
+| llama-3.1-8b | 1063 | 90% | 90% | 73% |
+| claude-3-haiku | 946 | 92% | 92% | 70% |
+| llama-3.2-1b | 1138 | 43% | 43% | 15% |
 | qwen2.5-coder-32b | 282 | 29% | 29% | 0% |
 
 ## By Context Level
@@ -1641,9 +565,9 @@ How much documentation context helps models learn Faber.
 
 | Context | Tests | Accuracy |
 |---------|-------|----------|
-| examples-only | 2604 | 61% |
-| grammar-only | 2226 | 82% |
-| minimal | 2924 | 78% |
+| examples-only | 2681 | 61% |
+| grammar-only | 2662 | 82% |
+| minimal | 2985 | 77% |
 | basic | 2466 | 79% |
 | complete | 2476 | 79% |
 
@@ -1654,8 +578,8 @@ Effect of few-shot examples on accuracy.
 | Examples | Tests | Accuracy |
 |----------|-------|----------|
 | 0-shot | 3343 | 70% |
-| 1-shot | 3012 | 72% |
-| 3-shot | 3401 | 80% |
+| 1-shot | 3073 | 71% |
+| 3-shot | 3914 | 80% |
 | 10-shot | 2940 | 81% |
 
 ## Error Distribution
@@ -1664,58 +588,77 @@ Where failures occur (among failed trials only).
 
 | Error Type | Count | % of Failures |
 |------------|-------|---------------|
-| wrong_output | 1330 | 43% |
-| type_error | 1248 | 40% |
+| type_error | 1360 | 42% |
+| wrong_output | 1345 | 42% |
 | no_response | 312 | 10% |
-| syntax_error | 192 | 6% |
-| runtime_error | 13 | 0% |
+| syntax_error | 201 | 6% |
+| runtime_error | 14 | 0% |
 
 ## By Task
 
 | Task | Tests | Accuracy |
 |------|-------|----------|
-| faber_to_ts_functio_string | 304 | 95% |
-| faber_to_ts_arithmetic | 302 | 94% |
-| faber_to_ts_ex_pro | 303 | 93% |
-| faber_to_ts_si_true | 304 | 92% |
-| faber_to_ts_functio | 304 | 92% |
-| faber_to_ts_fixum | 303 | 91% |
-| faber_to_ts_string | 304 | 91% |
-| faber_to_ts_si_false | 304 | 91% |
-| faber_to_ts_varia | 304 | 90% |
-| faber_to_ts_dum | 302 | 90% |
-| predict_const_value | 302 | 87% |
-| faber_to_ts_boolean | 302 | 85% |
-| ts_to_faber_const | 304 | 82% |
-| complete_const_keyword | 301 | 82% |
-| ts_to_faber_string | 304 | 81% |
-| ts_to_faber_arithmetic | 303 | 80% |
-| complete_return_keyword | 301 | 79% |
-| complete_let_keyword | 301 | 79% |
-| complete_function_keyword | 300 | 79% |
-| complete_while_keyword | 300 | 79% |
-| ts_to_faber_let | 303 | 78% |
-| predict_simple_output | 302 | 77% |
-| complete_print_keyword | 299 | 77% |
-| ts_to_faber_if_false | 304 | 76% |
-| predict_arithmetic_parens | 301 | 76% |
-| predict_function_math | 301 | 76% |
-| ts_to_faber_if_true | 304 | 75% |
-| ts_to_faber_while | 303 | 75% |
-| predict_loop_sum | 301 | 75% |
-| complete_else_keyword | 300 | 75% |
-| predict_conditional_true | 302 | 73% |
-| complete_loop_keyword | 301 | 72% |
-| predict_conditional_false | 303 | 71% |
-| predict_arithmetic_precedence | 302 | 68% |
-| ts_to_faber_for_of | 304 | 67% |
-| predict_loop_output | 301 | 65% |
-| predict_function_call | 301 | 65% |
-| ts_to_faber_function | 304 | 62% |
-| ts_to_faber_boolean | 303 | 56% |
-| ts_to_faber_function_string | 304 | 55% |
-| predict_boolean_and | 301 | 16% |
-| predict_boolean_or | 300 | 13% |
+| faber_to_ts_functio_string | 305 | 95% |
+| faber_to_ts_arithmetic | 303 | 94% |
+| faber_to_ts_ex_pro | 304 | 93% |
+| faber_to_ts_si_true | 305 | 92% |
+| faber_to_ts_functio | 305 | 92% |
+| complex_ts_to_faber_factorial | 12 | 92% |
+| complex_ts_to_faber_fibonacci | 12 | 92% |
+| complex_ts_to_faber_multi_function | 12 | 92% |
+| complex_ts_to_faber_ternary_chain | 12 | 92% |
+| complex_ts_to_faber_string_ops | 12 | 92% |
+| complex_ts_to_faber_early_return | 12 | 92% |
+| complex_ts_to_faber_accumulator | 12 | 92% |
+| complex_ts_to_faber_prime_check | 12 | 92% |
+| faber_to_ts_fixum | 304 | 91% |
+| faber_to_ts_string | 305 | 91% |
+| faber_to_ts_si_false | 305 | 91% |
+| faber_to_ts_varia | 305 | 90% |
+| faber_to_ts_dum | 303 | 89% |
+| predict_const_value | 303 | 87% |
+| faber_to_ts_boolean | 303 | 85% |
+| ts_to_faber_const | 333 | 84% |
+| complex_ts_to_faber_if_in_loop | 12 | 83% |
+| complex_ts_to_faber_typed_params | 12 | 83% |
+| complex_ts_to_faber_find_max | 12 | 83% |
+| ts_to_faber_string | 332 | 82% |
+| ts_to_faber_arithmetic | 331 | 82% |
+| complete_const_keyword | 302 | 81% |
+| ts_to_faber_let | 331 | 80% |
+| complete_return_keyword | 302 | 79% |
+| complete_let_keyword | 302 | 79% |
+| ts_to_faber_if_false | 332 | 78% |
+| complete_function_keyword | 301 | 78% |
+| complete_while_keyword | 301 | 78% |
+| ts_to_faber_if_true | 332 | 77% |
+| predict_simple_output | 303 | 77% |
+| complete_print_keyword | 300 | 77% |
+| ts_to_faber_while | 331 | 76% |
+| predict_function_math | 302 | 76% |
+| predict_arithmetic_parens | 302 | 75% |
+| predict_loop_sum | 302 | 75% |
+| complex_ts_to_faber_fizzbuzz | 12 | 75% |
+| complete_else_keyword | 301 | 74% |
+| predict_conditional_true | 303 | 73% |
+| complete_loop_keyword | 302 | 72% |
+| predict_conditional_false | 304 | 71% |
+| ts_to_faber_for_of | 332 | 67% |
+| predict_arithmetic_precedence | 303 | 67% |
+| complex_ts_to_faber_array_type | 12 | 67% |
+| ts_to_faber_function | 332 | 65% |
+| predict_loop_output | 302 | 65% |
+| predict_function_call | 302 | 65% |
+| ts_to_faber_boolean | 331 | 59% |
+| complex_ts_to_faber_guard_clause | 12 | 58% |
+| ts_to_faber_function_string | 332 | 57% |
+| complex_ts_to_faber_loop_in_loop | 14 | 43% |
+| complex_ts_to_faber_nested_if | 14 | 29% |
+| predict_boolean_and | 302 | 16% |
+| predict_boolean_or | 301 | 13% |
+| complex_ts_to_faber_higher_order | 12 | 0% |
+| complex_ts_to_faber_gcd | 12 | 0% |
+| complex_ts_to_faber_binary_search | 14 | 0% |
 
 ## Methodology
 
@@ -1724,7 +667,7 @@ Where failures occur (among failed trials only).
 - **Dialects:** Latin keywords
 - **Context levels:** examples-only, minimal, basic, complete
 
-See [faber-trials](https://github.com/ianzepp/faber-trials) for raw data and methodology details.
+See [faber-romanus](https://github.com/ianzepp/faber-romanus) for raw data and methodology details.
 
 
 ---
@@ -9341,39 +8284,333 @@ incipit {
 
 # Fundamenta
 
-Basic language elements: variables, constants, literals, and output.
+The fundamentals of Faber: program structure, variable bindings, literals, output, and patterns. These are the building blocks upon which all Faber programs rest. Understanding them means understanding how Faber uses Latin's clarity to make programming concepts visible.
 
-## Exempla
+## Program Structure
 
-- `exempla/fundamenta/`
+Every Faber program needs an entry point. This is where execution begins, and Faber provides two forms depending on whether your program is synchronous or asynchronous.
 
----
+### Synchronous Entry: incipit
 
-## Syntax
-
-### Object Pattern
-
-```ebnf
-objectPattern := '{' patternProperty (',' patternProperty)* '}'
-patternProperty := 'ceteri'? IDENTIFIER (':' IDENTIFIER)?
-```
-
-**Examples:**
+The keyword `incipit` marks the synchronous entry point. It is the third person singular present active indicative of *incipere* (to begin): "it begins."
 
 ```fab
-{ nomen, aetas }              // extract nomen and aetas
-{ nomen: localName, aetas }   // rename nomen to localName
-{ nomen, ceteri rest }        // extract nomen, collect rest
+incipit {
+    scribe "Salve, Munde!"
+}
+```
 
-T SUPPORTED (will produce parser errors):
-{ ...rest }    // JS spread syntax
-{ *rest }      // Python unpack syntax
-{ **rest }     // Python kwargs syntax
+This is the simplest possible Faber program. The `incipit` block contains the statements that execute when the program runs. Functions and types defined outside `incipit` become module-level declarations that the entry point can call.
+
+```fab
+functio greet(textus name) -> textus {
+    redde scriptum("Salve, §!", name)
+}
+
+incipit {
+    scribe greet("Marcus")
+}
+```
+
+### Asynchronous Entry: incipiet
+
+When your program needs to perform asynchronous operations at the top level, use `incipiet` instead. This is the future tense: "it will begin." The naming mirrors the `fit`/`fiet` pattern used throughout Faber, where present tense indicates synchronous operations and future tense indicates asynchronous ones.
+
+```fab
+incipiet {
+    figendum data = fetchData()
+    scribe data
+}
+```
+
+Inside an `incipiet` block, you can use `figendum` and `variandum` (the async binding forms) directly, or use `cede` (yield/await) with regular bindings.
+
+## Variables
+
+Faber distinguishes between mutable and immutable bindings with distinct keywords. This explicitness is a core design principle: the reader should know at a glance whether a value can change.
+
+### Immutable Bindings: fixum
+
+The keyword `fixum` declares an immutable binding. It is the perfect passive participle of *figere* (to fix, fasten): "that which has been fixed." Once bound, a `fixum` value cannot be reassigned.
+
+```fab
+fixum greeting = "Salve, Mundus!"
+fixum x = 10
+fixum y = 20
+fixum sum = x + y
+```
+
+Immutable bindings are the default choice in Faber. They communicate intent clearly: this value will not change for the remainder of its scope. Prefer `fixum` unless you have a specific reason for mutability.
+
+Type annotations are optional when the type can be inferred, but you can be explicit:
+
+```fab
+fixum numerus age = 30
+fixum textus name = "Marcus"
+fixum bivalens active = verum
+```
+
+The pattern is always type-first: `fixum <type> <name> = <value>`. This mirrors Latin's adjective-noun ordering and distinguishes Faber from languages that place types after names.
+
+### Mutable Bindings: varia
+
+The keyword `varia` declares a mutable binding. It comes from *variare* (to vary): "let it vary." A `varia` binding can be reassigned throughout its scope.
+
+```fab
+varia counter = 0
+scribe counter       # 0
+
+counter = 1
+scribe counter       # 1
+
+counter = counter + 10
+scribe counter       # 11
+```
+
+Use `varia` when a value genuinely needs to change, such as loop counters, accumulators, or state that evolves over time.
+
+```fab
+varia numerus count = 0
+varia textus status = "pending"
+varia bivalens running = falsum
+
+count = 100
+status = "complete"
+running = verum
+```
+
+### Async Bindings: figendum and variandum
+
+Faber provides async-aware binding forms that combine declaration with awaiting. These use the Latin gerundive, a verbal adjective expressing necessity or obligation.
+
+`figendum` means "that which must be fixed." It declares an immutable binding whose value comes from an asynchronous operation:
+
+```fab
+figendum result = fetchData()
+```
+
+`variandum` means "that which must be varied." It declares a mutable binding from an async source:
+
+```fab
+variandum data = loadConfig()
+data = transform(data)
+```
+
+These forms are syntactic conveniences equivalent to using `cede` (await) with regular bindings, but they make the async nature visible at declaration time.
+
+## Literals
+
+Faber supports the standard literal types with Latin keywords for boolean and null values.
+
+### Numbers
+
+Integers and floating-point numbers use standard notation:
+
+```fab
+fixum integer = 42
+fixum decimal = 3.14
+fixum negative = -100
+```
+
+For typed declarations, `numerus` is the integer type and `fractus` (from *frangere*, to break) is the floating-point type:
+
+```fab
+fixum numerus count = 42
+fixum fractus rate = 0.05
+```
+
+### Strings
+
+Strings can use either double or single quotes:
+
+```fab
+fixum greeting = "hello"
+fixum single = 'single quotes'
+```
+
+Template literals use backticks with `${...}` interpolation, following the familiar JavaScript pattern:
+
+```fab
+fixum name = "Mundus"
+fixum message = `Hello ${name}`
+```
+
+### Booleans: verum and falsum
+
+Rather than `true` and `false`, Faber uses Latin: `verum` (true, real) and `falsum` (false, deceptive). These are not arbitrary choices. Latin's *verum* shares its root with English "verify" and "veracity"; *falsum* gives us "falsify."
+
+```fab
+fixum yes = verum
+fixum no = falsum
+fixum bivalens active = verum
+```
+
+The type `bivalens` (two-valued) names what a boolean is: a value that can be one of exactly two states.
+
+### Null: nihil
+
+The absence of a value is expressed as `nihil` (nothing). This is clearer than symbols like `null` or `nil` that have become so familiar we no longer notice their meaning.
+
+```fab
+fixum nothing = nihil
+```
+
+## Output
+
+Faber provides three output statements corresponding to different severity levels. These are imperative forms that write to the console.
+
+### Standard Output: scribe
+
+The keyword `scribe` writes to standard output. It is the imperative of *scribere* (to write): "write!"
+
+```fab
+scribe "Hello, world!"
+```
+
+Multiple arguments are printed space-separated:
+
+```fab
+fixum nomen = "Marcus"
+fixum aetas = 30
+scribe "Name:", nomen
+scribe "Age:", aetas
+scribe "Coordinates:", x, y
+```
+
+### Debug Output: vide
+
+The keyword `vide` writes to debug output. It is the imperative of *videre* (to see): "see!" Use it for diagnostic information that should be visible during development but filtered in production.
+
+```fab
+vide "Debug: entering main loop"
+vide "Debug: count =", count
+```
+
+### Warning Output: mone
+
+The keyword `mone` writes to warning output. It is the imperative of *monere* (to warn, advise): "warn!" Use it for conditions that are not errors but deserve attention.
+
+```fab
+mone "Warning: deprecated feature used"
+mone "Warning: count exceeds threshold:", count
+```
+
+## Comments
+
+Comments begin with `#` and extend to the end of the line. There is no block comment syntax.
+
+```fab
+# This is a comment
+fixum x = 10  # inline comment
+```
+
+Comments explain *why*, not *what*. The code itself shows what is happening; comments provide context that cannot be derived from the code alone.
+
+## Destructuring
+
+Faber provides patterns for extracting values from objects and arrays. The syntax uses `ex` (from, out of) to indicate the source and the binding keyword to indicate mutability.
+
+### Object Destructuring
+
+To extract properties from an object, use `ex <source> fixum <properties>`:
+
+```fab
+fixum person = { name: "Marcus", age: 30, city: "Roma" }
+ex person fixum name, age
+
+scribe name   # "Marcus"
+scribe age    # 30
+```
+
+Use `ut` (as) to rename properties during extraction:
+
+```fab
+fixum user = { name: "Julia", email: "julia@roma.com" }
+ex user fixum name ut userName, email ut userEmail
+
+scribe userName    # "Julia"
+scribe userEmail   # "julia@roma.com"
+```
+
+Use `varia` instead of `fixum` for mutable bindings:
+
+```fab
+fixum data = { count: 100, active: verum }
+ex data varia count, active
+
+count = 200
+active = falsum
+```
+
+The rest pattern `ceteri` (the rest, the others) collects remaining properties:
+
+```fab
+fixum fullUser = { id: 1, name: "Gaius", email: "g@roma.com", role: "admin" }
+ex fullUser fixum id, ceteri details
+
+scribe id       # 1
+scribe details  # { name: "Gaius", email: "g@roma.com", role: "admin" }
+```
+
+### Array Destructuring
+
+Arrays use bracket notation in the pattern:
+
+```fab
+fixum numbers = [1, 2, 3]
+fixum [a, b, c] = numbers
+
+scribe a  # 1
+scribe b  # 2
+scribe c  # 3
+```
+
+Partial destructuring extracts only what you need:
+
+```fab
+fixum values = [1, 2, 3, 4, 5]
+fixum [one, two] = values
+
+scribe one  # 1
+scribe two  # 2
+```
+
+The underscore `_` skips elements:
+
+```fab
+fixum triple = [10, 20, 30]
+fixum [_, middle, _] = triple
+
+scribe middle  # 20
+```
+
+The rest pattern works with arrays too:
+
+```fab
+fixum items = [1, 2, 3, 4, 5]
+fixum [head, ceteri tail] = items
+
+scribe head  # 1
+scribe tail  # [2, 3, 4, 5]
+```
+
+Mutable array destructuring uses `varia`:
+
+```fab
+fixum coords = [100, 200]
+varia [x, y] = coords
+
+x = x + 50
+y = y + 50
+
+scribe x  # 150
+scribe y  # 250
 ```
 
 ---
 
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
+These fundamentals are the vocabulary and grammar of Faber. With them, you can write clear, expressive programs. The more advanced features documented elsewhere build upon this foundation, but these basics are sufficient for substantial work.
+
 
 
 ---
@@ -9383,47 +8620,459 @@ T SUPPORTED (will produce parser errors):
 
 # Typi
 
-Type system: type annotations, aliases, enums, nullable types, and collections.
+Faber Romanus uses a type-first syntax that places type annotations before identifiers, reflecting the Latin pattern where adjectives describing nature precede the noun they modify. Where TypeScript writes `const name: string`, Faber writes `fixum textus nomen`. This ordering reads naturally in Latin: "a fixed text, name"---the type describes what kind of thing the identifier represents.
 
-## Exempla
-
-- `exempla/typi/`
+The type system prioritizes explicitness and clarity. Every type name derives from Latin, chosen not for historical purity but because Latin's morphological richness allows type names to carry meaning. When you see `fractus` instead of `float`, you encounter the Latin root of "fraction"---a broken number, a number with parts. The etymology teaches.
 
 ---
 
-## Syntax
+## Primitive Types
 
-### Type Alias Declaration
+### textus (String)
 
-```ebnf
-typeAliasDecl := 'typus' IDENTIFIER '=' typeAnnotation
-```
-
-> Enables creating named type aliases for complex types.
-
-**Examples:**
+From the Latin *texere*, "to weave." Text is woven words, threads of meaning combined into fabric. The metaphor is ancient: we still speak of "spinning a yarn" and the "thread" of an argument.
 
 ```fab
-typus ID = textus
-typus UserID = numerus<32, Naturalis>
-typus ConfigTypus = typus config    // typeof
+fixum textus greeting = "Salve, Munde"
+fixum textus empty = ""
 ```
 
-### Type Annotation
+String literals use double or single quotes. Template literals use backticks with `${...}` interpolation, just as in JavaScript:
 
-```ebnf
-typeAnnotation := ('de' | 'in')? IDENTIFIER typeParams? '?'? arrayBrackets*
-typeParams := '<' typeParameter (',' typeParameter)* '>'
-typeParameter := typeAnnotation | NUMBER | MODIFIER
-arrayBrackets := '[]' '?'?
+```fab
+fixum name = "Marcus"
+fixum message = `Hello, ${name}`
 ```
 
-> Supports generics (lista<textus>), nullable (?), union types (unio<A, B>),
-> and array shorthand (numerus[] desugars to lista<numerus>).
+### numerus (Integer)
+
+From the Latin *numerus*, "number, count." This is the discrete counting number---whole, indivisible. When you need integers, you need `numerus`.
+
+```fab
+fixum numerus count = 42
+fixum numerus negative = -100
+fixum numerus hex = 0xFF
+```
+
+Numeric literals support decimal, hexadecimal (with `0x` prefix), and arbitrary-precision integers (with `n` suffix for big integers).
+
+### fractus (Floating-Point)
+
+From the Latin *fractus*, "broken." The past participle of *frangere*, "to break." A fractional number is a broken number---one that has been divided into parts. This is the etymological root of the English word "fraction."
+
+Use `fractus` when you need decimal precision:
+
+```fab
+fixum fractus pi = 3.14159
+fixum fractus rate = 0.05
+```
+
+The distinction between `numerus` and `fractus` mirrors the distinction between integers and floating-point numbers in systems languages. When precision matters---financial calculations, scientific computing---you choose deliberately.
+
+### bivalens (Boolean)
+
+From *bi-*, "two," and *valens*, "being strong, having value." A two-valued type. The boolean literals are `verum` (true) and `falsum` (false):
+
+```fab
+fixum bivalens active = verum
+fixum bivalens disabled = falsum
+```
+
+These literals read as Latin adjectives: "it is true," "it is false."
+
+### nihil (Null)
+
+From the Latin *nihil*, "nothing." The absence of value. Where other languages use `null` or `nil` or `None`, Faber uses `nihil`:
+
+```fab
+fixum nothing = nihil
+```
+
+A variable holding `nihil` holds nothing---not zero, not an empty string, but the explicit absence of any value.
+
+### vacuum (Void)
+
+From the Latin *vacuum*, "empty, void." This is the return type of functions that complete but return no value:
+
+```fab
+functio log(textus message) -> vacuum {
+    scribe message
+}
+```
+
+The distinction from `nihil` is semantic: `nihil` is a value (the null value), while `vacuum` is the absence of a return. A function returning `vacuum` completes normally; it simply has nothing to hand back.
 
 ---
 
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
+## Special Types
+
+### ignotum (Unknown)
+
+From *in-*, "not," and *gnoscere*, "to know." The unknown type. Unlike permissive "any" types in other languages, `ignotum` requires you to narrow before use:
+
+```fab
+fixum ignotum data = getExternalData()
+
+# Error: cannot use ignotum directly
+# scribe data.length
+
+# Must narrow first
+si data est textus {
+    scribe data.longitudo()
+}
+```
+
+Faber deliberately omits an "any" type. When you receive data of unknown type, you must either narrow it with type guards (`est`) or cast it explicitly (`qua`). This design makes uncertainty visible and intentional.
+
+### numquam (Never)
+
+From the Latin *numquam*, "never." This is the return type of functions that never return---those that throw exceptions, loop infinitely, or exit the process:
+
+```fab
+functio moritur() -> numquam {
+    iace novum Error { message: "fatal" }
+}
+
+functio infinitus() -> numquam {
+    dum verum { }
+}
+```
+
+A function marked `numquam` is a one-way door. Control enters but does not exit. This distinguishes it from `vacuum`: a void function returns (with no value); a never function does not return at all.
+
+### objectum (Object)
+
+From the Latin *objectum*, "something thrown before." The root of the English word "object." This type represents any non-primitive value---anything that is not a number, string, boolean, or null:
+
+```fab
+functio getUser() -> objectum {
+    redde { name: "Marcus", age: 30 }
+}
+```
+
+Use `objectum` when a function returns an anonymous object structure. For known shapes, prefer defining a `genus` (struct) instead.
+
+---
+
+## Type Annotations
+
+Faber uses type-first syntax. The type precedes the identifier it annotates:
+
+```fab
+fixum textus nomen = "Marcus"
+varia numerus count = 0
+```
+
+This ordering---type before name---reflects Latin's pattern where descriptive modifiers precede their nouns. It also mirrors how we think: "I need a number for counting," not "I need count, which is a number."
+
+### In Variable Declarations
+
+Both immutable (`fixum`) and mutable (`varia`) declarations support type annotations:
+
+```fab
+fixum numerus age = 30
+varia textus status = "pending"
+```
+
+Type annotations are optional when the type can be inferred:
+
+```fab
+fixum name = "Marcus"    # inferred as textus
+fixum count = 42         # inferred as numerus
+```
+
+### In Function Signatures
+
+Function parameters use the same type-first pattern. Return types follow the arrow:
+
+```fab
+functio adde(numerus a, numerus b) -> numerus {
+    redde a + b
+}
+
+functio describe(textus nomen, numerus aetas) -> textus {
+    redde scriptum("§ habet § annos", nomen, aetas)
+}
+```
+
+A function that returns nothing uses `vacuum` or omits the return type entirely:
+
+```fab
+functio log(textus message) -> vacuum {
+    scribe message
+}
+```
+
+---
+
+## Nullable Types
+
+The `?` suffix marks a type as nullable---able to hold either a value of that type or `nihil`:
+
+```fab
+fixum textus? maybeName = nihil
+fixum numerus? maybeCount = 42
+```
+
+A nullable type requires handling before use. You cannot call methods on a `textus?` without first checking that it is not `nihil`:
+
+```fab
+fixum textus? name = getOptionalName()
+
+# Using type guard
+si name est nihil {
+    scribe "No name provided"
+}
+aliter {
+    scribe name.longitudo()
+}
+```
+
+The `est` operator performs type checking:
+
+```fab
+fixum isNull = maybeValue est nihil
+```
+
+Function return types can be nullable to indicate that a function might not find what it is looking for:
+
+```fab
+functio inveni(textus id) -> persona? {
+    # might return nihil if not found
+}
+```
+
+---
+
+## Collections
+
+Faber provides three built-in collection types, each named for Latin words describing containment and abundance.
+
+### lista (Array/List)
+
+From the Latin *lista*, "border, strip, list." An ordered, indexable sequence of elements:
+
+```fab
+fixum lista<textus> names = ["Marcus", "Julia", "Gaius"]
+fixum lista<numerus> scores = [100, 95, 87]
+```
+
+Array shorthand uses brackets with type parameter:
+
+```fab
+fixum textus[] names = ["Marcus", "Julia", "Gaius"]
+fixum numerus[] empty = []
+```
+
+The shorthand `textus[]` is equivalent to `lista<textus>`.
+
+Access elements by index:
+
+```fab
+fixum first = names[0]
+fixum last = names[names.longitudo() - 1]
+```
+
+### tabula (Map/Dictionary)
+
+From the Latin *tabula*, "tablet, table, board." The writing tablet, a surface for recording associations. A `tabula` maps keys to values:
+
+```fab
+fixum tabula<textus, numerus> ages = {
+    "Marcus": 30,
+    "Julia": 25,
+    "Gaius": 40
+}
+```
+
+The type takes two parameters: key type and value type. Access values by key:
+
+```fab
+fixum marcusAge = ages["Marcus"]
+```
+
+### copia (Set)
+
+From the Latin *copia*, "abundance, supply, plenty." A collection of unique values with no duplicates:
+
+```fab
+fixum copia<textus> uniqueNames = copia("Marcus", "Julia", "Marcus")
+# Contains only "Marcus" and "Julia"
+```
+
+Sets are useful when you care about membership and uniqueness rather than order or key-value association.
+
+---
+
+## Type Aliases
+
+The `typus` keyword creates named aliases for types, improving readability and enabling reuse:
+
+```fab
+typus UserId = numerus
+typus Username = textus
+typus IsActive = bivalens
+```
+
+Once defined, type aliases can be used anywhere a type is expected:
+
+```fab
+fixum UserId id = 42
+fixum Username name = "Marcus"
+```
+
+Aliases are especially useful for complex types:
+
+```fab
+typus Names = lista<textus>
+typus UserCache = tabula<textus, numerus>
+typus OptionalName = textus?
+```
+
+This makes function signatures more readable:
+
+```fab
+functio findUser(UserId id) -> Username? {
+    # ...
+}
+```
+
+### typeof Extraction
+
+Use `typus` on the right-hand side to extract a type from a value:
+
+```fab
+fixum config = { port: 3000, host: "localhost" }
+typus Config = typus config
+```
+
+This creates a type alias matching the inferred type of the value.
+
+---
+
+## Generics
+
+Type parameters allow writing code that works with multiple types. Enclose parameters in angle brackets:
+
+```fab
+genus capsa<T> {
+    T valor
+
+    functio accipe() -> T {
+        redde ego.valor
+    }
+}
+
+fixum c = novum capsa<numerus> { valor: 42 }
+scribe c.accipe()
+```
+
+Generic constraints can limit what types are acceptable:
+
+```fab
+pactum Comparable<T> {
+    functio compare(T other) -> numerus
+}
+
+functio maximum<T implet Comparable<T>>(T a, T b) -> T {
+    si a.compare(b) > 0 {
+        redde a
+    }
+    redde b
+}
+```
+
+The type parameter `T` is constrained to types that implement the `Comparable` interface.
+
+---
+
+## Union Types
+
+The `unio<A, B>` generic expresses that a value may be one of several types:
+
+```fab
+typus StringOrNumber = unio<textus, numerus>
+
+functio process(StringOrNumber value) -> textus {
+    si value est textus {
+        redde value
+    }
+    redde value.toString()
+}
+```
+
+Union types require narrowing before use. The compiler does not know which variant you have until you check:
+
+```fab
+fixum unio<textus, numerus> value = getValue()
+
+# Must narrow
+si value est numerus {
+    scribe value * 2
+}
+aliter si value est textus {
+    scribe value.longitudo()
+}
+```
+
+---
+
+## Type Casting
+
+The `qua` keyword performs explicit type conversion:
+
+```fab
+fixum data = 42
+fixum asText = data qua textus
+```
+
+Casts are explicit acknowledgments of risk. When you write `qua`, you are telling the compiler: "I know what I am doing." The compiler trusts you---but if you are wrong, runtime errors follow.
+
+```fab
+# Cast to nullable type
+fixum num = 10
+fixum maybe = num qua numerus?
+
+# Cast with member access
+fixum response = getResponse()
+fixum body = response.body qua textus
+
+# Cast for chaining
+fixum len = (data qua textus).length
+```
+
+Use casts sparingly. Prefer type guards (`est`) when possible, as they provide compile-time safety.
+
+---
+
+## Type Checking
+
+The `est` keyword checks whether a value is of a given type:
+
+```fab
+fixum maybeValue = getValue()
+
+si maybeValue est textus {
+    # Within this block, maybeValue is known to be textus
+    scribe maybeValue.longitudo()
+}
+```
+
+Type guards work with nullable types:
+
+```fab
+fixum textus? name = getOptionalName()
+
+si name est nihil {
+    scribe "No name"
+}
+aliter {
+    scribe name
+}
+```
+
+The compiler narrows the type within the guarded block, eliminating the need for casts.
+
 
 
 ---
@@ -9433,122 +9082,360 @@ arrayBrackets := '[]' '?'?
 
 # Operatores
 
-Operators: arithmetic, logical, comparison, ternary, nullish coalescing, and ranges.
+Operators in Faber Romanus embody the language's central philosophy: making implicit programming concepts explicit through linguistic structure. Where most languages rely solely on symbols, Faber offers Latin keywords alongside familiar operators, letting programmers choose the form that best expresses their intent.
 
-## Exempla
-
-- `exempla/operatores/`
+This dual nature is not redundancy. Latin keywords read like natural language, making code flow more clearly when read aloud or processed by language models. Symbolic operators remain available for those who prefer terseness or familiarity. The choice is stylistic, not semantic; both forms compile identically.
 
 ---
 
-## Syntax
+## Arithmetic
 
-### Assignment
-
-```ebnf
-assignment := ternary (('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=') assignment)?
-```
-
-### Ternary
-
-```ebnf
-ternary := or (('?' expression ':' | 'sic' expression 'secus') ternary)?
-```
-
-> Supports both symbolic (? :) and Latin (sic secus) syntax.
-> The two forms cannot be mixed: use either ? : or sic secus.
-
-**Examples:**
+Standard mathematical operators work as expected:
 
 ```fab
-verum ? 1 : 0              // symbolic style
-verum sic 1 secus 0        // Latin style
-a ? b ? c : d : e          // nested (right-associative)
+fixum sum = 10 + 5       # addition
+fixum diff = 10 - 5      # subtraction
+fixum prod = 10 * 5      # multiplication
+fixum quot = 10 / 5      # division
+fixum rem = 10 % 3       # modulo (remainder)
 ```
 
-### Or
-
-```ebnf
-or := and (('||' | 'aut') and)* | and ('vel' and)*
-```
-
-> Latin 'aut' (or) for logical OR, 'vel' (or) for nullish coalescing.
-> Mixing aut/|| with vel without parentheses is a syntax error
-> (same as JavaScript's ?? and || restriction).
-
-### And
-
-```ebnf
-and := equality ('&&' equality | 'et' equality)*
-```
-
-> Latin 'et' (and) supported alongside '&&'.
-
-### Equality
-
-```ebnf
-equality := comparison (('==' | '!=' | '===' | '!==' | 'est' | 'non' 'est') comparison)*
-```
-
-> 'est' always means type check (instanceof/typeof).
-> Use '===' or '!==' for value equality.
-> Use 'nihil x' or 'nonnihil x' for null checks.
-
-### Comparison
-
-```ebnf
-comparison := bitwiseOr (('<' | '>' | '<=' | '>=' | 'intra' | 'inter') bitwiseOr)*
-```
-
-> intra/inter at comparison level - same precedence as relational operators
-
-### Range
-
-```ebnf
-range := additive (('..' | 'ante' | 'usque') additive ('per' additive)?)?
-```
-
-> Range expressions provide concise numeric iteration.
-> Three operators with different end semantics:
-> - '..' and 'ante': exclusive (0..10 / 0 ante 10 = 0-9)
-> - 'usque': inclusive (0 usque 10 = 0-10)
-> Optional step via 'per' keyword.
-
-**Examples:**
+The `+` operator also handles string concatenation:
 
 ```fab
-0..10           -> RangeExpression(0, 10, inclusive=false)
-0 ante 10       -> RangeExpression(0, 10, inclusive=false)
-0 usque 10      -> RangeExpression(0, 10, inclusive=true)
-0..10 per 2     -> RangeExpression(0, 10, 2, inclusive=false)
+fixum greeting = "salve" + " mundus"
 ```
 
-### Additive
+Unary negation uses the minus sign as a prefix:
 
-```ebnf
-additive := multiplicative (('+' | '-') multiplicative)*
+```fab
+fixum x = 5
+fixum neg = -x           # -5
 ```
 
-### Multiplicative
-
-```ebnf
-multiplicative := unary (('*' | '/' | '%') unary)*
-```
-
-### Unary
-
-```ebnf
-unary := ('!' | '-' | 'non' | 'nulla' | 'nonnulla' | 'nihil' | 'nonnihil' | 'negativum' | 'positivum' | 'cede' | 'novum' | 'finge') unary | cast
-```
-
-> Latin 'non' (not), 'nulla' (none/empty), 'nonnulla' (some/non-empty),
-> 'nihil' (is null), 'nonnihil' (is not null),
-> 'negativum' (< 0), 'positivum' (> 0), 'cede' (await), 'novum' (new),
-> 'finge' (form variant).
+There are no increment (`++`) or decrement (`--`) operators. Use compound assignment instead.
 
 ---
 
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
+## Comparison
+
+Relational operators compare values and return boolean results:
+
+```fab
+fixum isLess = 5 < 10           # less than
+fixum isGreater = 10 > 5        # greater than
+fixum isLessOrEqual = 5 <= 5    # less than or equal
+fixum isGreaterOrEqual = 10 >= 10
+```
+
+For equality, Faber follows JavaScript's distinction between loose and strict comparison:
+
+```fab
+fixum loose = 10 == "10"        # true (type coercion)
+fixum strict = 10 === 10        # true (same type and value)
+fixum notEqual = 10 != 5
+fixum strictNotEqual = 10 !== "10"
+```
+
+In practice, prefer strict equality (`===`, `!==`) to avoid subtle bugs from type coercion.
+
+---
+
+## Logical Operators
+
+Logical operators combine boolean expressions. Faber offers both symbolic and Latin forms.
+
+### Latin Forms
+
+The Latin keywords read naturally in conditional expressions:
+
+```fab
+fixum both = verum et verum       # and
+fixum either = falsum aut verum   # or
+fixum negated = non flag          # not
+```
+
+Etymology:
+- `et` means "and" in Latin, the same word that gives us "et cetera" (and the rest)
+- `aut` means "or" in the exclusive sense (one or the other)
+- `non` means "not"
+
+### Symbolic Forms
+
+The familiar C-style operators remain available:
+
+```fab
+fixum both = verum && verum
+fixum either = falsum || verum
+fixum negated = !flag
+```
+
+**Style guidance:** Prefer Latin forms (`et`, `aut`, `non`) over symbols. The Latin reads more clearly and avoids the visual ambiguity between `!` (logical not) and `!.` (non-null assertion).
+
+Short-circuit evaluation works as expected. In `falsum et expensiveCheck()`, the function never executes because the first operand is already false.
+
+---
+
+## Nullish Operations
+
+### vel (Nullish Coalescing)
+
+The `vel` operator provides a default value when the left operand is `nihil` (null):
+
+```fab
+fixum textus? maybeName = nihil
+fixum name = maybeName vel "default"   # "default"
+```
+
+Unlike `aut` (logical or), `vel` only triggers on null, not on falsy values:
+
+```fab
+0 vel 5           # 0 (zero is not null)
+"" vel "default"  # "" (empty string is not null)
+nihil vel 5       # 5
+```
+
+Etymology: `vel` is the Latin inclusive "or" (meaning "or if you prefer"). In Faber, it carries the sense of "or else use this alternative."
+
+**Note:** The JavaScript `??` operator is not available. Use `vel` instead.
+
+### Null Checks
+
+Faber provides unary prefix operators for checking null state:
+
+```fab
+fixum textus? maybe = nihil
+
+scribe nihil maybe       # verum (is null)
+scribe nonnihil maybe    # falsum (is not null)
+```
+
+For checking whether a value is null or empty (strings, arrays, collections):
+
+```fab
+scribe nulla maybe       # verum (null or empty)
+scribe nonnulla maybe    # falsum (has content)
+```
+
+The distinction matters:
+- `nihil`/`nonnihil` check strictly for null
+- `nulla`/`nonnulla` check for null OR empty (length zero)
+
+---
+
+## Type Checking
+
+### est (Type Check)
+
+The `est` operator tests whether a value is of a particular type or is null:
+
+```fab
+fixum numerus? maybeValue = nihil
+fixum isNull = maybeValue est nihil    # verum
+```
+
+For negative type checking:
+
+```fab
+fixum isNotNull = maybeValue non est nihil
+```
+
+Etymology: `est` is the Latin verb "is" (third person singular of "esse", to be). The phrase `x est nihil` reads naturally as "x is nothing."
+
+### Boolean Checks
+
+Faber allows testing boolean values with `verum` and `falsum` as prefix operators:
+
+```fab
+fixum enabled = verum
+fixum isTrue = verum enabled     # strict check that enabled is true
+fixum isFalse = falsum disabled  # strict check that disabled is false
+```
+
+---
+
+## Ternary Expressions
+
+Conditional expressions select between two values based on a condition.
+
+### Symbolic Style
+
+The familiar question-mark-colon syntax:
+
+```fab
+fixum max = a > b ? a : b
+fixum grade = score >= 90 ? "A" : score >= 80 ? "B" : "C"
+```
+
+### Latin Style
+
+The `sic ... secus` form reads as "thus ... otherwise":
+
+```fab
+fixum max = a > b sic a secus b
+```
+
+Etymology:
+- `sic` means "thus" or "so" (as in "sic semper tyrannis")
+- `secus` means "otherwise" or "differently"
+
+The Latin form works well when the condition and branches are short. For complex nested conditions, symbolic style may be clearer. Do not mix the two forms in a single expression.
+
+---
+
+## Ranges
+
+Range operators create sequences of numbers for iteration.
+
+### Exclusive Ranges
+
+The `..` operator creates a range that excludes the end value:
+
+```fab
+ex 0..10 pro i {
+    scribe i    # 0, 1, 2, ..., 9
+}
+```
+
+The Latin keyword `ante` ("before") means the same thing:
+
+```fab
+ex 0 ante 10 pro i {
+    scribe i    # 0, 1, 2, ..., 9
+}
+```
+
+### Inclusive Ranges
+
+The `usque` operator includes the end value:
+
+```fab
+ex 0 usque 10 pro i {
+    scribe i    # 0, 1, 2, ..., 10
+}
+```
+
+Etymology: `usque` means "up to" or "as far as" in Latin, implying inclusion of the destination.
+
+### Stepped Ranges
+
+The `per` modifier controls the step size:
+
+```fab
+ex 0..10 per 2 pro i {
+    scribe i    # 0, 2, 4, 6, 8
+}
+```
+
+For descending ranges, use a negative step:
+
+```fab
+ex 10..0 per -1 pro i {
+    scribe i    # 10, 9, 8, ..., 1
+}
+```
+
+Etymology: `per` means "by" or "through" in Latin.
+
+### Range Containment
+
+The `intra` operator tests whether a value falls within a range:
+
+```fab
+si age intra 18 usque 65 {
+    scribe "working age"
+}
+
+si value intra 0..100 {
+    scribe "valid percentage"
+}
+```
+
+Etymology: `intra` means "within" in Latin.
+
+---
+
+## Set Membership
+
+The `inter` operator tests whether a value appears in a collection:
+
+```fab
+si status inter ["pending", "active", "paused"] {
+    scribe "valid status"
+}
+```
+
+Etymology: `inter` means "among" or "between" in Latin.
+
+---
+
+## Assignment
+
+Simple assignment uses the equals sign:
+
+```fab
+varia x = 10
+x = 20
+```
+
+Compound assignment operators combine an operation with assignment:
+
+```fab
+varia counter = 0
+counter += 10    # add and assign
+counter -= 3     # subtract and assign
+counter *= 2     # multiply and assign
+counter /= 2     # divide and assign
+```
+
+Bitwise compound assignment is also available:
+
+```fab
+varia flags = 0b1010
+flags &= mask    # bitwise AND and assign
+flags |= flag    # bitwise OR and assign
+```
+
+---
+
+## Bitwise Operators
+
+Low-level bit manipulation uses symbolic operators exclusively. These operations are inherently machine-oriented and do not benefit from Latin keywords.
+
+```fab
+fixum flags = 0b1010
+fixum mask = 0b1100
+
+fixum bitwiseAnd = flags & mask      # AND
+fixum bitwiseOr = flags | mask       # OR
+fixum bitwiseXor = flags ^ mask      # XOR
+fixum bitwiseNot = ~flags            # NOT (complement)
+fixum leftShift = 1 << 4             # left shift
+fixum rightShift = 16 >> 2           # right shift
+```
+
+**Precedence note:** Unlike C, bitwise operators in Faber bind tighter than comparison operators. This means:
+
+```fab
+flags & mask == 0    # parses as (flags & mask) == 0
+```
+
+This matches programmer intent and avoids a common source of bugs in C-family languages.
+
+---
+
+## Why Both Forms?
+
+Faber's dual operator syntax reflects a deeper design principle: code is read by both humans and machines, and different readers benefit from different representations.
+
+Latin keywords make semantic relationships explicit. When you write `a et b`, the word "and" appears in the code. When you write `maybeName vel "default"`, the sense of "or alternatively" is visible. This clarity benefits code review, documentation, and AI systems that process code as natural language.
+
+Symbolic operators serve programmers who think in terms of established conventions. A `&&` is immediately recognizable to anyone with C-family experience. For quick expressions or dense logic, symbols can be more scannable.
+
+The language does not privilege one form over the other in parsing or semantics. Choose based on context: Latin for clarity, symbols for familiarity. Many programmers find that Latin keywords work best in conditionals and control flow, while symbols suit arithmetic and bitwise operations.
+
+This flexibility embodies Faber's motto of accessibility over purity. The goal is not to force Latin on reluctant programmers, but to offer it as a tool for those who find it clarifying.
+
 
 
 ---
@@ -9558,116 +9445,385 @@ unary := ('!' | '-' | 'non' | 'nulla' | 'nonnulla' | 'nihil' | 'nonnihil' | 'neg
 
 # Structurae
 
-Data structures: classes (genus), objects, member access, and instantiation.
+Faber provides two fundamental building blocks for defining data structures: `genus` for concrete data types with fields and methods, and `pactum` for behavioral contracts that define what a type can do. This document explains how to declare, instantiate, and work with both.
 
-## Exempla
-
-- `exempla/structurae/`
+The Latin terminology reflects the conceptual distinction: a `genus` (meaning "birth, origin, kind") describes what something *is*, while a `pactum` (meaning "agreement, contract") describes what something *promises to do*.
 
 ---
 
-## Syntax
+## genus (Data Types)
 
-### Genus Declaration
+A `genus` declaration creates a data type with fields and optional methods. Unlike class-based languages that emphasize inheritance hierarchies, Faber's `genus` follows struct semantics: fields are public by default, and composition is preferred over inheritance.
 
-```ebnf
-genusDecl := 'abstractus'? 'genus' IDENTIFIER typeParams? ('sub' IDENTIFIER)? ('implet' IDENTIFIER (',' IDENTIFIER)*)? '{' genusMember* '}'
-typeParams := '<' IDENTIFIER (',' IDENTIFIER)* '>'
-genusMember := fieldDecl | methodDecl
-```
+### Declaration
 
-> Latin 'genus' (kind/type) for data structures.
-> 'sub' (under) for inheritance - child is under parent.
-> 'implet' (fulfills) for implementing pactum interfaces.
-> 'abstractus' for abstract classes that cannot be instantiated.
-
-### Genus Member
-
-```ebnf
-genusMember := annotation* (fieldDecl | methodDecl)
-annotation := '@' IDENTIFIER+
-fieldDecl := 'generis'? 'nexum'? typeAnnotation IDENTIFIER (':' expression)?
-methodDecl := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause? blockStmt?
-funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
-```
-
-> Distinguishes between fields and methods by looking for 'functio' keyword.
-> Fields are public by default (struct semantics).
-> Use annotations for visibility: @ privatum, @ protectum.
-> Use annotations for abstract methods: @ abstracta (no body, must be overridden).
-
-### Pactum Declaration
-
-```ebnf
-pactumDecl := 'pactum' IDENTIFIER typeParams? '{' pactumMethod* '}'
-typeParams := '<' IDENTIFIER (',' IDENTIFIER)* '>'
-```
-
-> Latin 'pactum' (agreement/contract) for interfaces.
-> Defines method signatures that genus types can implement via 'implet'.
-
-**Examples:**
+The basic form declares a type name followed by its fields inside braces:
 
 ```fab
-pactum Legibilis { functio lege() -> textus }
-pactum Mappabilis<T, U> { functio mappa(T valor) -> U }
+genus Punctum {
+    numerus x
+    numerus y
+}
 ```
 
-### Pactum Method
+Each field declaration specifies the type first, then the field name. This follows Faber's type-first convention, making the shape of data immediately visible.
 
-```ebnf
-pactumMethod := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause?
-funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
-returnClause := ('->' | 'fit' | 'fiet' | 'fiunt' | 'fient') typeAnnotation
+A `genus` can contain any number of fields:
+
+```fab
+genus Persona {
+    textus nomen
+    numerus aetas
+    bivalens activus
+}
 ```
 
-> Method signatures without bodies. Same syntax as function declarations
-> but terminates after return type (no block).
+Type names in Faber are conventionally lowercase, following Latin's case conventions where common nouns are not capitalized. The parser is case-insensitive, but the canonical style uses lowercase: `genus persona`, not `genus Persona`.
 
-### Call
+### Field Defaults
 
-```ebnf
-call := primary (callSuffix | memberSuffix | optionalSuffix | nonNullSuffix)*
-callSuffix := '(' argumentList ')'
-memberSuffix := '.' IDENTIFIER | '[' expression ']'
-optionalSuffix := '?.' IDENTIFIER | '?[' expression ']' | '?(' argumentList ')'
-nonNullSuffix := '!.' IDENTIFIER | '![' expression ']' | '!(' argumentList ')'
+Fields can specify default values using the colon (`:`) syntax:
+
+```fab
+genus Persona {
+    textus nomen: "Incognitus"
+    numerus aetas: 0
+    bivalens activus: verum
+}
 ```
 
-> Handles function calls, member access, and computed member access.
-> Left-associative via loop (obj.a.b parsed as (obj.a).b).
-> 
-> OPTIONAL CHAINING: ?. ?[ ?( return nihil if object is nihil
-> NON-NULL ASSERTION: !. ![ !( assert object is not nihil
+When a default is provided, the field becomes optional during instantiation. Fields without defaults are required.
 
-### Argument List
+The colon syntax deserves explanation. Faber distinguishes between two operations:
 
-```ebnf
-argumentList := (argument (',' argument)*)?
-argument := 'sparge' expression | expression
+| Syntax | Meaning | Context |
+|--------|---------|---------|
+| `:` | "has value" / "defaults to" | Field defaults, object literals, construction |
+| `=` | "assign value" | Variable binding, reassignment, method bodies |
+
+The colon represents a *declarative specification*: this field has this value by nature of its definition. The equals sign represents an *imperative action*: assign this value to that location.
+
+This distinction creates consistency across the language. Object literals use colons (`{ nomen: "Marcus" }`), construction overrides use colons, and field defaults use colons. All three are specifying property values, not performing assignment.
+
+### Methods
+
+A `genus` can include methods alongside its fields. Methods are declared with the `functio` keyword:
+
+```fab
+genus Rectangle {
+    numerus width: 1
+    numerus height: 1
+
+    functio area() -> numerus {
+        redde ego.width * ego.height
+    }
+
+    functio perimeter() -> numerus {
+        redde 2 * (ego.width + ego.height)
+    }
+
+    functio isSquare() -> bivalens {
+        redde ego.width == ego.height
+    }
+}
 ```
 
-### Primary
+Methods can return values, modify state, or both:
 
-```ebnf
-primary := IDENTIFIER | NUMBER | STRING | TEMPLATE_STRING
-| 'ego' | 'verum' | 'falsum' | 'nihil'
-| '(' (expression | arrowFunction) ')'
+```fab
+genus Counter {
+    numerus count: 0
+
+    functio increment() {
+        ego.count = ego.count + 1
+    }
+
+    functio getValue() -> numerus {
+        redde ego.count
+    }
+}
 ```
 
-> Latin literals: verum (true), falsum (false), nihil (null).
-> 'ego' (I/self) is the self-reference keyword (like 'this' in JS).
-> Parenthesized expressions require lookahead to distinguish from arrow functions.
+Methods are public by default, matching the struct semantics of `genus`. Use the `@ privata` annotation for internal helper methods.
 
-### Identifier
+### Self-Reference with ego
 
-```ebnf
-identifier := IDENTIFIER
+Within methods, `ego` refers to the current instance. The word is Latin for "I" or "self", making the self-reference explicit in every usage.
+
+```fab
+functio celebraNatalem() {
+    ego.aetas = ego.aetas + 1
+}
+```
+
+Unlike languages where `this` is implicit or optional, Faber requires explicit `ego` for all instance member access. This eliminates ambiguity between local variables and instance fields, and makes the flow of data through an object visible.
+
+### Static Members with generis
+
+Members that belong to the type itself rather than instances use the `generis` keyword. The word is the genitive form of `genus`, literally meaning "of the type":
+
+```fab
+genus Colores {
+    generis fixum ruber = "#FF0000"
+    generis fixum viridis = "#00FF00"
+    generis fixum caeruleus = "#0000FF"
+}
+
+genus Math {
+    generis fixum PI = 3.14159
+    generis fixum E = 2.71828
+
+    generis functio maximus(numerus a, numerus b) -> numerus {
+        si a > b { redde a }
+        redde b
+    }
+}
+```
+
+Access static members through the type name:
+
+```fab
+scribe Colores.ruber      # "#FF0000"
+scribe Math.PI            # 3.14159
+fixum m = Math.maximus(5, 3)  # 5
+```
+
+Static members are useful for constants, utility functions, and factory methods that don't require instance state.
+
+### Field Visibility
+
+Fields in a `genus` are public by default, following struct semantics where data is meant to be accessed directly. For fields that should be encapsulated, use visibility annotations:
+
+```fab
+genus Persona {
+    textus nomen              # public (default)
+
+    @ privatum
+    numerus internaAetas      # private - only accessible within this genus
+}
+```
+
+The `@ privatum` annotation marks a field as accessible only within the `genus` that declares it. The `@ protectum` annotation allows access from subtypes as well.
+
+### Method Visibility
+
+Methods follow the same pattern:
+
+```fab
+genus Processor {
+    functio process() -> textus {       # public (default)
+        redde ego.auxilium()
+    }
+
+    @ privata
+    functio auxilium() -> textus {      # private helper
+        redde "internal work"
+    }
+}
+```
+
+Note the grammatical agreement: `privatum` for fields (neuter), `privata` for methods (feminine, agreeing with `functio`).
+
+### Abstract Types
+
+The `abstractus` modifier creates a type that cannot be instantiated directly. Abstract types define structure and behavior that subtypes must complete:
+
+```fab
+abstractus genus Figura {
+    @ abstracta
+    functio area() -> numerus
+}
+```
+
+Methods marked with `@ abstracta` have no body; subtypes must provide the implementation.
+
+### Generics
+
+A `genus` can be parameterized with type variables:
+
+```fab
+genus Capsa<T> {
+    T valor
+
+    functio accipe() -> T {
+        redde ego.valor
+    }
+}
+
+fixum c = novum Capsa<numerus> { valor: 42 }
+scribe c.accipe()  # 42
+```
+
+Multiple type parameters are comma-separated: `genus Pair<K, V> { ... }`.
+
+---
+
+## pactum (Interfaces)
+
+A `pactum` defines a contract: a set of method signatures that a type promises to implement. The word means "agreement" or "pact", reflecting its role as a behavioral promise rather than a structural definition.
+
+### Declaration
+
+A `pactum` declares method signatures without implementations:
+
+```fab
+pactum Drawable {
+    functio draw() -> vacuum
+}
+
+pactum Iterabilis<T> {
+    functio sequens() -> T?
+    functio habet() -> bivalens
+}
+```
+
+Unlike `genus`, a `pactum` cannot have fields or property requirements. It defines only what a type can *do*, not what it *has*. This constraint keeps interfaces focused on behavior.
+
+### Implementation with implet
+
+A `genus` fulfills a `pactum` using the `implet` keyword (Latin "fulfills"):
+
+```fab
+genus Circle implet Drawable {
+    numerus radius: 10
+
+    functio draw() {
+        scribe scriptum("Drawing circle with radius §", ego.radius)
+    }
+}
+
+genus Square implet Drawable {
+    numerus side: 5
+
+    functio draw() {
+        scribe scriptum("Drawing square with side §", ego.side)
+    }
+}
+```
+
+The implementing type must provide concrete implementations for all methods declared in the `pactum`. The compiler verifies this at compile time.
+
+A type can implement multiple interfaces:
+
+```fab
+genus Document implet Readable, Writable, Printable {
+    # must implement methods from all three pactum
+}
 ```
 
 ---
 
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
+## Instantiation
+
+### Creating Instances with novum
+
+The `novum` keyword creates a new instance of a `genus`. The word is Latin for "new":
+
+```fab
+fixum p = novum Punctum { x: 10, y: 20 }
+```
+
+Field values are provided in an object literal following the type name. Required fields (those without defaults) must be specified:
+
+```fab
+genus Persona {
+    textus nomen           # required - no default
+    numerus aetas: 0       # optional - has default
+}
+
+# nomen is required, aetas is optional
+fixum marcus = novum Persona { nomen: "Marcus" }
+scribe marcus.aetas  # 0 (default)
+
+# Override defaults by providing values
+fixum julia = novum Persona { nomen: "Julia", aetas: 25 }
+```
+
+When all fields have defaults, the literal can be omitted entirely:
+
+```fab
+genus Counter {
+    numerus count: 0
+}
+
+varia counter = novum Counter  # no braces needed
+```
+
+### Construction from Variables
+
+When constructing from an existing variable, use the `de` (from) preposition:
+
+```fab
+fixum props = getPersonaProps()
+fixum p = novum Persona de props
+```
+
+This merges the source object's fields into the new instance, following the same rules as literal construction.
+
+### The creo() Hook
+
+The optional `creo()` method runs after construction is complete. Use it for validation, clamping values, or computing derived state:
+
+```fab
+genus BoundedValue {
+    numerus value: 0
+
+    functio creo() {
+        si ego.value < 0 {
+            ego.value = 0
+        }
+        si ego.value > 100 {
+            ego.value = 100
+        }
+    }
+}
+```
+
+The initialization sequence is:
+
+1. Field defaults are applied
+2. Literal overrides (or `de` source) are merged
+3. `creo()` runs if defined
+
+By the time `creo()` executes, `ego` already has all its field values. The method takes no parameters because everything it needs is already on the instance.
+
+A practical use is computing derived fields:
+
+```fab
+genus Circle {
+    numerus radius: 1
+    numerus diameter: 0
+    numerus area: 0
+
+    functio creo() {
+        ego.diameter = ego.radius * 2
+        ego.area = 3.14159 * ego.radius * ego.radius
+    }
+}
+
+fixum c = novum Circle { radius: 5 }
+scribe c.diameter  # 10
+scribe c.area      # 78.54
+```
+
+Most types will not need `creo()`. The declarative field defaults handle the common case. Reserve `creo()` for invariants, validation, or derived initialization that cannot be expressed as simple defaults.
+
+---
+
+## Design Philosophy
+
+Faber's type system reflects several deliberate choices:
+
+**Composition over inheritance.** There is no `extends` keyword. Types compose behavior through `implet` and embed other types as fields. This avoids the fragility of deep inheritance hierarchies.
+
+**Methods over getters.** Faber omits computed properties (getters). Derived values use explicit methods: `r.area()` rather than `r.area`. The parentheses honestly communicate that computation is happening. Getters that start simple often grow complex, but their API is locked to property syntax.
+
+**Struct semantics by default.** Fields are public unless explicitly marked private. This transparency suits data-oriented design where types are containers of state rather than encapsulated black boxes.
+
+**No classes, no constructors.** The `genus` keyword names a type of thing, not a blueprint for objects. Construction happens through `novum` with declarative field specification, not imperative constructor logic.
+
+These choices produce code that is explicit about data flow and honest about computation. The Roman craftsman built things to last; Faber aims for code that remains comprehensible as it evolves.
+
 
 
 ---
@@ -9677,1315 +9833,1650 @@ identifier := IDENTIFIER
 
 # Regimen
 
-Control flow: conditionals, loops, guards, assertions, and program structure.
+Control flow determines how a program executes: which statements run, in what order, and under what conditions. Faber uses Latin keywords that map intuitively to their English equivalents while reading naturally as Latin prose.
 
-## Exempla
-
-- `exempla/regimen/`
+The Latin word *regimen* means "guidance" or "direction"—literally, the act of steering. In Faber, control flow keywords *steer* execution through conditionals, loops, and branching constructs.
 
 ---
 
-## Syntax
+## Conditionals
 
-### Annotation
+Conditional statements execute code based on whether a condition evaluates to true or false.
 
-```ebnf
-annotation := '@' IDENTIFIER (expression)?
-```
+### si (If)
 
-### Program
-
-```ebnf
-program := statement*
-```
-
-### Annotations
-
-```ebnf
-annotation := '@' IDENTIFIER+
-```
-
-> Annotations modify the following declaration with metadata like
-> visibility (publicum, privatum), async (futura), abstract (abstractum).
-
-### Statement
-
-```ebnf
-statement := importDecl | varDecl | funcDecl | typeAliasDecl | ifStmt | whileStmt | forStmt
-| returnStmt | throwStmt | tryStmt | blockStmt | exprStmt
-```
-
-> Uses lookahead to determine statement type via keyword inspection.
-
-### Specifier
-
-```ebnf
-specifier := 'ceteri'? IDENTIFIER ('ut' IDENTIFIER)?
-```
-
-> Shared between imports and destructuring.
-> 'ceteri' (rest) is only valid in destructuring contexts.
-> 'ut' provides aliasing: nomen ut n
-
-**Examples:**
+The keyword `si` means "if" in Latin. It introduces a condition that, when true, executes the following block.
 
 ```fab
-scribe             -> imported=scribe, local=scribe
-scribe ut s        -> imported=scribe, local=s
-ceteri rest        -> imported=rest, local=rest, rest=true
-```
-
-### Importa Declaration
-
-```ebnf
-importDecl := 'ex' (STRING | IDENTIFIER) 'importa' (specifierList | '*')
-specifierList := specifier (',' specifier)*
-specifier := IDENTIFIER ('ut' IDENTIFIER)?
-```
-
-**Examples:**
-
-```fab
-ex norma importa scribe, lege
-ex norma importa scribe ut s, lege ut l
-ex "norma/tempus" importa nunc, dormi
-ex norma importa *
-```
-
-### Varia Declaration
-
-```ebnf
-varDecl := ('varia' | 'fixum' | 'figendum' | 'variandum') typeAnnotation? IDENTIFIER ('=' expression)?
-arrayDestruct := ('varia' | 'fixum' | 'figendum' | 'variandum') arrayPattern '=' expression
-```
-
-> Type-first syntax: "fixum textus nomen = value" or "fixum nomen = value"
-> Latin 'varia' (let it be) for mutable, 'fixum' (fixed) for immutable.
-
-### Array Pattern
-
-```ebnf
-arrayPattern := '[' arrayPatternElement (',' arrayPatternElement)* ']'
-arrayPatternElement := '_' | 'ceteri'? IDENTIFIER
-```
-
-**Examples:**
-
-```fab
-[a, b, c]                 // extract first three elements
-[first, ceteri rest]     // extract first, collect rest
-[_, second, _]           // skip first and third, extract second
-
-T SUPPORTED:
-[...rest]                // JS spread syntax
-[*rest]                  // Python unpack syntax
-```
-
-### Functio Declaration
-
-```ebnf
-funcDecl := 'functio' IDENTIFIER '(' paramList ')' funcModifier* returnClause? blockStmt
-paramList := (typeParamDecl ',')* (parameter (',' parameter)*)?
-typeParamDecl := 'prae' 'typus' IDENTIFIER
-funcModifier := 'futura' | 'cursor' | 'curata' IDENTIFIER
-returnClause := ('->' | 'fit' | 'fiet' | 'fiunt' | 'fient') typeAnnotation
-```
-
-> All function declarations start with 'functio' for consistent parsing.
-> Modifiers come after the parameter list, before the return clause.
-> 'futura' marks async functions (future/promise-based).
-> 'cursor' marks generator functions (yield-based).
-> 'curata NAME' marks managed functions (receives allocator as NAME).
-> 
-> TYPE PARAMETERS: 'prae typus T' declares compile-time type parameters.
-> functio max(prae typus T, T a, T b) -> T { ... }
-> Maps to: <T> (TS/Rust), TypeVar (Py), comptime T: type (Zig)
-> 
-> RETURN TYPE VERBS: Latin verb forms encode async/generator semantics directly:
-> '->'    neutral arrow (semantics from modifier only)
-> 'fit'   "it becomes" - sync, returns single value
-> 'fiet'  "it will become" - async, returns Promise<T>
-> 'fiunt' "they become" - sync generator, yields multiple values
-> 'fient' "they will become" - async generator, yields Promise values
-> 
-> When using verb forms, the futura/cursor modifier is NOT required - the verb
-> itself carries the semantic information. The modifier becomes redundant:
-> functio compute() -> numerus { ... }         // arrow: sync by default
-> functio compute() fit numerus { ... }        // verb: explicitly sync
-> functio fetch() futura -> textus { ... }     // modifier: async
-> functio fetch() fiet textus { ... }          // verb implies async
-> functio items() cursor -> numerus { ... }    // modifier: generator
-> functio items() fiunt numerus { ... }        // verb implies generator
-> functio stream() fient datum { ... }         // verb implies async generator
-> functio alloc(textus s) curata a -> T { ... } // managed, allocator bound as 'a'
-> 
-> Modifier is still allowed for emphasis, but verb/modifier conflicts are errors.
-> 
-> NOT SUPPORTED (will produce parser errors):
-> - TS-style param annotation: functio f(x: textus) (use: functio f(textus x))
-> - TS-style return type: functio f(): textus (use: functio f() -> textus)
-> - Trailing comma in params: functio f(a, b,)
-
-### Type And Parameter List
-
-```ebnf
-paramList := (typeParamDecl ',')* (parameter (',' parameter)*)?
-typeParamDecl := 'prae' 'typus' IDENTIFIER
-```
-
-> Type parameters (prae typus T) must come first, followed by regular params.
-> This matches the conventions of TypeScript, Rust, and Zig.
-
-**Examples:**
-
-```fab
-(prae typus T, T a, T b)     -> typeParams=[T], params=[a, b]
-(prae typus T, prae typus U) -> typeParams=[T, U], params=[]
-(numerus a, numerus b)       -> typeParams=[], params=[a, b]
-```
-
-### Ordo Declaration
-
-```ebnf
-enumDecl := 'ordo' IDENTIFIER '{' enumMember (',' enumMember)* ','? '}'
-enumMember := IDENTIFIER ('=' ('-'? NUMBER | STRING))?
-```
-
-> Latin 'ordo' (order/rank) for enumerated constants.
-
-**Examples:**
-
-```fab
-ordo color { rubrum, viridis, caeruleum }
-ordo status { pendens = 0, actum = 1, finitum = 2 }
-ordo offset { ante = -1, ad = 0, post = 1 }
-```
-
-### Discretio Declaration
-
-```ebnf
-discretioDecl := 'discretio' IDENTIFIER typeParams? '{' variant (',' variant)* ','? '}'
-variant := IDENTIFIER ('{' variantFields '}')?
-variantFields := (typeAnnotation IDENTIFIER (',' typeAnnotation IDENTIFIER)*)?
-```
-
-> Latin 'discretio' (distinction) for tagged unions.
-> Each variant has a compiler-managed tag for exhaustive pattern matching.
-
-**Examples:**
-
-```fab
-discretio Event {
-    Click { numerus x, numerus y }
-    Keypress { textus key }
-    Quit
-}
-
-discretio Option<T> {
-    Some { T value }
-    None
+si x > 0 {
+    scribe "positive"
 }
 ```
 
-### Variant Declaration
+The condition must be a boolean expression. If it evaluates to `verum` (true), the block executes. Otherwise, execution continues past the block.
 
-```ebnf
-variant := IDENTIFIER ('{' variantFields '}')?
-variantFields := (typeAnnotation IDENTIFIER (',' typeAnnotation IDENTIFIER)*)?
-```
-
-> Variant names are capitalized by convention (like type names).
-> Fields use type-first syntax like genus fields.
-
-**Examples:**
+Multiple statements can appear within the block:
 
 ```fab
-Click { numerus x, numerus y }  -> fields with payload
-Quit                            -> unit variant (no payload)
+si user.authenticated {
+    scribe "Welcome back"
+    loadUserPreferences(user)
+    updateLastLogin(user)
+}
 ```
 
-### Si Statement
+### sin (Else If)
 
-```ebnf
-ifStmt := 'si' expression (blockStmt | 'ergo' statement | 'reddit' expression) ('cape' IDENTIFIER blockStmt)? (elseClause | 'sin' ifStmt)?
-elseClause := ('secus' | 'secus') (ifStmt | blockStmt | statement)
-```
-
-> 'cape' (catch/seize) clause allows error handling within conditionals.
-> 'ergo' (therefore) for one-liner consequents.
-> 'reddit' (it returns) for early return one-liners.
-> 
-> TWO STYLE OPTIONS (both supported, can be mixed within the same chain):
-> 
-> Literal style: si / sin / secus
-> si x > 0 { positive() }
-> sin x < 0 { negative() }
-> secus { zero() }
-> 
-> Poetic style: si / sin / secus
-> si x > 0 { positive() }
-> sin x < 0 { negative() }    // "sin" = "but if" (classical Latin)
-> secus { zero() }            // "secus" = "otherwise"
-> 
-> Keywords are interchangeable at each branch point:
-> - 'sin' ≡ 'sin' (else-if)
-> - 'secus' ≡ 'secus' (else)
-> - Mixed: si ... sin ... secus { } is valid
-
-**Examples:**
+The keyword `sin` is a classical Latin contraction of `si non`—"but if" or "if however." It chains additional conditions after an initial `si`.
 
 ```fab
-si x > 5 ergo scribe("big")
-si x > 5 reddit verum            // early return
-si x > 5 { scribe("big") } secus scribe("small")
-si x < 0 { ... } sin x == 0 { ... } secus { ... }
+fixum hour = 14
+
+si hour < 6 {
+    scribe "Late night"
+}
+sin hour < 12 {
+    scribe "Morning"
+}
+sin hour < 18 {
+    scribe "Afternoon"
+}
+sin hour < 22 {
+    scribe "Evening"
+}
 ```
 
-### Dum Statement
+Each `sin` condition is tested only if all preceding conditions were false. The chain stops at the first true condition.
 
-```ebnf
-whileStmt := 'dum' expression (blockStmt | 'ergo' statement | 'reddit' expression) ('cape' IDENTIFIER blockStmt)?
-```
+### secus (Else)
 
-> 'dum' (while/until) for while loops.
-
-**Examples:**
+The keyword `secus` means "otherwise" in Latin. It provides a default branch when no preceding condition matched.
 
 ```fab
-dum x > 0 { x = x - 1 }
-dum x > 0 ergo x = x - 1
-dum x > 0 reddit x
+si hour < 12 {
+    scribe "Morning"
+}
+sin hour < 18 {
+    scribe "Afternoon"
+}
+secus {
+    scribe "Evening or night"
+}
 ```
 
-### Ex Statement
+A `secus` block always executes if reached—it has no condition to test. It must appear last in a conditional chain.
 
-```ebnf
-exStmt := 'ex' expression (forBinding | destructBinding | arrayDestructBinding)
-forBinding := ('pro' | 'fit' | 'fiet') IDENTIFIER (blockStmt | 'ergo' statement | 'reddit' expression) catchClause?
-destructBinding := ('fixum' | 'varia' | 'figendum' | 'variandum') specifierList
-arrayDestructBinding := ('fixum' | 'varia' | 'figendum' | 'variandum') arrayPattern
-specifierList := specifier (',' specifier)*
-specifier := 'ceteri'? IDENTIFIER ('ut' IDENTIFIER)?
-```
+### Short Forms
 
-> 'ex' (from/out of) introduces both iteration and extraction:
-> - Iteration: ex items pro item { ... } (for each item from items)
-> - Object destructuring: ex persona fixum nomen, aetas (extract properties)
-> - Array destructuring: ex coords fixum [x, y, z] (extract by position)
-> - Async destructuring: ex promise figendum result (await + extract)
-> 
-> The binding keywords encode mutability and async semantics:
-> - fixum: immutable binding (const)
-> - varia: mutable binding (let)
-> - figendum: immutable + await (const with await)
-> - variandum: mutable + await (let with await)
+Faber provides concise syntax for simple conditionals.
 
-**Examples:**
+#### ergo (Therefore)
+
+The keyword `ergo` means "therefore" or "thus" in Latin—expressing logical consequence. Use it for one-liner conditionals where a block would be verbose.
 
 ```fab
-ex numeri pro n { ... }              // for-loop (sync)
-ex numeri fiet n { ... }             // for-await-of loop (async)
-ex persona fixum nomen, aetas        // object destructuring
-ex persona fixum nomen ut n          // object destructuring with alias
-ex persona fixum nomen, ceteri rest  // object destructuring with rest
-ex coords fixum [x, y, z]            // array destructuring
-ex fetchData() figendum result       // async destructuring
-
-llection DSL forms:
-ex items prima 5 pro item { }        // iteration with transforms
-ex items prima 5, ultima 2 pro x {}  // multiple transforms
+si x > 5 ergo scribe "x is big"
 ```
 
-### D S L Transforms
-
-```ebnf
-dslTransforms := dslTransform (',' dslTransform)*
-dslTransform := dslVerb expression?
-dslVerb := 'prima' | 'ultima' | 'summa'
-```
-
-> DSL provides concise syntax for common collection operations.
-> Transforms chain with commas: prima 5, ultima 3
-
-**Examples:**
+This is equivalent to:
 
 ```fab
-prima 5           -> first 5 elements
-ultima 3          -> last 3 elements
-summa             -> sum (no argument)
-prima 5, ultima 2 -> first 5, then last 2 of those
+si x > 5 {
+    scribe "x is big"
+}
 ```
 
-### Collection D S L Expression
-
-```ebnf
-dslExpr := 'ex' expression dslTransform (',' dslTransform)*
-```
-
-> When 'ex' appears in expression context with DSL verbs (not pro/fit/fiet),
-> it creates a collection pipeline expression that can be assigned.
-
-**Examples:**
+The `ergo` form works with `secus` for one-liner if-else:
 
 ```fab
-fixum top5 = ex items prima 5
-fixum total = ex prices summa
-fixum result = ex items prima 10, ultima 3
+si age >= 18 ergo scribe "Adult" secus scribe "Minor"
 ```
 
-### Ab Expression
+#### reddit (Early Return)
 
-```ebnf
-abExpr := 'ab' expression filter? (',' transform)*
-filter := ['non'] ('ubi' condition | identifier)
-condition := expression
-```
-
-> 'ab' (away from) is the dedicated DSL entry point for filtering.
-> The 'ex' preposition remains unchanged for iteration/import/destructuring.
-> Include/exclude is handled via 'non' keyword.
-
-**Examples:**
+The keyword `reddit` means "it returns" in Latin (third person singular of *reddere*, "to give back"). It combines `ergo` with `redde` for early return patterns.
 
 ```fab
-ab users activus                     // boolean property shorthand
-ab users non banned                  // negated boolean property
-ab users ubi aetas >= 18             // condition with ubi
-ab users non ubi banned et suspended // negated compound condition
-ab users activus, prima 10           // filter + transforms
-ab users activus pro user { }        // iteration form
+functio classify(numerus x) -> textus {
+    si x < 0 reddit "negative"
+    si x == 0 reddit "zero"
+    redde "positive"
+}
 ```
 
-### Regex Literal
-
-```ebnf
-regexLiteral := 'sed' STRING IDENTIFIER?
-```
-
-> 'sed' (the Unix stream editor) is synonymous with pattern matching.
-> The pattern string is passed through verbatim to the target.
-> Flags are a bare identifier after the pattern (no comma).
-
-**Examples:**
+This is equivalent to:
 
 ```fab
-sed "\\d+"           // pattern only
-sed "hello" i        // case insensitive
-sed "^start" im      // multiple flags
+functio classify(numerus x) -> textus {
+    si x < 0 {
+        redde "negative"
+    }
+    si x == 0 {
+        redde "zero"
+    }
+    redde "positive"
+}
 ```
 
-### De Statement
-
-```ebnf
-deStmt := 'de' expression ('pro' | 'fit' | 'fiet') IDENTIFIER
-(blockStmt | 'ergo' statement | 'reddit' expression) catchClause?
-```
-
-> 'de' (from/concerning) for extracting keys from an object.
-> Semantically read-only - contrasts with 'in' for mutation.
-
-**Examples:**
+The `reddit` form excels at guard clauses—conditions that validate input and exit early:
 
 ```fab
-de tabula pro clavis { ... }  // from table, for each key
-de object pro k ergo scribe k // one-liner form
-de object pro k reddit k      // return first key
+functio divide(numerus a, numerus b) -> numerus? {
+    si b == 0 reddit nihil
+    redde a / b
+}
 ```
 
-### In Statement
-
-```ebnf
-inStmt := 'in' expression blockStmt
-```
-
-> 'in' (into) for reaching into an object to modify it.
-> Semantically mutable - contrasts with 'de' for read-only iteration.
-
-**Examples:**
+It works throughout a conditional chain:
 
 ```fab
-in user { nomen = "Marcus" }  // mutation block
+functio grade(numerus score) -> textus {
+    si score >= 90 reddit "A"
+    sin score >= 80 reddit "B"
+    sin score >= 70 reddit "C"
+    sin score >= 60 reddit "D"
+    secus reddit "F"
+}
 ```
 
-### Elige Statement
+---
 
-```ebnf
-eligeStmt := 'elige' expression '{' eligeCase* defaultCase? '}' catchClause?
-eligeCase := 'casu' expression (blockStmt | 'ergo' statement | 'reddit' expression)
-defaultCase := 'ceterum' (blockStmt | statement)
+## Loops
+
+Loops repeat a block of code, either a fixed number of times or until a condition changes.
+
+### dum (While)
+
+The keyword `dum` means "while" or "as long as" in Latin. It executes a block repeatedly while a condition remains true.
+
+```fab
+varia numerus counter = 0
+
+dum counter < 5 {
+    scribe counter
+    counter = counter + 1
+}
 ```
 
-> 'elige' (choose) for value-based switch.
-> 'ergo' (therefore) for one-liners, 'ceterum' (otherwise) for default.
-> 'reddit' (it returns) for early return one-liners.
-> For variant matching on discretio types, use 'discerne' instead.
+The condition is checked before each iteration. If it starts false, the block never executes.
 
-**Examples:**
+While loops work well for countdown patterns:
+
+```fab
+varia numerus countdown = 3
+
+dum countdown > 0 {
+    scribe "Countdown:", countdown
+    countdown = countdown - 1
+}
+scribe "Done!"
+```
+
+The one-liner form uses `ergo`:
+
+```fab
+dum i > 0 ergo i = i - 1
+```
+
+### ex...pro (For Each Values)
+
+The `ex...pro` construct iterates over values in a collection. The syntax reads naturally in Latin: "from items, for each item."
+
+```fab
+fixum numbers = [1, 2, 3, 4, 5]
+
+ex numbers pro n {
+    scribe n
+}
+```
+
+The Latin preposition `ex` means "from" or "out of"—the source from which values are drawn. The preposition `pro` means "for" or "on behalf of"—introducing the binding for each iteration.
+
+This source-first syntax differs from most programming languages. Where JavaScript writes `for (const item of items)`, Faber writes `ex items pro item`. The Faber form mirrors natural language: "from the list, for each element, do this."
+
+The syntax works with any iterable:
+
+```fab
+fixum names = ["Marcus", "Julia", "Claudia"]
+
+ex names pro name {
+    scribe name
+}
+```
+
+Processing each item:
+
+```fab
+fixum values = [10, 20, 30]
+
+ex values pro v {
+    fixum doubled = v * 2
+    scribe doubled
+}
+```
+
+The one-liner form:
+
+```fab
+ex numbers pro n ergo scribe n
+```
+
+#### Range Expressions
+
+Ranges generate sequences of numbers. Faber provides three range operators:
+
+| Operator | Latin Meaning | End Behavior | Example |
+|----------|---------------|--------------|---------|
+| `..` | (shorthand) | exclusive | `0..5` yields 0, 1, 2, 3, 4 |
+| `ante` | "before" | exclusive | `0 ante 5` yields 0, 1, 2, 3, 4 |
+| `usque` | "up to" | inclusive | `0 usque 5` yields 0, 1, 2, 3, 4, 5 |
+
+The `..` operator is convenient shorthand matching common programming conventions (Python's `range()`, Rust's `..`):
+
+```fab
+ex 0..5 pro i {
+    scribe i
+}
+```
+
+The `ante` keyword makes exclusivity explicit—the range stops *before* the end value:
+
+```fab
+ex 0 ante 5 pro i {
+    scribe i
+}
+```
+
+The `usque` keyword includes the end value—the range goes *up to and including* the end:
+
+```fab
+ex 0 usque 5 pro i {
+    scribe i
+}
+```
+
+For step increments, use `per`:
+
+```fab
+ex 0..10 per 2 pro i {
+    scribe i  # 0, 2, 4, 6, 8
+}
+
+ex 0 usque 10 per 2 pro i {
+    scribe i  # 0, 2, 4, 6, 8, 10
+}
+```
+
+### de...pro (For Each Keys)
+
+The `de...pro` construct iterates over keys (property names or indices) rather than values. The syntax reads: "concerning the object, for each key."
+
+```fab
+fixum persona = { nomen: "Marcus", aetas: 30, urbs: "Roma" }
+
+de persona pro clavis {
+    scribe clavis
+}
+```
+
+The Latin preposition `de` means "from" or "concerning"—indicating a read-only relationship with the object. You're iterating *concerning* the object's structure, not extracting its contents.
+
+To access values, use the key with bracket notation:
+
+```fab
+de persona pro clavis {
+    scribe scriptum("Key: §, Value: §", clavis, persona[clavis])
+}
+```
+
+For arrays, `de` iterates indices:
+
+```fab
+fixum numeri = [10, 20, 30]
+
+de numeri pro index {
+    scribe scriptum("Index §: §", index, numeri[index])
+}
+```
+
+The distinction between `ex` and `de` mirrors their Latin meanings:
+- `ex items pro item` — draw *values* **from** the collection
+- `de object pro key` — inspect *keys* **concerning** the object
+
+### Async Iteration
+
+For asynchronous streams, replace `pro` with `fiet` ("it will become"):
+
+```fab
+ex stream fiet chunk {
+    scribe chunk
+}
+```
+
+The verb `fiet` is the future tense of `fio` ("to become"). It signals that each iteration awaits the next value—the chunk "will become" available.
+
+| Keyword | Meaning | Compiles To |
+|---------|---------|-------------|
+| `pro` | "for" (preposition) | `for...of` |
+| `fit` | "it becomes" (present) | `for...of` |
+| `fiet` | "it will become" (future) | `for await...of` |
+
+The `fit` form is equivalent to `pro` and can be used interchangeably for sync iteration.
+
+### Loop Control
+
+Two keywords control loop flow:
+
+#### rumpe (Break)
+
+The keyword `rumpe` is the imperative of *rumpere* ("to break"). It exits the innermost loop immediately.
+
+```fab
+varia i = 0
+
+dum i < 10 {
+    si i == 5 {
+        rumpe
+    }
+    scribe i
+    i = i + 1
+}
+```
+
+Output: 0, 1, 2, 3, 4 (loop breaks when `i` reaches 5).
+
+In nested loops, `rumpe` exits only the inner loop:
+
+```fab
+ex 0..3 pro outer {
+    ex 0..10 pro inner {
+        si inner == 2 {
+            rumpe  # exits inner loop only
+        }
+        scribe scriptum("outer=§, inner=§", outer, inner)
+    }
+}
+```
+
+#### perge (Continue)
+
+The keyword `perge` is the imperative of *pergere* ("to continue" or "proceed"). It skips to the next iteration.
+
+```fab
+ex 0..10 pro i {
+    si i % 2 == 0 {
+        perge  # skip even numbers
+    }
+    scribe i
+}
+```
+
+Output: 1, 3, 5, 7, 9 (even numbers skipped).
+
+Like `rumpe`, `perge` affects only the innermost loop.
+
+---
+
+## Branching
+
+Branching statements select one path among several based on a value.
+
+### elige (Switch)
+
+The keyword `elige` is the imperative of *eligere* ("to choose"). It matches a value against cases.
+
+```fab
+fixum status = "active"
+
+elige status {
+    casu "pending" {
+        scribe "Waiting..."
+    }
+    casu "active" {
+        scribe "Running"
+    }
+    casu "done" {
+        scribe "Completed"
+    }
+}
+```
+
+The keyword `casu` is the ablative of *casus* ("case" or "instance")—literally "in the case of."
+
+Unlike C-family switch statements, Faber's `elige` does not fall through. Each `casu` is self-contained.
+
+For a default branch, use `ceterum` ("otherwise" or "for the rest"):
+
+```fab
+elige code {
+    casu 200 {
+        scribe "OK"
+    }
+    casu 404 {
+        scribe "Not Found"
+    }
+    ceterum {
+        scribe "Unknown status"
+    }
+}
+```
+
+One-liner cases use `ergo`:
 
 ```fab
 elige status {
-    casu "pending" ergo scribe("waiting")
-    casu "active" reddit verum
+    casu "pending" ergo scribe "waiting"
+    casu "active" ergo scribe "running"
     ceterum iace "Unknown status"
 }
 ```
 
-### Discerne Statement
-
-```ebnf
-discerneStmt := 'discerne' discriminants '{' variantCase* '}'
-discriminants := expression (',' expression)*
-variantCase := 'casu' patterns (blockStmt | 'ergo' statement | 'reddit' expression)
-patterns := pattern (',' pattern)*
-pattern := '_' | (IDENTIFIER patternBind?)
-patternBind := ('ut' IDENTIFIER) | ('pro' IDENTIFIER (',' IDENTIFIER)*)
-```
-
-> 'discerne' (distinguish!) pairs with 'discretio' (the tagged union type).
-> Uses 'casu' for match arms, 'ut' to bind whole variants, and 'pro' for positional bindings.
-> Multi-discriminant matching reduces nesting when comparing multiple values.
-
-**Examples:**
+Early returns use `reddit`:
 
 ```fab
-# Single discriminant
-discerne event {
-    casu Click pro x, y { scribe "clicked at " + x + ", " + y }
-    casu Keypress pro key reddit key
-    casu Quit ergo mori "goodbye"
+functio statusMessage(numerus code) -> textus {
+    elige code {
+        casu 200 reddit "OK"
+        casu 404 reddit "Not Found"
+        casu 500 reddit "Server Error"
+        ceterum reddit "Unknown"
+    }
 }
+```
 
-# Multi-discriminant
+### discerne (Pattern Match)
+
+The keyword `discerne` is the imperative of *discernere* ("to distinguish" or "discriminate"). It performs exhaustive pattern matching on tagged union types (*discretio*).
+
+First, define a `discretio` (tagged union):
+
+```fab
+discretio Event {
+    Click { numerus x, numerus y },
+    Keypress { textus key },
+    Quit
+}
+```
+
+Then match against it:
+
+```fab
+functio handle_event(Event e) -> nihil {
+    discerne e {
+        casu Click pro x, y {
+            scribe scriptum("Clicked at §, §", x, y)
+        }
+        casu Keypress pro key {
+            scribe scriptum("Key: §", key)
+        }
+        casu Quit {
+            scribe "Goodbye"
+        }
+    }
+}
+```
+
+The `pro` keyword destructures variant fields into local bindings. For the `Quit` variant (which has no fields), the block has no `pro` clause.
+
+For simple variants without data, the body can use `ergo`:
+
+```fab
+discretio Status { Active, Inactive, Pending }
+
+functio describe(Status s) -> textus {
+    discerne s {
+        casu Active ergo redde "active"
+        casu Inactive ergo redde "inactive"
+        casu Pending ergo redde "pending"
+    }
+}
+```
+
+To bind the entire variant (not just its fields), use `ut`:
+
+```fab
 discerne left, right {
-    casu Primitivum ut l, Primitivum ut r { redde l.nomen == r.nomen }
-    casu _, _ { redde falsum }
+    casu Primitivum ut l, Primitivum ut r {
+        redde l.nomen == r.nomen
+    }
+    casu _, _ {
+        redde falsum
+    }
 }
 ```
 
-### Variant Pattern
+The underscore `_` is the wildcard pattern—it matches any variant without binding.
 
-```ebnf
-pattern := '_' | (IDENTIFIER patternBind?)
-patternBind := ('ut' IDENTIFIER) | ('pro' IDENTIFIER (',' IDENTIFIER)*)
-```
+The difference between `elige` and `discerne`:
+- `elige` matches against primitive values (numbers, strings)
+- `discerne` matches against `discretio` variants with destructuring
 
-> Patterns match against discriminants in discerne statements.
-> Wildcard '_' matches any variant without binding.
-> 'ut' binds the whole variant, 'pro' destructures fields.
-> 
-> DISAMBIGUATION: After 'pro', commas separate bindings until we see:
-> - '_' (wildcard pattern)
-> - An identifier followed by 'ut' or 'pro' (new pattern with binding)
-> - '{', 'ergo', 'reddit' (end of patterns)
+---
 
-### Custodi Statement
+## Guards and Assertions
 
-```ebnf
-guardStmt := 'custodi' '{' guardClause+ '}'
-guardClause := 'si' expression (blockStmt | 'ergo' statement | 'reddit' expression)
-```
+Guards and assertions enforce invariants—conditions that must hold for the program to proceed correctly.
 
-> 'custodi' (guard!) groups early-exit conditions.
-> 'ergo' for one-liner actions, 'reddit' for early return one-liners.
+### custodi (Guard Block)
 
-**Examples:**
+The keyword `custodi` is the imperative of *custodire* ("to guard" or "watch over"). It groups early-exit conditions at the start of a function.
 
 ```fab
-custodi {
-    si user == nihil reddit nihil
-    si user.age < 0 ergo iace "Invalid age"
-    si user.name == "" { redde defaultUser() }
+functio divide(numerus a, numerus b) -> numerus {
+    custodi {
+        si b == 0 {
+            redde 0
+        }
+    }
+
+    redde a / b
 }
 ```
 
-### Adfirma Statement
+The `custodi` block creates a visual separation between validation and main logic. All precondition checks cluster together, making the function's requirements explicit.
 
-```ebnf
-assertStmt := 'adfirma' expression (',' expression)?
+Multiple guards in one block:
+
+```fab
+functio processValue(numerus x) -> numerus {
+    custodi {
+        si x < 0 {
+            redde -1
+        }
+        si x > 100 {
+            redde -1
+        }
+    }
+
+    # Main logic, clearly separated from guards
+    redde x * 2
+}
 ```
 
-> 'adfirma' (affirm/assert) for runtime invariant checks.
+Guards can throw instead of returning:
 
-**Examples:**
+```fab
+functio sqrt(numerus n) -> numerus {
+    custodi {
+        si n < 0 {
+            iace "Cannot compute square root of negative number"
+        }
+    }
+
+    redde computeSqrt(n)
+}
+```
+
+The `reddit` shorthand works within `custodi`:
+
+```fab
+functio clamp(numerus value, numerus min, numerus max) -> numerus {
+    custodi {
+        si value < min reddit min
+        si value > max reddit max
+    }
+
+    redde value
+}
+```
+
+Input validation patterns:
+
+```fab
+functio createUser(textus name, textus email, numerus age) -> textus {
+    custodi {
+        si name == nihil aut name == "" {
+            redde "Error: name required"
+        }
+        si email == nihil aut email == "" {
+            redde "Error: email required"
+        }
+        si age < 13 {
+            redde "Error: must be 13 or older"
+        }
+        si age > 120 {
+            redde "Error: invalid age"
+        }
+    }
+
+    redde scriptum("User created: §", name)
+}
+```
+
+### adfirma (Assert)
+
+The keyword `adfirma` is the imperative of *adfirmare* ("to affirm" or "assert"). It checks runtime invariants.
 
 ```fab
 adfirma x > 0
+```
+
+If the condition is false, execution halts with an assertion error.
+
+Add a message for clarity:
+
+```fab
 adfirma x > 0, "x must be positive"
+adfirma name != "", "name must not be empty"
 ```
 
-### Redde Statement
+Assertions differ from guards:
+- Guards handle expected edge cases gracefully (return early, throw recoverable errors)
+- Assertions catch programming errors (bugs) that should never occur in correct code
 
-```ebnf
-returnStmt := 'redde' expression?
-```
-
-> 'redde' (give back/return) for return statements.
-
-### Rumpe Statement
-
-```ebnf
-breakStmt := 'rumpe'
-```
-
-> 'rumpe' (break!) exits the innermost loop.
-
-### Perge Statement
-
-```ebnf
-continueStmt := 'perge'
-```
-
-> 'perge' (continue/proceed!) skips to the next loop iteration.
-
-### Iace Statement
-
-```ebnf
-throwStmt := ('iace' | 'mori') expression
-```
-
-> Two error severity levels:
-> iace (throw!) → recoverable, can be caught
-> mori (die!)   → fatal/panic, unrecoverable
-
-### Scribe Statement
-
-```ebnf
-outputStmt := ('scribe' | 'vide' | 'mone') expression (',' expression)*
-```
-
-> Latin output keywords as statement forms:
-> scribe (write!) → console.log
-> vide (see!)     → console.debug
-> mone (warn!)    → console.warn
-
-**Examples:**
+Use `adfirma` for conditions that indicate bugs if violated:
 
 ```fab
-scribe "hello"
-vide "debugging:", value
-mone "warning:", message
-```
+functio processArray(lista<numerus> items) {
+    adfirma items != nihil, "items must not be null"
+    adfirma items.longitudo > 0, "items must not be empty"
 
-### Tempta Statement
-
-```ebnf
-tryStmt := 'tempta' blockStmt ('cape' IDENTIFIER blockStmt)? ('demum' blockStmt)?
-```
-
-> 'tempta' (attempt/try), 'cape' (catch/seize), 'demum' (finally/at last).
-
-### Cape Clause
-
-```ebnf
-catchClause := 'cape' IDENTIFIER blockStmt
-```
-
-### Probandum Statement
-
-```ebnf
-probandumDecl := 'probandum' STRING '{' probandumBody '}'
-probandumBody := (curaBlock | probandumDecl | probaStmt)*
-```
-
-> Latin "probandum" (gerundive of probare) = "that which must be tested".
-> Analogous to describe() in Jest/Vitest.
-
-**Examples:**
-
-```fab
-probandum "Tokenizer" {
-    praepara { lexer = init() }
-    proba "parses numbers" { ... }
+    # ... process items
 }
 ```
 
-### Proba Statement
+---
 
-```ebnf
-probaStmt := 'proba' probaModifier? STRING blockStmt
-probaModifier := 'omitte' STRING | 'futurum' STRING
-```
+## Summary
 
-> Latin "proba" (imperative of probare) = "test!" / "prove!".
-> Analogous to test() or it() in Jest/Vitest.
+| Keyword | Latin Meaning | Purpose |
+|---------|--------------|---------|
+| `si` | "if" | Conditional branch |
+| `sin` | "but if" | Else-if branch |
+| `secus` | "otherwise" | Else branch |
+| `ergo` | "therefore" | One-liner consequent |
+| `reddit` | "it returns" | One-liner early return |
+| `dum` | "while" | While loop |
+| `ex` | "from, out of" | Iteration source |
+| `de` | "concerning" | Key iteration source |
+| `pro` | "for" | Iteration binding |
+| `fit` | "it becomes" | Sync binding |
+| `fiet` | "it will become" | Async binding |
+| `rumpe` | "break!" | Exit loop |
+| `perge` | "continue!" | Skip to next iteration |
+| `elige` | "choose!" | Value switch |
+| `casu` | "in the case of" | Switch case |
+| `ceterum` | "otherwise" | Switch default |
+| `discerne` | "distinguish!" | Pattern match |
+| `custodi` | "guard!" | Guard clause block |
+| `adfirma` | "affirm!" | Runtime assertion |
 
-**Examples:**
 
-```fab
-proba "parses integers" { adfirma parse("42") est 42 }
-proba omitte "blocked by #42" { ... }
-proba futurum "needs async support" { ... }
-```
 
-### Ad Statement
+---
 
-```ebnf
-adStmt := 'ad' STRING '(' argumentList ')' adBinding? blockStmt? catchClause?
-adBinding := adBindingVerb typeAnnotation? 'pro' IDENTIFIER ('ut' IDENTIFIER)?
-adBindingVerb := 'fit' | 'fiet' | 'fiunt' | 'fient'
-argumentList := (expression (',' expression)*)?
-```
+# Functiones
 
-> Latin 'ad' (to/toward) dispatches to named endpoints:
-> - Stdlib syscalls: "fasciculus:lege", "console:log"
-> - External packages: "hono/Hono"
-> - Remote services: "https://api.example.com/users"
-> 
-> Binding verbs encode sync/async and single/plural:
-> - fit: sync, single ("it becomes")
-> - fiet: async, single ("it will become")
-> - fiunt: sync, plural ("they become")
-> - fient: async, plural ("they will become")
 
-**Examples:**
+# Functiones
 
-```fab
-ad "console:log" ("hello")                           // fire-and-forget
-ad "fasciculus:lege" ("file.txt") fit textus pro c { }  // sync binding
-ad "http:get" (url) fiet Response pro r { }          // async binding
-ad "http:batch" (urls) fient Response[] pro rs { }   // async plural
-```
+Functions in Faber are declared using the `functio` keyword, derived from the Latin _functio_ meaning "performance, execution." This chapter covers function declarations, parameters, return types, async patterns, generators, and lambda expressions.
 
-### Praepara Block
+## Declaring Functions
 
-```ebnf
-praeparaBlock := ('praepara' | 'praeparabit' | 'postpara' | 'postparabit') 'omnia'? blockStmt
-```
+### Basic Syntax
 
-> Latin "praepara" (prepare!) for test setup, "postpara" (cleanup!) for teardown.
-> Uses -bit suffix for async (future tense), matching fit/fiet pattern.
-
-**Examples:**
+A function declaration begins with `functio` followed by the function name, parameter list in parentheses, optional return type, and the function body in braces:
 
 ```fab
-praepara { lexer = init() }
-praepara omnia { db = connect() }
-praeparabit omnia { db = cede connect() }
-postpara { cleanup() }
-postpara omnia { db.close() }
-postparabit omnia { cede db.close() }
+functio saluta() {
+    scribe "Salve, Mundus!"
+}
 ```
 
-### Cura Statement
-
-```ebnf
-curaStmt := 'cura' curatorKind? expression? ('pro' | 'fit' | 'fiet') typeAnnotation? IDENTIFIER blockStmt catchClause?
-curatorKind := 'arena' | 'page'
-```
-
-> Latin "cura" (care) + binding verb for scoped resources.
-> - pro: neutral binding ("for")
-> - fit: sync binding ("it becomes")
-> - fiet: async binding ("it will become")
-> Curator kinds declare explicit allocator types (arena, page).
-> Guarantees cleanup via solve() on scope exit.
-
-**Examples:**
+Functions that return values specify the return type after an arrow (`->`) and use `redde` (Latin "give back, return") to yield the result:
 
 ```fab
-cura arena fit mem { ... }                    // arena allocator
-cura page fit mem { ... }                     // page allocator
-cura aperi("data.bin") fit fd { lege(fd) }   // generic resource
-cura connect(url) fiet conn { ... }          // async resource
+functio nomen() -> textus {
+    redde "Marcus Aurelius"
+}
 ```
 
-### Incipit Statement
+### Parameters
 
-```ebnf
-incipitStmt := 'incipit' (blockStmt | 'ergo' statement | 'reddit' expression)
-```
-
-> 'incipit' (it begins) marks the program entry point.
-> This is a pure structural marker with no magic injection.
-> The source is responsible for any setup (allocators via cura, etc.).
-> 
-> The 'ergo' (therefore) form chains to a single statement, typically
-> a cura block for allocator setup. This avoids extra nesting.
-> The 'reddit' form returns an exit code directly.
-
-**Examples:**
+Faber uses type-first syntax for parameters, placing the type before the parameter name. This mirrors natural language order ("a string called name") and aligns with languages like Go, Rust, and Zig:
 
 ```fab
-incipit {
-    scribe "Hello"
+functio quadratum(numerus n) -> numerus {
+    redde n * n
 }
 
-incipit ergo cura arena {
-```
-
-### Incipiet Statement
-
-```ebnf
-incipietStmt := 'incipiet' (blockStmt | 'ergo' statement | 'reddit' expression)
-```
-
-> 'incipiet' (it will begin) marks the async program entry point.
-> Mirrors the fit/fiet pattern: present for sync, future for async.
-> 
-> The 'ergo' form chains to a single statement for concise setup.
-> The 'reddit' form returns an exit code directly.
-
-**Examples:**
-
-```fab
-incipiet {
-    fixum data = cede fetchData()
-    scribe data
+functio adde(numerus a, numerus b) -> numerus {
+    redde a + b
 }
 
-incipiet ergo cura arena {
-    fixum data = cede fetchData()
+functio describe(textus nomen, numerus aetas) -> textus {
+    redde scriptum("§ habet § annos", nomen, aetas)
 }
-
-incipiet reddit 0
 ```
 
-### Block Statement
-
-```ebnf
-blockStmt := '{' statement* '}'
-```
-
-### Expression Statement
-
-```ebnf
-exprStmt := expression
-```
-
-### Expression
-
-```ebnf
-expression := assignment
-```
-
-> Top-level expression delegates to assignment (lowest precedence).
-
-### Bitwise Or
-
-```ebnf
-bitwiseOr := bitwiseXor ('|' bitwiseXor)*
-```
-
-> Bitwise precedence is above comparison (unlike C), so
-> `flags & MASK == 0` parses as `(flags & MASK) == 0`.
-
-### Bitwise Xor
-
-```ebnf
-bitwiseXor := bitwiseAnd ('^' bitwiseAnd)*
-```
-
-### Bitwise And
-
-```ebnf
-bitwiseAnd := shift ('&' shift)*
-```
-
-### Shift
-
-```ebnf
-shift := range (('<<' | '>>') range)*
-```
-
-### Praefixum Expression
-
-```ebnf
-praefixumExpr := 'praefixum' (blockStmt | '(' expression ')')
-```
-
-> Latin 'praefixum' (pre-fixed) extends fixum vocabulary.
-> Block form: praefixum { ... } for multi-statement computation
-> Expression form: praefixum(expr) for simple expressions
-> 
-> TARGET SUPPORT:
-> Zig:    comptime { } or comptime (expr)
-> C++:    constexpr
-> Rust:   const (in const context)
-> TS/Py:  Semantic error - not supported
-
-**Examples:**
+When a parameter has no explicit type annotation, the compiler infers it from usage:
 
 ```fab
-fixum size = praefixum(256 * 4)
-fixum table = praefixum {
-    varia result = []
-    ex 0..10 pro i { result.adde(i * i) }
+functio duplica(n) -> numerus {
+    redde n * 2
+}
+```
+
+### Dual Parameter Naming
+
+Following Swift's pattern, parameters can have separate external (callsite) and internal (body) names using `ut` (Latin "as"):
+
+```fab
+functio greet(textus location ut loc) {
+    scribe loc  # internal name
+}
+
+greet(location: "Roma")  # external name at callsite
+```
+
+The `ut` keyword provides a unified aliasing syntax across the language:
+
+- Imports: `ex norma importa scribe ut s`
+- Destructuring: `ex persona fixum nomen ut n`
+- Parameters: `textus location ut loc`
+
+All three express the same concept: "X, known locally as Y."
+
+### Optional Parameters
+
+The `si` modifier (Latin "if") marks a parameter as optional. Without a default value, the parameter type becomes nullable (`ignotum<T>`):
+
+```fab
+functio greet(textus nomen, si textus titulus) -> textus {
+    si titulus est nihil {
+        redde scriptum("Salve, §!", nomen)
+    }
+    redde scriptum("Salve, § §!", titulus, nomen)
+}
+
+greet("Marcus")              # titulus receives nihil
+greet("Marcus", "Dominus")   # titulus receives "Dominus"
+```
+
+### Default Values
+
+Default values use `vel` (Latin "or"), consistent with the nullish coalescing operator in expressions:
+
+```fab
+functio paginate(si numerus pagina vel 1, si numerus per_pagina vel 10) -> textus {
+    redde scriptum("Page § with § items", pagina, per_pagina)
+}
+
+paginate()        # "Page 1 with 10 items"
+paginate(2)       # "Page 2 with 10 items"
+paginate(2, 25)   # "Page 2 with 25 items"
+```
+
+The choice of `vel` provides consistency: `vel` already means "or if nil" in expressions like `value vel "default"`, making parameter defaults read naturally as "numerus pagina or 1."
+
+Default values only make sense for owned parameters. Borrowed (`de`) and mutable (`in`) parameters require the caller to provide a value since there is nothing to borrow by default.
+
+### Rest Parameters
+
+The `ceteri` modifier (Latin "the rest, the others") collects remaining arguments into an array:
+
+```fab
+functio sum(ceteri numerus[] nums) -> numerus {
+    varia total = 0
+    ex nums pro n {
+        total += n
+    }
+    redde total
+}
+
+sum(1, 2, 3, 4, 5)  # 15
+```
+
+Rest parameters must come last in the parameter list.
+
+## Return Types
+
+### Arrow Syntax
+
+The arrow `->` specifies a function's return type directly. This is the simplest form and compiles with minimal overhead:
+
+```fab
+functio compute() -> numerus {
+    redde 42
+}
+```
+
+When the function returns nothing, omit the return type entirely or specify `vacuum`:
+
+```fab
+functio doNothing() {
+    # no return value
+}
+
+functio doNothingExplicit() -> vacuum {
+    redde
+}
+```
+
+### Latin Verb Forms
+
+Faber offers an alternative syntax using conjugated forms of the Latin verb _fieri_ ("to become"). These verb forms encode additional semantic information about how the function returns values:
+
+| Verb    | Tense/Number   | Meaning                | Semantics              |
+| ------- | -------------- | ---------------------- | ---------------------- |
+| `fit`   | present, sing. | "it becomes"           | sync, single value     |
+| `fiet`  | future, sing.  | "it will become"       | async, single value    |
+| `fiunt` | present, plur. | "they become"          | sync, yields multiple  |
+| `fient` | future, plur.  | "they will become"     | async, yields multiple |
+
+The verb forms participate in the Responsum stream protocol, providing structured error handling. Arrow syntax (`->`) bypasses this protocol for direct returns with zero overhead.
+
+```fab
+# These are equivalent for simple cases:
+functio getId() -> textus { redde "abc" }
+functio getId() fit textus { redde "abc" }
+```
+
+The verb syntax becomes valuable when you want stream-based error handling or generator behavior without explicit modifiers.
+
+## Async Functions
+
+### The futura Modifier
+
+The `futura` modifier (Latin "future things," neuter plural of _futurus_) marks a function as asynchronous. Combined with arrow syntax, it returns a Promise:
+
+```fab
+futura functio fetchData(textus url) -> textus {
+    fixum response = cede fetch(url)
+    redde response.text()
+}
+```
+
+The choice of _futura_ leverages Latin's grammatical future tense to express temporal semantics: the result will be available in the future.
+
+### The cede Keyword
+
+Inside async functions, `cede` (Latin "yield, give way, surrender") awaits a promise:
+
+```fab
+futura functio processAll(textus[] urls) -> textus[] {
+    varia results = []
+    ex urls pro url {
+        fixum data = cede fetchData(url)
+        results.adde(data)
+    }
+    redde results
+}
+```
+
+The etymology captures the semantics precisely: the function cedes control until the async operation completes.
+
+### Async via Verb Form
+
+The `fiet` verb ("it will become") implies async behavior without the `futura` modifier:
+
+```fab
+functio fetchData() fiet textus {
+    redde "data"
+}
+```
+
+This is equivalent to `futura functio fetchData() -> textus` but participates in the Responsum protocol.
+
+### Gerundive Declarations
+
+The gerundive forms `figendum` and `variandum` provide implicit await:
+
+```fab
+figendum data = fetchData(url)   # immutable, implicit await
+variandum result = fetchInitial() # mutable, implicit await
+```
+
+These are equivalent to `fixum x = cede y()` and `varia x = cede y()`. The gerundive signals futurity: the value will be fixed/varied once the operation completes. If the right-hand side is synchronous, it passes through unchanged.
+
+## Generator Functions
+
+### The cursor Modifier
+
+The `cursor` modifier (Latin "runner," from _currere_ "to run") creates a generator function:
+
+```fab
+cursor functio range(numerus n) -> numerus {
+    ex 0..n pro i {
+        cede i
+    }
+}
+```
+
+In generator context, `cede` yields values rather than awaiting them, reusing the same keyword for both semantics based on function context.
+
+### Generator via Verb Forms
+
+The `fiunt` verb ("they become," plural) implies generator behavior:
+
+```fab
+functio range(numerus n) fiunt numerus {
+    ex 0..n pro i {
+        cede i
+    }
+}
+```
+
+For async generators that yield promises, use `fient` ("they will become"):
+
+```fab
+functio fetchAll(textus[] urls) fient textus {
+    ex urls pro url {
+        cede fetch(url)
+    }
+}
+```
+
+### Iterating Over Generators
+
+Generator results can be consumed with `ex...pro` loops:
+
+```fab
+ex rangeSync(5) pro num {
+    scribe num
+}
+```
+
+## Generic Functions
+
+### Type Parameters with prae
+
+The `prae` keyword (Latin "before") declares compile-time type parameters. Combined with `typus` ("type"), it introduces generic type variables:
+
+```fab
+functio max(prae typus T, T a, T b) -> T {
+    si a > b { redde a }
+    redde b
+}
+
+fixum larger = max(10, 20)           # T inferred as numerus
+fixum longer = max("alpha", "beta")  # T inferred as textus
+```
+
+Type parameters must come first in the parameter list, followed by regular parameters. This matches conventions in TypeScript, Rust, and Zig.
+
+Multiple type parameters are supported:
+
+```fab
+functio pair(prae typus T, prae typus U, T first, U second) -> [T, U] {
+    redde [first, second]
+}
+```
+
+## Lambda Expressions
+
+### Basic Syntax
+
+Lambda expressions use `pro` (Latin "for, on behalf of") followed by parameters, a colon, and an expression:
+
+```fab
+fixum double = pro x: x * 2
+fixum add = pro a, b: a + b
+```
+
+The colon separates parameters from the body. For single expressions, the result is implicitly returned.
+
+### With Return Type Annotation
+
+When type annotation is needed, use an arrow before the colon:
+
+```fab
+fixum add = pro a, b -> numerus: a + b
+fixum isPositive = pro n -> bivalens: n > 0
+```
+
+### Block Bodies
+
+For multi-statement lambdas, use braces and explicit `redde`:
+
+```fab
+fixum process = pro x {
+    varia result = x * 2
+    result += 10
     redde result
 }
 ```
 
-### Scriptum Expression
+### Zero-Parameter Lambdas
 
-```ebnf
-scriptumExpr := 'scriptum' '(' STRING (',' expression)* ')'
-```
-
-> "scriptum" (that which has been written) is the perfect passive participle
-> of scribere. While scribe outputs to console, scriptum returns a formatted string.
-> 
-> The § placeholder is converted to target-appropriate format specifiers.
-
-**Examples:**
+When a lambda takes no parameters, place the colon immediately after `pro`:
 
 ```fab
-scriptum("Hello, §", name)
-scriptum("§ + § = §", a, b, a + b)
+fixum getFortyTwo = pro: 42
 ```
 
-### Lege Expression
+### Async Lambdas
 
-```ebnf
-legeExpr := 'lege' ('lineam')?
-```
-
-### Qua Expression
-
-```ebnf
-castExpr := call ('qua' typeAnnotation)*
-```
-
-> Latin 'qua' (as, in the capacity of) for type assertions.
-> Compile-time only — no runtime checking. Maps to:
-> - TypeScript: x as T
-> - Python: x (ignored, dynamic typing)
-> - Zig: @as(T, x)
-> - Rust: x as T
-> - C++: static_cast<T>(x)
-
-### Novum Expression
-
-```ebnf
-newExpr := 'novum' IDENTIFIER ('(' argumentList ')')? (objectLiteral | 'de' expression)?
-```
-
-> Two forms for property overrides:
-> - Inline literal: `novum Persona { nomen: "Marcus" }`
-> - From expression: `novum Persona de props` (props is variable/call/etc.)
-> 
-> The `de` (from) form allows dynamic overrides from variables or function results.
-
-### Finge Expression
-
-```ebnf
-fingeExpr := 'finge' IDENTIFIER ('{' fieldList '}')? ('qua' IDENTIFIER)?
-```
-
-> Latin 'finge' (form/shape) for constructing discretio variants.
-> Variant name comes first, optional fields in braces, optional qua for
-> explicit discretio type when not inferrable from context.
-
-**Examples:**
+The `fiet` keyword creates async lambdas:
 
 ```fab
-finge Click { x: 10, y: 20 }           - payload variant
-finge Click { x: 10, y: 20 } qua Event - with explicit type
-finge Active                            - unit variant
-finge Active qua Status                 - unit variant with explicit type
-```
-
-### Lambda Expression
-
-```ebnf
-lambdaExpr := ('pro' | 'fit' | 'fiet') params? ('->' type)? (':' expression | blockStmt)
-params := IDENTIFIER (',' IDENTIFIER)*
-```
-
-### Identifier Or Keyword
-
-```ebnf
-identifierOrKeyword := IDENTIFIER | KEYWORD
-```
-
-> Import specifiers can be keywords (ex norma importa scribe).
-> In this context, 'scribe' is a valid name, not a statement keyword.
-
----
-
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
-
-
----
-
-# Functiones
-
-
-# Functiones
-
-Function declarations: basic functions, typed parameters, async, generators, and lambdas.
-
-## Exempla
-
-- `exempla/functiones/`
-
----
-
-## Syntax
-
-### Parameter List
-
-```ebnf
-paramList := (parameter (',' parameter)*)?
-```
-
-### Parameter
-
-```ebnf
-parameter := ('de' | 'in' | 'ex')? 'si'? 'ceteri'? (typeAnnotation IDENTIFIER | IDENTIFIER) ('ut' IDENTIFIER)? ('vel' expression)?
-```
-
-> Type-first syntax: "textus name" or "de textus source"
-> Prepositional prefixes indicate semantic roles:
-> de = from/concerning (borrowed, read-only),
-> in = in/into (mutable borrow),
-> ex = from/out of (source)
-> 
-> OPTIONAL PARAMETERS:
-> 'si' marks a parameter as optional. Without 'vel', type becomes ignotum<T>.
-> With 'vel', parameter has a default value and type stays T.
-> Order: preposition, then si, then ceteri, then type, then name.
-
----
-
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
-
-
----
-
-# Importa
-
-
-# Importa
-
-Module system: imports and exports.
-
-## Exempla
-
-- `exempla/importa/`
-
----
-
-## Syntax
-
-### Import Declaration
-
-```ebnf
-importDecl := 'ex' (STRING | IDENTIFIER) 'importa' (identifierList | '*')
-identifierList := IDENTIFIER (',' IDENTIFIER)*
-```
-
-**Examples:**
-
-```fab
-ex norma importa scribe, lege
-ex "norma/tempus" importa nunc, dormi
-ex norma importa *
-```
-
-### Export Declaration
-
-```ebnf
-exportDecl := 'exporta' (identifierList | inlineDecl)
-identifierList := IDENTIFIER (',' IDENTIFIER)*
-inlineDecl := funcDecl | genusDecl | varDecl | typeAliasDecl
-```
-
-> Named exports only. No default exports — TS `export default` migrates to named export.
-
-**Examples:**
-
-```fab
-exporta foo, bar
-exporta functio greet(textus name) -> textus { redde "Hello, " + name }
-exporta genus User { textus nomen }
-exporta fixum VERSION = "1.0.0"
-```
-
-### Dynamic Import
-
-```ebnf
-dynamicImport := 'ex' (STRING | expression) 'importabit' IDENTIFIER
-```
-
-> Async import using future tense `importabit` ("will import").
-
-**Examples:**
-
-```fab
-ex "./heavy" importabit modulus
-ex pathVariable importabit modulus
-```
-
----
-
-*Generated from `fons/parser/index.ts` — do not edit directly.*
-
-
----
-
-# Errores
-
-
-# Errores
-
-Error handling: try/catch, throw, panic, and scoped error handling.
-
-## Exempla
-
-- `exempla/errores/`
-
----
-
-## Syntax
-
-### Fac Block Statement
-
-```ebnf
-facBlockStmt := 'fac' blockStmt ('cape' IDENTIFIER blockStmt)? ('dum' expression)?
-```
-
-> 'fac' (do/make) creates an explicit scope boundary for grouping
-> statements with optional error handling via 'cape' (catch).
-> When followed by 'dum', creates a do-while loop where the body
-> executes at least once before the condition is checked.
-> Useful for:
-> - Scoped variable declarations
-> - Grouping related operations with shared error handling
-> - Creating IIFE-like constructs
-> - Do-while loops (body executes first, then condition checked)
-
-**Examples:**
-
-```fab
-fac { fixum x = computeValue() }
-fac { riskyOperation() } cape e { scribe e }
-fac { process() } dum hasMore()
-fac { process() } cape e { log(e) } dum hasMore()
-```
-
----
-
-*Generated from `fons/faber/parser/index.ts` — do not edit directly.*
-
-
----
-
-# Faber Romanus Grammar
-
-
-# Faber Romanus Grammar
-
-Complete syntax reference for the Faber Romanus programming language.
-
-## For LLMs
-
-This document is designed for both human readers and LLM code generation. When generating Faber code:
-
-**Style preferences:**
-
-- PREFER Latin keywords over symbols: `et` over `&&`, `aut` over `||`, `non` over `!`
-- PREFER `pro x: expr` for short lambdas, `pro x redde expr` when clarity helps
-- ALWAYS use type-first syntax: `textus nomen` not `nomen: textus`
-- NEVER use JavaScript/TypeScript/Python syntax where Faber has its own
-
-**Common mistakes to avoid:**
-
-- `return` instead of `redde`
-- `const`/`let` instead of `fixum`/`varia`
-- `if`/`else` instead of `si`/`secus`
-- `for...of` instead of `ex...pro`
-- `string`/`number`/`boolean` instead of `textus`/`numerus`/`bivalens`
-- `null` instead of `nihil`
-- `this` instead of `ego`
-- `new` instead of `novum`
-- `await` instead of `cede`
-- `async function` instead of `futura functio`
-
----
-
-## Quick Reference
-
-### Types
-
-| Faber      | TypeScript   | Python     | Zig          | Meaning        |
-| ---------- | ------------ | ---------- | ------------ | -------------- |
-| `textus`   | `string`     | `str`      | `[]const u8` | text/string    |
-| `numerus`  | `number`     | `int`      | `i64`        | integer        |
-| `fractus`  | `number`     | `float`    | `f64`        | floating point |
-| `decimus`  | `number`     | `Decimal`  | -            | decimal        |
-| `magnus`   | `bigint`     | `int`      | `i128`       | big integer    |
-| `bivalens` | `boolean`    | `bool`     | `bool`       | boolean        |
-| `nihil`    | `null`       | `None`     | `null`       | null           |
-| `vacuum`   | `void`       | `None`     | `void`       | void           |
-| `numquam`  | `never`      | `NoReturn` | `noreturn`   | never          |
-| `ignotum`  | `unknown`    | `Any`      | -            | unknown        |
-| `octeti`   | `Uint8Array` | `bytes`    | `[]u8`       | bytes          |
-| `objectum` | `object`     | `object`   | -            | object         |
-
-### Generic Collections
-
-| Faber          | TypeScript    | Python         | Meaning        |
-| -------------- | ------------- | -------------- | -------------- |
-| `lista<T>`     | `T[]`         | `list[T]`      | array/list     |
-| `tabula<K,V>`  | `Map<K,V>`    | `dict[K,V]`    | map/dictionary |
-| `copia<T>`     | `Set<T>`      | `set[T]`       | set            |
-| `promissum<T>` | `Promise<T>`  | `Awaitable[T]` | promise/future |
-| `cursor<T>`    | `Iterator<T>` | `Iterator[T]`  | iterator       |
-| `unio<A,B>`    | `A \| B`      | `A \| B`       | union type     |
-
-### Literals
-
-| Faber    | Meaning   |
-| -------- | --------- |
-| `verum`  | true      |
-| `falsum` | false     |
-| `nihil`  | null      |
-| `ego`    | this/self |
-
-### Keywords by Category
-
-**Declarations:**
-
-- `fixum` — immutable binding (const)
-- `varia` — mutable binding (let)
-- `functio` — function
-- `genus` — class/struct
-- `pactum` — interface/protocol
-- `typus` — type alias
-- `ordo` — enum
-- `discretio` — tagged union
-
-**Control flow:**
-
-- `si` / `sin` / `secus` / `secus` — if / else-if / else
-- `dum` — while
-- `ex...pro` — for-of (iteration)
-- `de...pro` — for-in (keys)
-- `elige` — switch/match
-- `custodi` — guard clauses
-- `rumpe` — break
-- `perge` — continue
-
-**Functions:**
-
-- `redde` — return
-- `futura` — async modifier
-- `cede` — await
-- `cursor` — generator modifier
-- `pro x: expr` — lambda expression
-
-**Error handling:**
-
-- `tempta` — try
-- `cape` — catch
-- `demum` — finally
-- `iace` — throw (recoverable)
-- `mori` — panic (fatal)
-- `adfirma` — assert
-
-**Output:**
-
-- `scribe` — console.log
-- `vide` — console.debug
-- `mone` — console.warn
-
-**Operators:**
-
-- `et` — logical and (&&)
-- `aut` — logical or (||)
-- `non` — logical not (!)
-- `vel` — nullish coalescing (??)
-- `est` — instanceof/typeof check
-- `qua` — type cast (as)
-
-### Collection Methods (lista)
-
-Common array methods (see README for complete list):
-
-| Latin               | JavaScript          | Mutates? |
-| ------------------- | ------------------- | -------- |
-| `adde(x)`           | `push(x)`           | yes      |
-| `remove()`          | `pop()`             | yes      |
-| `primus`            | `[0]`               | no       |
-| `ultimus`           | `[arr.length-1]`    | no       |
-| `longitudo`         | `.length`           | no       |
-| `mappata(fn)`       | `.map(fn)`          | no       |
-| `filtrata(fn)`      | `.filter(fn)`       | no       |
-| `reducta(fn, init)` | `.reduce(fn, init)` | no       |
-| `inveni(fn)`        | `.find(fn)`         | no       |
-| `continet(x)`       | `.includes(x)`      | no       |
-| `coniunge(sep)`     | `.join(sep)`        | no       |
-
-### Collection Methods (tabula)
-
-| Latin        | JavaScript   | Mutates? |
-| ------------ | ------------ | -------- |
-| `pone(k, v)` | `.set(k, v)` | yes      |
-| `accipe(k)`  | `.get(k)`    | no       |
-| `habet(k)`   | `.has(k)`    | no       |
-| `dele(k)`    | `.delete(k)` | yes      |
-| `claves()`   | `.keys()`    | no       |
-| `valores()`  | `.values()`  | no       |
-
-### Collection Methods (copia)
-
-| Latin                | JavaScript       | Mutates? |
-| -------------------- | ---------------- | -------- |
-| `adde(x)`            | `.add(x)`        | yes      |
-| `habet(x)`           | `.has(x)`        | no       |
-| `dele(x)`            | `.delete(x)`     | yes      |
-| `unio(other)`        | set union        | no       |
-| `intersectio(other)` | set intersection | no       |
-
----
-
-## Complete Program Example
-
-```fab
-# A simple API handler demonstrating multiple features
-ex hono importa Hono, Context
-
-genus UserService {
-    @ privatum
-    textus baseUrl
-
-    functio creo(textus url) {
-        ego.baseUrl = url
-    }
-
-    futura functio fetch(numerus id) fiet User? {
-        fixum response = cede ego.client.get(`${ego.baseUrl}/users/${id}`)
-
-        custodi {
-            si response.status !== 200 { redde nihil }
-        }
-
-        redde response.json() qua User
-    }
-
-    futura functio fetchAll() fiet lista<User> {
-        fixum response = cede ego.client.get(`${ego.baseUrl}/users`)
-        fixum users = cede response.json() qua User[]
-
-        redde users.filtrata(pro u: u.active)
-    }
+fixum fetchAndProcess = fiet url {
+    fixum data = cede fetch(url)
+    redde process(data)
 }
+```
 
-fixum app = novum Hono()
+This is useful for callbacks in async contexts:
 
-app.get("/users/:id", futura functio(Context ctx) {
-    fixum id = ctx.param("id") qua numerus
-    fixum service = novum UserService("https:#api.example.com")
-    fixum user = cede service.fetch(id)
-
-    si user === nihil {
-        redde ctx.json({ error: "Not found" }, 404)
-    }
-
-    redde ctx.json(user)
+```fab
+app.post("/users", fiet context {
+    redde context.json()
 })
 ```
 
+### Common Patterns
+
+Lambdas shine in functional operations:
+
+```fab
+fixum numbers = [1, 2, 3, 4, 5]
+
+# Filter
+fixum evens = numbers.filter(pro x: x % 2 == 0)
+
+# Map
+fixum doubled = numbers.map(pro x: x * 2)
+
+# Reduce
+fixum sum = numbers.reduce(0, pro acc, x: acc + x)
+```
+
+## Ownership Prepositions in Parameters
+
+Latin prepositions indicate how parameters are passed and what the function may do with them:
+
+- `de` (from/concerning): borrowed, read-only access
+- `in` (into): mutable borrow, the function may modify the value
+
+```fab
+functio processPoints(de Point[] points, in Point[] targets) {
+    # points is borrowed (read-only)
+    # targets is mutably borrowed
+    ex points pro point {
+        targets.adde(point)
+    }
+}
+```
+
+These prepositions combine naturally with other parameter modifiers:
+
+```fab
+functio analyze(textus source, de si numerus depth) -> numerus {
+    si depth est nihil { redde 3 }
+    redde depth
+}
+```
+
+The prepositions express semantic intent about ownership and mutability. They serve as documentation for readers and enable stricter checking in future compiler versions.
+
+## Summary
+
+Faber's function system balances Latin linguistic authenticity with practical programming needs:
+
+- `functio` for declaration, `redde` for return
+- Type-first parameters with `ut` aliasing
+- `si` for optional, `vel` for defaults, `ceteri` for rest
+- Arrow `->` for direct returns, verb forms for stream protocol
+- `futura` and `cursor` modifiers, or `fiet`/`fiunt`/`fient` verbs
+- `cede` for await (async) or yield (generator)
+- `prae typus` for generics
+- `pro` for lambdas with optional `fiet` for async
+
+The Latin vocabulary maps naturally to programming concepts: _futura_ captures async's temporal nature, _cede_ captures yielding control, and verb conjugations encode sync/async and single/multiple semantics grammatically.
+
+
+
 ---
+
+# Importa
+
+
+# Importa
+
+Faber's module system lets programs organize code across files and incorporate external libraries. The design follows a simple principle: imports should read like Latin sentences. When you write `ex norma importa scribe`, you are saying "from the standard library, bring in scribe." The syntax mirrors how Latin expresses provenance and acquisition.
+
+The verb `importa` is the imperative of *importare* (to bring in, to carry into). Its counterpart `exporta` comes from *exportare* (to carry out). These are not arbitrary keyword choices. They describe exactly what the operations do: bringing symbols into a scope, or carrying them out for others to use.
+
+## Importing
+
+### The ex...importa Pattern
+
+Every import begins with `ex` followed by a source, then `importa` followed by the names you want:
+
+```fab
+ex norma importa scribe, lege
+ex "lodash" importa map, filter
+ex "./utils" importa helper
+```
+
+This pattern reads naturally in Latin. The preposition `ex` means "from" or "out of," indicating origin or source. You are drawing bindings *out of* a module into your local scope.
+
+The structure is consistent regardless of source type. Whether importing from the standard library, an external package, or a local file, the syntax remains the same. Only the source specifier changes.
+
+### Why "ex"?
+
+Latin prepositions carry semantic weight that English keywords lose through familiarity. When you see `ex items pro item` in a loop, the `ex` tells you where the data flows from. When you see `ex norma importa scribe`, the `ex` tells you where the symbol originates.
+
+The preposition `ex` appears throughout Faber whenever something is drawn from a source:
+
+- Imports draw symbols from modules: `ex module importa name`
+- Iteration draws elements from collections: `ex items pro item { ... }`
+- Destructuring draws fields from objects: `ex response fixum status, data`
+
+This consistency is deliberate. By using positional grammar rather than distinct keywords for each context, Faber mirrors how Latin works. The preposition's meaning derives from its position in the sentence, not from memorizing what each keyword does in isolation.
+
+### String Paths vs. Bare Identifiers
+
+The source in an import can be either a quoted string or a bare identifier:
+
+```fab
+ex norma importa scribe           # bare identifier
+ex "norma/tempus" importa dormi   # string path
+ex "@hono/hono" importa Hono      # string with special characters
+ex "./local" importa helper       # relative path
+```
+
+Bare identifiers work for simple module names that are valid identifiers. Use quoted strings when the path contains slashes, special characters, or needs to be a relative path. The `norma` standard library can be imported either way, but its submodules require string paths: `"norma/tempus"`, `"norma/crypto"`.
+
+External packages from registries like npm use their published names as strings. Scoped packages retain their syntax: `"@scope/package"`. Relative imports use standard path notation: `"./sibling"`, `"../parent/child"`.
+
+### Named Imports
+
+Most imports specify exactly which symbols to bring in:
+
+```fab
+ex "hono" importa Hono, Context
+ex "lodash" importa map, filter, reduce
+ex norma importa scribe, lege, mone
+```
+
+This is explicit and intentional. Named imports make dependencies visible. A reader can see at a glance what a file uses from each module without hunting through the code.
+
+Multiple symbols are comma-separated. There is no limit to how many you can import in a single statement, but consider readability. If you need a dozen symbols from one module, that module may be doing too much, or your file may be doing too much.
+
+### Import Aliases
+
+Sometimes you need to rename an import. Perhaps there is a naming conflict, or the original name is unclear in context, or you prefer a shorter form for frequently used symbols. The `ut` keyword provides aliasing:
+
+```fab
+ex "utils" importa helper ut h
+ex "db" importa connect, query ut q, close
+ex "lodash" importa map ut lodashMap
+```
+
+The `ut` preposition means "as" or "like." You are saying "import `helper` *as* `h`." The original name appears first, then `ut`, then the local name you want to use. This mirrors Latin's use of `ut` for comparison and equivalence.
+
+Aliases work with any import, whether you are renaming one symbol or several:
+
+```fab
+ex "mod" importa foo ut f, bar ut b, baz ut z
+```
+
+Each renaming is independent. You can alias some imports while leaving others with their original names.
+
+### Wildcard Imports
+
+When you need everything a module exports, use the wildcard form with an alias:
+
+```fab
+ex "@std/crypto" importa * ut crypto
+ex "lodash" importa * ut _
+```
+
+The asterisk `*` means "all exports." The alias is required because wildcard imports must be namespaced. You cannot dump all exports into the local scope without a container. This prevents name collisions and keeps dependencies traceable.
+
+After a wildcard import, access symbols through the alias:
+
+```fab
+ex "lodash" importa * ut _
+fixum doubled = _.map(numbers, pro x: x * 2)
+```
+
+Use wildcards sparingly. Named imports are clearer about dependencies and help tree-shaking in build systems. But wildcards have their place when you genuinely need most of what a module provides.
+
+## Exporting
+
+Modules expose their symbols through exports. Only exported symbols are visible to importers. Everything else remains internal to the module.
+
+### Named Exports
+
+To export existing declarations, list them after `exporta`:
+
+```fab
+fixum VERSION = "1.0.0"
+functio greet(textus name) -> textus {
+    redde scriptum("Salve, §!", name)
+}
+
+exporta VERSION, greet
+```
+
+The `exporta` statement names what leaves the module. This can appear anywhere in the file, but placing exports at the end (after definitions) or at the beginning (as a manifest) aids readability.
+
+### Inline Exports
+
+You can combine export with declaration for a more compact form:
+
+```fab
+exporta fixum VERSION = "1.0.0"
+
+exporta functio greet(textus name) -> textus {
+    redde scriptum("Salve, §!", name)
+}
+
+exporta genus User {
+    textus nomen
+    numerus aetas
+}
+```
+
+When `exporta` precedes a declaration, that declaration is both defined and exported in one statement. This is convenient for modules where most definitions are public.
+
+Choose between named exports and inline exports based on what makes your code clearer. A module with many internal helpers might prefer explicit `exporta` at the end. A module that is primarily a public API might prefer inline exports throughout.
+
+### No Default Exports
+
+Faber does not support default exports. Every export has a name. This is a deliberate choice. Named exports are explicit, searchable, and consistent. When you import `Hono` from a module, you know that is exactly what the module calls it. There is no ambiguity about whether you are importing the default or a named export.
+
+If you are porting code from TypeScript or JavaScript that uses default exports, convert them to named exports with meaningful names.
+
+## Dynamic Imports
+
+### The importabit Verb
+
+Static imports happen at module load time. Sometimes you need to import a module later, perhaps conditionally or to reduce initial load time. Faber provides dynamic imports using the future tense: `importabit`.
+
+```fab
+ex "./heavy" importabit modulus
+scribe modulus.process(data)
+```
+
+The verb `importabit` is the future active indicative of *importare*: "it will bring in." This naming follows Faber's convention that future tense indicates asynchronous operations. Just as `fiet` (will become) signals an async result and `incipiet` (will begin) signals an async entry point, `importabit` signals that the import happens asynchronously.
+
+Dynamic imports return a promise that resolves to the module. Use them within async contexts:
+
+```fab
+incipiet {
+    ex pathVariable importabit modulus
+    scribe modulus.result
+}
+```
+
+The source can be an expression, not just a literal string. This enables computed imports based on configuration or runtime conditions:
+
+```fab
+varia textus modulePath = determineModule()
+ex modulePath importabit loaded
+```
+
+Use dynamic imports judiciously. Static imports are analyzed at compile time, enabling better error checking and optimization. Dynamic imports defer this to runtime, trading analysis for flexibility.
+
+## Module Organization
+
+### The norma Standard Library
+
+The identifier `norma` refers to Faber's standard library. Unlike external packages, `norma` modules are compiler-handled. The compiler recognizes `norma/*` paths, validates their exports, and generates appropriate target-language code without emitting import statements.
+
+```fab
+ex norma importa scribe, lege
+ex "norma/tempus" importa nunc, dormi, SECUNDUM
+```
+
+This design means compiled output has no Faber-specific dependencies. The standard library is "batteries included" at compile time, not runtime. When you import `dormi` from `norma/tempus`, the compiler emits the appropriate sleep implementation for your target language directly.
+
+### External Packages
+
+External packages are imported by their published names:
+
+```fab
+ex "@hono/hono" importa Hono, Context
+ex "pg" importa Pool
+```
+
+The compiler passes external package references through unchanged. This gives you full access to your target ecosystem's libraries while writing Faber syntax.
+
+### Local Imports
+
+Files within your project import from relative paths:
+
+```fab
+ex "./utils" importa helper, formatter
+ex "../shared/types" importa User, Config
+```
+
+Local imports work like external packages for compilation purposes. The compiler rewrites the path extension (`.fab` to `.ts` or `.py` depending on target) but otherwise passes the import through.
+
+For a project organized across multiple files, local imports let you compose modules while keeping each file focused. Export what others need; keep internals private by not exporting them.
+
+---
+
+The module system is how Faber programs scale beyond single files. The `ex...importa` pattern, once familiar, reads naturally and makes dependencies explicit. Exports mark boundaries. Dynamic imports handle runtime flexibility. And throughout, the Latin vocabulary reminds you what these operations actually do: bringing symbols in, carrying them out, drawing from sources.
+
+
+
+---
+
+# Errores
+
+
+# Errores
+
+Error handling in Faber distinguishes between two fundamentally different kinds of failure: recoverable errors that calling code can handle, and fatal errors that indicate unrecoverable conditions. This distinction, common in systems languages like Rust and Zig, makes error handling intentions explicit in the code itself.
+
+The Latin vocabulary reinforces these semantics: `iace` (throw) signals an error you expect callers to catch, while `mori` (die) signals that the program cannot meaningfully continue.
+
+## Exempla
+
+- `exempla/statements/tempta-cape/` - try/catch patterns
+- `exempla/statements/fac/` - scoped blocks with error handling
+- `exempla/statements/iace/` - throw statements
+
+---
+
+## Try/Catch
+
+The `tempta`/`cape`/`demum` trio corresponds directly to try/catch/finally in other languages. Use this structure when you want to attempt an operation that might fail and handle the failure gracefully.
+
+### tempta (Try)
+
+From Latin *temptare* (to attempt, to try). The `tempta` block wraps code that might throw an error.
+
+```fab
+tempta {
+    scribe "Attempting operation..."
+    riskyOperation()
+    scribe "Operation succeeded"
+}
+```
+
+Code after the block only executes if no error occurs. If an error is thrown and not caught, it propagates to the caller.
+
+### cape (Catch)
+
+From Latin *capere* (to seize, to catch). The `cape` clause binds the thrown error to a variable and executes handler code.
+
+```fab
+tempta {
+    iace "Something went wrong"
+    scribe "This line never runs"
+}
+cape err {
+    scribe "Caught error:", err
+}
+```
+
+The error variable (`err` in this example) is scoped to the `cape` block. You can name it whatever makes sense for your context.
+
+A `tempta` block can omit `cape` if you only need cleanup behavior via `demum`:
+
+```fab
+tempta {
+    scribe "Operation succeeds"
+}
+demum {
+    scribe "Cleanup runs anyway"
+}
+```
+
+### demum (Finally)
+
+From Latin *demum* (at last, finally). The `demum` block contains cleanup code that runs regardless of whether an error occurred.
+
+```fab
+tempta {
+    scribe "Opening resource..."
+    iace "Failed to open"
+}
+cape err {
+    scribe "Error occurred:", err
+}
+demum {
+    scribe "Cleanup: always runs"
+}
+```
+
+The `demum` block executes after both the `tempta` body and any `cape` handler, whether the operation succeeded or failed. This is essential for resource cleanup: closing files, releasing locks, resetting state.
+
+When a function returns from within a `tempta` block, the `demum` block still executes before the return completes:
+
+```fab
+functio withReturnInDemum() -> textus {
+    tempta {
+        scribe "Starting operation"
+        redde "success"
+    }
+    cape err {
+        redde "error"
+    }
+    demum {
+        scribe "Demum runs before return"
+    }
+}
+```
+
+### Nested Try Blocks
+
+`tempta` blocks can nest. Inner errors are caught by inner handlers; if uncaught, they propagate outward:
+
+```fab
+tempta {
+    scribe "Outer try"
+
+    tempta {
+        scribe "Inner try"
+        iace "Inner error"
+    }
+    cape inner {
+        scribe "Caught inner:", inner
+    }
+
+    scribe "Continues after inner catch"
+}
+cape outer {
+    scribe "Outer catch:", outer
+}
+```
+
+---
+
+## Throwing Errors
+
+Faber provides two keywords for signaling errors, each with distinct semantics.
+
+### iace (Throw)
+
+From Latin *iacere* (to throw, to hurl). Use `iace` for recoverable errors that calling code can catch and handle.
+
+```fab
+iace "Something went wrong"
+```
+
+The expression following `iace` becomes the error value. Typically this is a string message, but it can be any expression:
+
+```fab
+fixum code = 404
+iace scriptum("Error code: {}", code)
+```
+
+`iace` throws from the current context and unwinds the stack until a `cape` clause catches it, or propagates to the program's top level.
+
+### mori (Panic)
+
+From Latin *mori* (to die). Use `mori` for fatal errors that indicate the program cannot meaningfully continue.
+
+```fab
+mori "Fatal: invariant violated"
+```
+
+Unlike `iace`, a `mori` cannot be caught. It terminates execution immediately. Use this for conditions that represent bugs (violated invariants, impossible states) rather than expected failure modes.
+
+### When to Use Each
+
+**Use `iace` when:**
+- The caller might reasonably recover from this error
+- The error represents an expected failure mode (file not found, invalid input, network timeout)
+- You want to return error information to the caller
+- The program state remains consistent after the error
+
+**Use `mori` when:**
+- The error indicates a bug in the program
+- An invariant has been violated that should never happen
+- Continuing would corrupt data or produce undefined behavior
+- The program has reached an impossible state
+
+The distinction follows Rust's philosophy: `iace` is for errors that are part of normal operation (like `Result::Err`), while `mori` is for programmer errors that indicate something has gone fundamentally wrong (like `panic!`).
+
+---
+
+## Scoped Error Handling
+
+Beyond the traditional try/catch pattern, Faber provides `fac` blocks for creating explicit scope boundaries with optional error handling.
+
+### fac Blocks
+
+From Latin *facere* (to do, to make). A `fac` block creates an explicit scope for grouping statements:
+
+```fab
+fac {
+    fixum x = 42
+    scribe x
+}
+# x is not accessible here
+```
+
+Variables declared inside a `fac` block are scoped to that block. This is useful for isolating temporary values or grouping related operations.
+
+### Adding cape to fac
+
+A `fac` block can include a `cape` clause to handle errors from the block's body:
+
+```fab
+fac {
+    fixum value = riskyComputation()
+    scribe value
+} cape err {
+    scribe "Error occurred:", err
+}
+```
+
+This is more concise than `tempta`/`cape` when you also want scope isolation, and when you don't need a `demum` clause. The `fac` block with `cape` is equivalent to:
+
+```fab
+tempta {
+    fixum value = riskyComputation()
+    scribe value
+}
+cape err {
+    scribe "Error occurred:", err
+}
+```
+
+### Do-While with Errors
+
+When a `fac` block is followed by `dum` (while), it creates a do-while loop where the body executes at least once before the condition is checked:
+
+```fab
+fac { process() } dum hasMore()
+```
+
+This pattern can combine with `cape` for do-while loops with error handling:
+
+```fab
+fac {
+    processNextItem()
+} cape err {
+    scribe "Item failed:", err
+} dum hasMoreItems()
+```
+
+The loop continues as long as `hasMoreItems()` returns true. If an error occurs during `processNextItem()`, the `cape` clause handles it, and then the `dum` condition is checked.
+
+---
+
+## Error Handling in Functions
+
+Functions can handle errors internally or let them propagate to callers.
+
+### Internal Handling
+
+When a function handles errors internally, it returns a fallback value:
+
+```fab
+functio safeDivide(numerus a, numerus b) -> numerus {
+    tempta {
+        si b == 0 {
+            iace "Division by zero"
+        }
+        redde a / b
+    }
+    cape err {
+        scribe "Error:", err
+        redde 0
+    }
+}
+```
+
+### Propagation
+
+When a function doesn't catch an error, it propagates to the caller:
+
+```fab
+functio divide(numerus a, numerus b) -> numerus {
+    si b == 0 {
+        iace "Division by zero"
+    }
+    redde a / b
+}
+
+# Caller must handle the error
+tempta {
+    fixum result = divide(10, 0)
+}
+cape err {
+    scribe "Division failed:", err
+}
+```
+
+### Cleanup with Resources
+
+The `tempta`/`cape`/`demum` pattern is particularly valuable when working with resources that need cleanup:
+
+```fab
+functio processWithCleanup(textus name) {
+    varia resource = "pending"
+
+    tempta {
+        scribe "Opening:", name
+        resource = name
+
+        si name == "" {
+            iace "Empty name"
+        }
+
+        scribe "Processing:", resource
+    }
+    cape err {
+        scribe "Error:", err
+    }
+    demum {
+        scribe "Closing:", resource
+    }
+}
+```
+
+The `demum` block ensures the resource is cleaned up whether the operation succeeds or fails.
+
+---
+
+## Design Philosophy
+
+Faber's error handling reflects the "compiler as tutor" philosophy. The two-tier system (`iace` vs `mori`) makes the programmer's intent explicit:
+
+- When you write `iace`, you're communicating: "This might fail, and that's okay - handle it."
+- When you write `mori`, you're communicating: "This should never happen. If it does, we have a bug."
+
+This distinction helps both human readers and the compiler understand what kind of failure you're anticipating. The Latin vocabulary reinforces the semantics: throwing (iace) implies something catchable, while dying (mori) implies finality.
 
 
 

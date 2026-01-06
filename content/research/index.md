@@ -7,7 +7,7 @@ order: 0
 
 # Research
 
-Can LLMs learn Faber effectively? The [faber-trials](https://github.com/ianzepp/faber-trials) project evaluates this systematically.
+Can LLMs learn Faber effectively? The [faber-romanus](https://github.com/ianzepp/faber-romanus) project includes an evaluation harness to test this systematically.
 
 ## Hypothesis
 
@@ -32,4 +32,4 @@ See [Research Results](/research/results.html) for current data.
 - Reproducible: all prompts and responses logged
 - Transparent: raw JSONL data available
 
-Source: [faber-trials on GitHub](https://github.com/ianzepp/faber-trials)
+Source: [faber-romanus on GitHub](https://github.com/ianzepp/faber-romanus)

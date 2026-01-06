@@ -23,25 +23,35 @@
   <a href="/docs/typi.html">Typi</a>
   <a href="/docs/operatores.html" class="active">Operatores</a>
   <div class="nav-subheadings">
-    <a href="/docs/operatores.html#exempla">Exempla</a>
-    <a href="/docs/operatores.html#syntax">Syntax</a>
-    <a href="/docs/operatores.html#assignment" class="nav-h3">Assignment</a>
-    <a href="/docs/operatores.html#ternary" class="nav-h3">Ternary</a>
-    <a href="/docs/operatores.html#or" class="nav-h3">Or</a>
-    <a href="/docs/operatores.html#and" class="nav-h3">And</a>
-    <a href="/docs/operatores.html#equality" class="nav-h3">Equality</a>
-    <a href="/docs/operatores.html#comparison" class="nav-h3">Comparison</a>
-    <a href="/docs/operatores.html#range" class="nav-h3">Range</a>
-    <a href="/docs/operatores.html#additive" class="nav-h3">Additive</a>
-    <a href="/docs/operatores.html#multiplicative" class="nav-h3">Multiplicative</a>
-    <a href="/docs/operatores.html#unary" class="nav-h3">Unary</a>
+    <a href="/docs/operatores.html#arithmetic">Arithmetic</a>
+    <a href="/docs/operatores.html#comparison">Comparison</a>
+    <a href="/docs/operatores.html#logical-operators">Logical Operators</a>
+    <a href="/docs/operatores.html#latin-forms" class="nav-h3">Latin Forms</a>
+    <a href="/docs/operatores.html#symbolic-forms" class="nav-h3">Symbolic Forms</a>
+    <a href="/docs/operatores.html#nullish-operations">Nullish Operations</a>
+    <a href="/docs/operatores.html#vel-nullish-coalescing" class="nav-h3">vel (Nullish Coalescing)</a>
+    <a href="/docs/operatores.html#null-checks" class="nav-h3">Null Checks</a>
+    <a href="/docs/operatores.html#type-checking">Type Checking</a>
+    <a href="/docs/operatores.html#est-type-check" class="nav-h3">est (Type Check)</a>
+    <a href="/docs/operatores.html#boolean-checks" class="nav-h3">Boolean Checks</a>
+    <a href="/docs/operatores.html#ternary-expressions">Ternary Expressions</a>
+    <a href="/docs/operatores.html#symbolic-style" class="nav-h3">Symbolic Style</a>
+    <a href="/docs/operatores.html#latin-style" class="nav-h3">Latin Style</a>
+    <a href="/docs/operatores.html#ranges">Ranges</a>
+    <a href="/docs/operatores.html#exclusive-ranges" class="nav-h3">Exclusive Ranges</a>
+    <a href="/docs/operatores.html#inclusive-ranges" class="nav-h3">Inclusive Ranges</a>
+    <a href="/docs/operatores.html#stepped-ranges" class="nav-h3">Stepped Ranges</a>
+    <a href="/docs/operatores.html#range-containment" class="nav-h3">Range Containment</a>
+    <a href="/docs/operatores.html#set-membership">Set Membership</a>
+    <a href="/docs/operatores.html#assignment">Assignment</a>
+    <a href="/docs/operatores.html#bitwise-operators">Bitwise Operators</a>
+    <a href="/docs/operatores.html#why-both-forms">Why Both Forms?</a>
   </div>
   <a href="/docs/structurae.html">Structurae</a>
   <a href="/docs/regimen.html">Regimen</a>
   <a href="/docs/functiones.html">Functiones</a>
   <a href="/docs/importa.html">Importa</a>
   <a href="/docs/errores.html">Errores</a>
-  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
   <div class="nav-section">research</div>
   <a href="/research/index.html">Research</a>
   <a href="/research/results.html">Research Results</a>
@@ -49,91 +59,222 @@
 </nav>
     <main class="content">
       <h1 id="operatores">Operatores</h1>
-<p>Operators: arithmetic, logical, comparison, ternary, nullish coalescing, and ranges.</p>
-<h2 id="exempla">Exempla</h2>
+<p>Operators in Faber Romanus embody the language&#39;s central philosophy: making implicit programming concepts explicit through linguistic structure. Where most languages rely solely on symbols, Faber offers Latin keywords alongside familiar operators, letting programmers choose the form that best expresses their intent.</p>
+<p>This dual nature is not redundancy. Latin keywords read like natural language, making code flow more clearly when read aloud or processed by language models. Symbolic operators remain available for those who prefer terseness or familiarity. The choice is stylistic, not semantic; both forms compile identically.</p>
+<hr>
+<h2 id="arithmetic">Arithmetic</h2>
+<p>Standard mathematical operators work as expected:</p>
+<pre><code class="language-fab">fixum sum = 10 + 5       # addition
+fixum diff = 10 - 5      # subtraction
+fixum prod = 10 * 5      # multiplication
+fixum quot = 10 / 5      # division
+fixum rem = 10 % 3       # modulo (remainder)
+</code></pre>
+<p>The <code>+</code> operator also handles string concatenation:</p>
+<pre><code class="language-fab">fixum greeting = &quot;salve&quot; + &quot; mundus&quot;
+</code></pre>
+<p>Unary negation uses the minus sign as a prefix:</p>
+<pre><code class="language-fab">fixum x = 5
+fixum neg = -x           # -5
+</code></pre>
+<p>There are no increment (<code>++</code>) or decrement (<code>--</code>) operators. Use compound assignment instead.</p>
+<hr>
+<h2 id="comparison">Comparison</h2>
+<p>Relational operators compare values and return boolean results:</p>
+<pre><code class="language-fab">fixum isLess = 5 &lt; 10           # less than
+fixum isGreater = 10 &gt; 5        # greater than
+fixum isLessOrEqual = 5 &lt;= 5    # less than or equal
+fixum isGreaterOrEqual = 10 &gt;= 10
+</code></pre>
+<p>For equality, Faber follows JavaScript&#39;s distinction between loose and strict comparison:</p>
+<pre><code class="language-fab">fixum loose = 10 == &quot;10&quot;        # true (type coercion)
+fixum strict = 10 === 10        # true (same type and value)
+fixum notEqual = 10 != 5
+fixum strictNotEqual = 10 !== &quot;10&quot;
+</code></pre>
+<p>In practice, prefer strict equality (<code>===</code>, <code>!==</code>) to avoid subtle bugs from type coercion.</p>
+<hr>
+<h2 id="logical-operators">Logical Operators</h2>
+<p>Logical operators combine boolean expressions. Faber offers both symbolic and Latin forms.</p>
+<h3 id="latin-forms">Latin Forms</h3>
+<p>The Latin keywords read naturally in conditional expressions:</p>
+<pre><code class="language-fab">fixum both = verum et verum       # and
+fixum either = falsum aut verum   # or
+fixum negated = non flag          # not
+</code></pre>
+<p>Etymology:</p>
 <ul>
-<li><code>exempla/operatores/</code></li>
+<li><code>et</code> means &quot;and&quot; in Latin, the same word that gives us &quot;et cetera&quot; (and the rest)</li>
+<li><code>aut</code> means &quot;or&quot; in the exclusive sense (one or the other)</li>
+<li><code>non</code> means &quot;not&quot;</li>
+</ul>
+<h3 id="symbolic-forms">Symbolic Forms</h3>
+<p>The familiar C-style operators remain available:</p>
+<pre><code class="language-fab">fixum both = verum &amp;&amp; verum
+fixum either = falsum || verum
+fixum negated = !flag
+</code></pre>
+<p><strong>Style guidance:</strong> Prefer Latin forms (<code>et</code>, <code>aut</code>, <code>non</code>) over symbols. The Latin reads more clearly and avoids the visual ambiguity between <code>!</code> (logical not) and <code>!.</code> (non-null assertion).</p>
+<p>Short-circuit evaluation works as expected. In <code>falsum et expensiveCheck()</code>, the function never executes because the first operand is already false.</p>
+<hr>
+<h2 id="nullish-operations">Nullish Operations</h2>
+<h3 id="vel-nullish-coalescing">vel (Nullish Coalescing)</h3>
+<p>The <code>vel</code> operator provides a default value when the left operand is <code>nihil</code> (null):</p>
+<pre><code class="language-fab">fixum textus? maybeName = nihil
+fixum name = maybeName vel &quot;default&quot;   # &quot;default&quot;
+</code></pre>
+<p>Unlike <code>aut</code> (logical or), <code>vel</code> only triggers on null, not on falsy values:</p>
+<pre><code class="language-fab">0 vel 5           # 0 (zero is not null)
+&quot;&quot; vel &quot;default&quot;  # &quot;&quot; (empty string is not null)
+nihil vel 5       # 5
+</code></pre>
+<p>Etymology: <code>vel</code> is the Latin inclusive &quot;or&quot; (meaning &quot;or if you prefer&quot;). In Faber, it carries the sense of &quot;or else use this alternative.&quot;</p>
+<p><strong>Note:</strong> The JavaScript <code>??</code> operator is not available. Use <code>vel</code> instead.</p>
+<h3 id="null-checks">Null Checks</h3>
+<p>Faber provides unary prefix operators for checking null state:</p>
+<pre><code class="language-fab">fixum textus? maybe = nihil
+
+scribe nihil maybe       # verum (is null)
+scribe nonnihil maybe    # falsum (is not null)
+</code></pre>
+<p>For checking whether a value is null or empty (strings, arrays, collections):</p>
+<pre><code class="language-fab">scribe nulla maybe       # verum (null or empty)
+scribe nonnulla maybe    # falsum (has content)
+</code></pre>
+<p>The distinction matters:</p>
+<ul>
+<li><code>nihil</code>/<code>nonnihil</code> check strictly for null</li>
+<li><code>nulla</code>/<code>nonnulla</code> check for null OR empty (length zero)</li>
 </ul>
 <hr>
-<h2 id="syntax">Syntax</h2>
-<h3 id="assignment">Assignment</h3>
-<pre><code class="language-ebnf">assignment := ternary ((&#39;=&#39; | &#39;+=&#39; | &#39;-=&#39; | &#39;*=&#39; | &#39;/=&#39; | &#39;&amp;=&#39; | &#39;|=&#39;) assignment)?
+<h2 id="type-checking">Type Checking</h2>
+<h3 id="est-type-check">est (Type Check)</h3>
+<p>The <code>est</code> operator tests whether a value is of a particular type or is null:</p>
+<pre><code class="language-fab">fixum numerus? maybeValue = nihil
+fixum isNull = maybeValue est nihil    # verum
 </code></pre>
-<h3 id="ternary">Ternary</h3>
-<pre><code class="language-ebnf">ternary := or ((&#39;?&#39; expression &#39;:&#39; | &#39;sic&#39; expression &#39;secus&#39;) ternary)?
+<p>For negative type checking:</p>
+<pre><code class="language-fab">fixum isNotNull = maybeValue non est nihil
 </code></pre>
-<blockquote>
-<p>Supports both symbolic (? :) and Latin (sic secus) syntax.
-The two forms cannot be mixed: use either ? : or sic secus.</p>
-</blockquote>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-fab">verum ? 1 : 0              // symbolic style
-verum sic 1 secus 0        // Latin style
-a ? b ? c : d : e          // nested (right-associative)
+<p>Etymology: <code>est</code> is the Latin verb &quot;is&quot; (third person singular of &quot;esse&quot;, to be). The phrase <code>x est nihil</code> reads naturally as &quot;x is nothing.&quot;</p>
+<h3 id="boolean-checks">Boolean Checks</h3>
+<p>Faber allows testing boolean values with <code>verum</code> and <code>falsum</code> as prefix operators:</p>
+<pre><code class="language-fab">fixum enabled = verum
+fixum isTrue = verum enabled     # strict check that enabled is true
+fixum isFalse = falsum disabled  # strict check that disabled is false
 </code></pre>
-<h3 id="or">Or</h3>
-<pre><code class="language-ebnf">or := and ((&#39;||&#39; | &#39;aut&#39;) and)* | and (&#39;vel&#39; and)*
-</code></pre>
-<blockquote>
-<p>Latin &#39;aut&#39; (or) for logical OR, &#39;vel&#39; (or) for nullish coalescing.
-Mixing aut/|| with vel without parentheses is a syntax error
-(same as JavaScript&#39;s ?? and || restriction).</p>
-</blockquote>
-<h3 id="and">And</h3>
-<pre><code class="language-ebnf">and := equality (&#39;&amp;&amp;&#39; equality | &#39;et&#39; equality)*
-</code></pre>
-<blockquote>
-<p>Latin &#39;et&#39; (and) supported alongside &#39;&amp;&amp;&#39;.</p>
-</blockquote>
-<h3 id="equality">Equality</h3>
-<pre><code class="language-ebnf">equality := comparison ((&#39;==&#39; | &#39;!=&#39; | &#39;===&#39; | &#39;!==&#39; | &#39;est&#39; | &#39;non&#39; &#39;est&#39;) comparison)*
-</code></pre>
-<blockquote>
-<p>&#39;est&#39; always means type check (instanceof/typeof).
-Use &#39;===&#39; or &#39;!==&#39; for value equality.
-Use &#39;nihil x&#39; or &#39;nonnihil x&#39; for null checks.</p>
-</blockquote>
-<h3 id="comparison">Comparison</h3>
-<pre><code class="language-ebnf">comparison := bitwiseOr ((&#39;&lt;&#39; | &#39;&gt;&#39; | &#39;&lt;=&#39; | &#39;&gt;=&#39; | &#39;intra&#39; | &#39;inter&#39;) bitwiseOr)*
-</code></pre>
-<blockquote>
-<p>intra/inter at comparison level - same precedence as relational operators</p>
-</blockquote>
-<h3 id="range">Range</h3>
-<pre><code class="language-ebnf">range := additive ((&#39;..&#39; | &#39;ante&#39; | &#39;usque&#39;) additive (&#39;per&#39; additive)?)?
-</code></pre>
-<blockquote>
-<p>Range expressions provide concise numeric iteration.
-Three operators with different end semantics:</p>
-<ul>
-<li>&#39;..&#39; and &#39;ante&#39;: exclusive (0..10 / 0 ante 10 = 0-9)</li>
-<li>&#39;usque&#39;: inclusive (0 usque 10 = 0-10)
-Optional step via &#39;per&#39; keyword.</li>
-</ul>
-</blockquote>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-fab">0..10           -&gt; RangeExpression(0, 10, inclusive=false)
-0 ante 10       -&gt; RangeExpression(0, 10, inclusive=false)
-0 usque 10      -&gt; RangeExpression(0, 10, inclusive=true)
-0..10 per 2     -&gt; RangeExpression(0, 10, 2, inclusive=false)
-</code></pre>
-<h3 id="additive">Additive</h3>
-<pre><code class="language-ebnf">additive := multiplicative ((&#39;+&#39; | &#39;-&#39;) multiplicative)*
-</code></pre>
-<h3 id="multiplicative">Multiplicative</h3>
-<pre><code class="language-ebnf">multiplicative := unary ((&#39;*&#39; | &#39;/&#39; | &#39;%&#39;) unary)*
-</code></pre>
-<h3 id="unary">Unary</h3>
-<pre><code class="language-ebnf">unary := (&#39;!&#39; | &#39;-&#39; | &#39;non&#39; | &#39;nulla&#39; | &#39;nonnulla&#39; | &#39;nihil&#39; | &#39;nonnihil&#39; | &#39;negativum&#39; | &#39;positivum&#39; | &#39;cede&#39; | &#39;novum&#39; | &#39;finge&#39;) unary | cast
-</code></pre>
-<blockquote>
-<p>Latin &#39;non&#39; (not), &#39;nulla&#39; (none/empty), &#39;nonnulla&#39; (some/non-empty),
-&#39;nihil&#39; (is null), &#39;nonnihil&#39; (is not null),
-&#39;negativum&#39; (&lt; 0), &#39;positivum&#39; (&gt; 0), &#39;cede&#39; (await), &#39;novum&#39; (new),
-&#39;finge&#39; (form variant).</p>
-</blockquote>
 <hr>
-<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+<h2 id="ternary-expressions">Ternary Expressions</h2>
+<p>Conditional expressions select between two values based on a condition.</p>
+<h3 id="symbolic-style">Symbolic Style</h3>
+<p>The familiar question-mark-colon syntax:</p>
+<pre><code class="language-fab">fixum max = a &gt; b ? a : b
+fixum grade = score &gt;= 90 ? &quot;A&quot; : score &gt;= 80 ? &quot;B&quot; : &quot;C&quot;
+</code></pre>
+<h3 id="latin-style">Latin Style</h3>
+<p>The <code>sic ... secus</code> form reads as &quot;thus ... otherwise&quot;:</p>
+<pre><code class="language-fab">fixum max = a &gt; b sic a secus b
+</code></pre>
+<p>Etymology:</p>
+<ul>
+<li><code>sic</code> means &quot;thus&quot; or &quot;so&quot; (as in &quot;sic semper tyrannis&quot;)</li>
+<li><code>secus</code> means &quot;otherwise&quot; or &quot;differently&quot;</li>
+</ul>
+<p>The Latin form works well when the condition and branches are short. For complex nested conditions, symbolic style may be clearer. Do not mix the two forms in a single expression.</p>
+<hr>
+<h2 id="ranges">Ranges</h2>
+<p>Range operators create sequences of numbers for iteration.</p>
+<h3 id="exclusive-ranges">Exclusive Ranges</h3>
+<p>The <code>..</code> operator creates a range that excludes the end value:</p>
+<pre><code class="language-fab">ex 0..10 pro i {
+    scribe i    # 0, 1, 2, ..., 9
+}
+</code></pre>
+<p>The Latin keyword <code>ante</code> (&quot;before&quot;) means the same thing:</p>
+<pre><code class="language-fab">ex 0 ante 10 pro i {
+    scribe i    # 0, 1, 2, ..., 9
+}
+</code></pre>
+<h3 id="inclusive-ranges">Inclusive Ranges</h3>
+<p>The <code>usque</code> operator includes the end value:</p>
+<pre><code class="language-fab">ex 0 usque 10 pro i {
+    scribe i    # 0, 1, 2, ..., 10
+}
+</code></pre>
+<p>Etymology: <code>usque</code> means &quot;up to&quot; or &quot;as far as&quot; in Latin, implying inclusion of the destination.</p>
+<h3 id="stepped-ranges">Stepped Ranges</h3>
+<p>The <code>per</code> modifier controls the step size:</p>
+<pre><code class="language-fab">ex 0..10 per 2 pro i {
+    scribe i    # 0, 2, 4, 6, 8
+}
+</code></pre>
+<p>For descending ranges, use a negative step:</p>
+<pre><code class="language-fab">ex 10..0 per -1 pro i {
+    scribe i    # 10, 9, 8, ..., 1
+}
+</code></pre>
+<p>Etymology: <code>per</code> means &quot;by&quot; or &quot;through&quot; in Latin.</p>
+<h3 id="range-containment">Range Containment</h3>
+<p>The <code>intra</code> operator tests whether a value falls within a range:</p>
+<pre><code class="language-fab">si age intra 18 usque 65 {
+    scribe &quot;working age&quot;
+}
+
+si value intra 0..100 {
+    scribe &quot;valid percentage&quot;
+}
+</code></pre>
+<p>Etymology: <code>intra</code> means &quot;within&quot; in Latin.</p>
+<hr>
+<h2 id="set-membership">Set Membership</h2>
+<p>The <code>inter</code> operator tests whether a value appears in a collection:</p>
+<pre><code class="language-fab">si status inter [&quot;pending&quot;, &quot;active&quot;, &quot;paused&quot;] {
+    scribe &quot;valid status&quot;
+}
+</code></pre>
+<p>Etymology: <code>inter</code> means &quot;among&quot; or &quot;between&quot; in Latin.</p>
+<hr>
+<h2 id="assignment">Assignment</h2>
+<p>Simple assignment uses the equals sign:</p>
+<pre><code class="language-fab">varia x = 10
+x = 20
+</code></pre>
+<p>Compound assignment operators combine an operation with assignment:</p>
+<pre><code class="language-fab">varia counter = 0
+counter += 10    # add and assign
+counter -= 3     # subtract and assign
+counter *= 2     # multiply and assign
+counter /= 2     # divide and assign
+</code></pre>
+<p>Bitwise compound assignment is also available:</p>
+<pre><code class="language-fab">varia flags = 0b1010
+flags &amp;= mask    # bitwise AND and assign
+flags |= flag    # bitwise OR and assign
+</code></pre>
+<hr>
+<h2 id="bitwise-operators">Bitwise Operators</h2>
+<p>Low-level bit manipulation uses symbolic operators exclusively. These operations are inherently machine-oriented and do not benefit from Latin keywords.</p>
+<pre><code class="language-fab">fixum flags = 0b1010
+fixum mask = 0b1100
+
+fixum bitwiseAnd = flags &amp; mask      # AND
+fixum bitwiseOr = flags | mask       # OR
+fixum bitwiseXor = flags ^ mask      # XOR
+fixum bitwiseNot = ~flags            # NOT (complement)
+fixum leftShift = 1 &lt;&lt; 4             # left shift
+fixum rightShift = 16 &gt;&gt; 2           # right shift
+</code></pre>
+<p><strong>Precedence note:</strong> Unlike C, bitwise operators in Faber bind tighter than comparison operators. This means:</p>
+<pre><code class="language-fab">flags &amp; mask == 0    # parses as (flags &amp; mask) == 0
+</code></pre>
+<p>This matches programmer intent and avoids a common source of bugs in C-family languages.</p>
+<hr>
+<h2 id="why-both-forms">Why Both Forms?</h2>
+<p>Faber&#39;s dual operator syntax reflects a deeper design principle: code is read by both humans and machines, and different readers benefit from different representations.</p>
+<p>Latin keywords make semantic relationships explicit. When you write <code>a et b</code>, the word &quot;and&quot; appears in the code. When you write <code>maybeName vel &quot;default&quot;</code>, the sense of &quot;or alternatively&quot; is visible. This clarity benefits code review, documentation, and AI systems that process code as natural language.</p>
+<p>Symbolic operators serve programmers who think in terms of established conventions. A <code>&amp;&amp;</code> is immediately recognizable to anyone with C-family experience. For quick expressions or dense logic, symbols can be more scannable.</p>
+<p>The language does not privilege one form over the other in parsing or semantics. Choose based on context: Latin for clarity, symbols for familiarity. Many programmers find that Latin keywords work best in conditionals and control flow, while symbols suit arithmetic and bitwise operations.</p>
+<p>This flexibility embodies Faber&#39;s motto of accessibility over purity. The goal is not to force Latin on reluctant programmers, but to offer it as a tool for those who find it clarifying.</p>
 
     </main>
   </div>

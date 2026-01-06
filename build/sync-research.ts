@@ -4,9 +4,9 @@ import yaml from 'js-yaml'
 
 const ROOT = join(import.meta.dir, '..')
 const CONTENT_DIR = join(ROOT, 'content')
-const FABER_TRIALS = join(ROOT, '..', 'faber-trials')
-const RESULTS_DIR = join(FABER_TRIALS, 'results')
-const CONFIG_DIR = join(FABER_TRIALS, 'config')
+const FABER_ROMANUS = join(ROOT, '..', 'faber-romanus')
+const RESULTS_DIR = join(FABER_ROMANUS, 'probationes', 'results')
+const CONFIG_DIR = join(FABER_ROMANUS, 'probationes', 'config')
 
 interface GradedResult {
   timestamp: string
@@ -392,14 +392,14 @@ function generateResearchPage(stats: Stats): string {
 
   let content = `---
 title: Research Results
-description: LLM learnability research from faber-trials
+description: LLM learnability research for Faber
 section: research
 order: 1
 ---
 
 # Research Results
 
-Results from the faber-trials evaluation harness. Testing whether LLMs can learn Faber syntax from examples.
+Results from the Faber evaluation harness. Testing whether LLMs can learn Faber syntax from examples.
 
 | Metric | Value |
 |--------|-------|
@@ -491,14 +491,14 @@ Where failures occur (among failed trials only).
 - **Dialects:** Latin keywords
 - **Context levels:** examples-only, minimal, basic, complete
 
-See [faber-trials](https://github.com/ianzepp/faber-trials) for raw data and methodology details.
+See [faber-romanus](https://github.com/ianzepp/faber-romanus) for raw data and methodology details.
 `
 
   return content
 }
 
 async function main() {
-  console.log('Syncing research from faber-trials...')
+  console.log('Syncing research from faber-romanus...')
   console.log(`Source: ${RESULTS_DIR}`)
   console.log()
 

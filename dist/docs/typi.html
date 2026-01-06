@@ -22,10 +22,31 @@
   <a href="/docs/fundamenta.html">Fundamenta</a>
   <a href="/docs/typi.html" class="active">Typi</a>
   <div class="nav-subheadings">
-    <a href="/docs/typi.html#exempla">Exempla</a>
-    <a href="/docs/typi.html#syntax">Syntax</a>
-    <a href="/docs/typi.html#type-alias-declaration" class="nav-h3">Type Alias Declaration</a>
-    <a href="/docs/typi.html#type-annotation" class="nav-h3">Type Annotation</a>
+    <a href="/docs/typi.html#primitive-types">Primitive Types</a>
+    <a href="/docs/typi.html#textus-string" class="nav-h3">textus (String)</a>
+    <a href="/docs/typi.html#numerus-integer" class="nav-h3">numerus (Integer)</a>
+    <a href="/docs/typi.html#fractus-floating-point" class="nav-h3">fractus (Floating-Point)</a>
+    <a href="/docs/typi.html#bivalens-boolean" class="nav-h3">bivalens (Boolean)</a>
+    <a href="/docs/typi.html#nihil-null" class="nav-h3">nihil (Null)</a>
+    <a href="/docs/typi.html#vacuum-void" class="nav-h3">vacuum (Void)</a>
+    <a href="/docs/typi.html#special-types">Special Types</a>
+    <a href="/docs/typi.html#ignotum-unknown" class="nav-h3">ignotum (Unknown)</a>
+    <a href="/docs/typi.html#numquam-never" class="nav-h3">numquam (Never)</a>
+    <a href="/docs/typi.html#objectum-object" class="nav-h3">objectum (Object)</a>
+    <a href="/docs/typi.html#type-annotations">Type Annotations</a>
+    <a href="/docs/typi.html#in-variable-declarations" class="nav-h3">In Variable Declarations</a>
+    <a href="/docs/typi.html#in-function-signatures" class="nav-h3">In Function Signatures</a>
+    <a href="/docs/typi.html#nullable-types">Nullable Types</a>
+    <a href="/docs/typi.html#collections">Collections</a>
+    <a href="/docs/typi.html#lista-array-list" class="nav-h3">lista (Array/List)</a>
+    <a href="/docs/typi.html#tabula-map-dictionary" class="nav-h3">tabula (Map/Dictionary)</a>
+    <a href="/docs/typi.html#copia-set" class="nav-h3">copia (Set)</a>
+    <a href="/docs/typi.html#type-aliases">Type Aliases</a>
+    <a href="/docs/typi.html#typeof-extraction" class="nav-h3">typeof Extraction</a>
+    <a href="/docs/typi.html#generics">Generics</a>
+    <a href="/docs/typi.html#union-types">Union Types</a>
+    <a href="/docs/typi.html#type-casting">Type Casting</a>
+    <a href="/docs/typi.html#type-checking">Type Checking</a>
   </div>
   <a href="/docs/operatores.html">Operatores</a>
   <a href="/docs/structurae.html">Structurae</a>
@@ -33,7 +54,6 @@
   <a href="/docs/functiones.html">Functiones</a>
   <a href="/docs/importa.html">Importa</a>
   <a href="/docs/errores.html">Errores</a>
-  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
   <div class="nav-section">research</div>
   <a href="/research/index.html">Research</a>
   <a href="/research/results.html">Research Results</a>
@@ -41,36 +61,291 @@
 </nav>
     <main class="content">
       <h1 id="typi">Typi</h1>
-<p>Type system: type annotations, aliases, enums, nullable types, and collections.</p>
-<h2 id="exempla">Exempla</h2>
-<ul>
-<li><code>exempla/typi/</code></li>
-</ul>
+<p>Faber Romanus uses a type-first syntax that places type annotations before identifiers, reflecting the Latin pattern where adjectives describing nature precede the noun they modify. Where TypeScript writes <code>const name: string</code>, Faber writes <code>fixum textus nomen</code>. This ordering reads naturally in Latin: &quot;a fixed text, name&quot;---the type describes what kind of thing the identifier represents.</p>
+<p>The type system prioritizes explicitness and clarity. Every type name derives from Latin, chosen not for historical purity but because Latin&#39;s morphological richness allows type names to carry meaning. When you see <code>fractus</code> instead of <code>float</code>, you encounter the Latin root of &quot;fraction&quot;---a broken number, a number with parts. The etymology teaches.</p>
 <hr>
-<h2 id="syntax">Syntax</h2>
-<h3 id="type-alias-declaration">Type Alias Declaration</h3>
-<pre><code class="language-ebnf">typeAliasDecl := &#39;typus&#39; IDENTIFIER &#39;=&#39; typeAnnotation
+<h2 id="primitive-types">Primitive Types</h2>
+<h3 id="textus-string">textus (String)</h3>
+<p>From the Latin <em>texere</em>, &quot;to weave.&quot; Text is woven words, threads of meaning combined into fabric. The metaphor is ancient: we still speak of &quot;spinning a yarn&quot; and the &quot;thread&quot; of an argument.</p>
+<pre><code class="language-fab">fixum textus greeting = &quot;Salve, Munde&quot;
+fixum textus empty = &quot;&quot;
 </code></pre>
-<blockquote>
-<p>Enables creating named type aliases for complex types.</p>
-</blockquote>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-fab">typus ID = textus
-typus UserID = numerus&lt;32, Naturalis&gt;
-typus ConfigTypus = typus config    // typeof
+<p>String literals use double or single quotes. Template literals use backticks with <code>${...}</code> interpolation, just as in JavaScript:</p>
+<pre><code class="language-fab">fixum name = &quot;Marcus&quot;
+fixum message = `Hello, ${name}`
 </code></pre>
-<h3 id="type-annotation">Type Annotation</h3>
-<pre><code class="language-ebnf">typeAnnotation := (&#39;de&#39; | &#39;in&#39;)? IDENTIFIER typeParams? &#39;?&#39;? arrayBrackets*
-typeParams := &#39;&lt;&#39; typeParameter (&#39;,&#39; typeParameter)* &#39;&gt;&#39;
-typeParameter := typeAnnotation | NUMBER | MODIFIER
-arrayBrackets := &#39;[]&#39; &#39;?&#39;?
+<h3 id="numerus-integer">numerus (Integer)</h3>
+<p>From the Latin <em>numerus</em>, &quot;number, count.&quot; This is the discrete counting number---whole, indivisible. When you need integers, you need <code>numerus</code>.</p>
+<pre><code class="language-fab">fixum numerus count = 42
+fixum numerus negative = -100
+fixum numerus hex = 0xFF
 </code></pre>
-<blockquote>
-<p>Supports generics (lista<textus>), nullable (?), union types (unio&lt;A, B&gt;),
-and array shorthand (numerus[] desugars to lista<numerus>).</p>
-</blockquote>
+<p>Numeric literals support decimal, hexadecimal (with <code>0x</code> prefix), and arbitrary-precision integers (with <code>n</code> suffix for big integers).</p>
+<h3 id="fractus-floating-point">fractus (Floating-Point)</h3>
+<p>From the Latin <em>fractus</em>, &quot;broken.&quot; The past participle of <em>frangere</em>, &quot;to break.&quot; A fractional number is a broken number---one that has been divided into parts. This is the etymological root of the English word &quot;fraction.&quot;</p>
+<p>Use <code>fractus</code> when you need decimal precision:</p>
+<pre><code class="language-fab">fixum fractus pi = 3.14159
+fixum fractus rate = 0.05
+</code></pre>
+<p>The distinction between <code>numerus</code> and <code>fractus</code> mirrors the distinction between integers and floating-point numbers in systems languages. When precision matters---financial calculations, scientific computing---you choose deliberately.</p>
+<h3 id="bivalens-boolean">bivalens (Boolean)</h3>
+<p>From <em>bi-</em>, &quot;two,&quot; and <em>valens</em>, &quot;being strong, having value.&quot; A two-valued type. The boolean literals are <code>verum</code> (true) and <code>falsum</code> (false):</p>
+<pre><code class="language-fab">fixum bivalens active = verum
+fixum bivalens disabled = falsum
+</code></pre>
+<p>These literals read as Latin adjectives: &quot;it is true,&quot; &quot;it is false.&quot;</p>
+<h3 id="nihil-null">nihil (Null)</h3>
+<p>From the Latin <em>nihil</em>, &quot;nothing.&quot; The absence of value. Where other languages use <code>null</code> or <code>nil</code> or <code>None</code>, Faber uses <code>nihil</code>:</p>
+<pre><code class="language-fab">fixum nothing = nihil
+</code></pre>
+<p>A variable holding <code>nihil</code> holds nothing---not zero, not an empty string, but the explicit absence of any value.</p>
+<h3 id="vacuum-void">vacuum (Void)</h3>
+<p>From the Latin <em>vacuum</em>, &quot;empty, void.&quot; This is the return type of functions that complete but return no value:</p>
+<pre><code class="language-fab">functio log(textus message) -&gt; vacuum {
+    scribe message
+}
+</code></pre>
+<p>The distinction from <code>nihil</code> is semantic: <code>nihil</code> is a value (the null value), while <code>vacuum</code> is the absence of a return. A function returning <code>vacuum</code> completes normally; it simply has nothing to hand back.</p>
 <hr>
-<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+<h2 id="special-types">Special Types</h2>
+<h3 id="ignotum-unknown">ignotum (Unknown)</h3>
+<p>From <em>in-</em>, &quot;not,&quot; and <em>gnoscere</em>, &quot;to know.&quot; The unknown type. Unlike permissive &quot;any&quot; types in other languages, <code>ignotum</code> requires you to narrow before use:</p>
+<pre><code class="language-fab">fixum ignotum data = getExternalData()
+
+# Error: cannot use ignotum directly
+# scribe data.length
+
+# Must narrow first
+si data est textus {
+    scribe data.longitudo()
+}
+</code></pre>
+<p>Faber deliberately omits an &quot;any&quot; type. When you receive data of unknown type, you must either narrow it with type guards (<code>est</code>) or cast it explicitly (<code>qua</code>). This design makes uncertainty visible and intentional.</p>
+<h3 id="numquam-never">numquam (Never)</h3>
+<p>From the Latin <em>numquam</em>, &quot;never.&quot; This is the return type of functions that never return---those that throw exceptions, loop infinitely, or exit the process:</p>
+<pre><code class="language-fab">functio moritur() -&gt; numquam {
+    iace novum Error { message: &quot;fatal&quot; }
+}
+
+functio infinitus() -&gt; numquam {
+    dum verum { }
+}
+</code></pre>
+<p>A function marked <code>numquam</code> is a one-way door. Control enters but does not exit. This distinguishes it from <code>vacuum</code>: a void function returns (with no value); a never function does not return at all.</p>
+<h3 id="objectum-object">objectum (Object)</h3>
+<p>From the Latin <em>objectum</em>, &quot;something thrown before.&quot; The root of the English word &quot;object.&quot; This type represents any non-primitive value---anything that is not a number, string, boolean, or null:</p>
+<pre><code class="language-fab">functio getUser() -&gt; objectum {
+    redde { name: &quot;Marcus&quot;, age: 30 }
+}
+</code></pre>
+<p>Use <code>objectum</code> when a function returns an anonymous object structure. For known shapes, prefer defining a <code>genus</code> (struct) instead.</p>
+<hr>
+<h2 id="type-annotations">Type Annotations</h2>
+<p>Faber uses type-first syntax. The type precedes the identifier it annotates:</p>
+<pre><code class="language-fab">fixum textus nomen = &quot;Marcus&quot;
+varia numerus count = 0
+</code></pre>
+<p>This ordering---type before name---reflects Latin&#39;s pattern where descriptive modifiers precede their nouns. It also mirrors how we think: &quot;I need a number for counting,&quot; not &quot;I need count, which is a number.&quot;</p>
+<h3 id="in-variable-declarations">In Variable Declarations</h3>
+<p>Both immutable (<code>fixum</code>) and mutable (<code>varia</code>) declarations support type annotations:</p>
+<pre><code class="language-fab">fixum numerus age = 30
+varia textus status = &quot;pending&quot;
+</code></pre>
+<p>Type annotations are optional when the type can be inferred:</p>
+<pre><code class="language-fab">fixum name = &quot;Marcus&quot;    # inferred as textus
+fixum count = 42         # inferred as numerus
+</code></pre>
+<h3 id="in-function-signatures">In Function Signatures</h3>
+<p>Function parameters use the same type-first pattern. Return types follow the arrow:</p>
+<pre><code class="language-fab">functio adde(numerus a, numerus b) -&gt; numerus {
+    redde a + b
+}
+
+functio describe(textus nomen, numerus aetas) -&gt; textus {
+    redde scriptum(&quot;§ habet § annos&quot;, nomen, aetas)
+}
+</code></pre>
+<p>A function that returns nothing uses <code>vacuum</code> or omits the return type entirely:</p>
+<pre><code class="language-fab">functio log(textus message) -&gt; vacuum {
+    scribe message
+}
+</code></pre>
+<hr>
+<h2 id="nullable-types">Nullable Types</h2>
+<p>The <code>?</code> suffix marks a type as nullable---able to hold either a value of that type or <code>nihil</code>:</p>
+<pre><code class="language-fab">fixum textus? maybeName = nihil
+fixum numerus? maybeCount = 42
+</code></pre>
+<p>A nullable type requires handling before use. You cannot call methods on a <code>textus?</code> without first checking that it is not <code>nihil</code>:</p>
+<pre><code class="language-fab">fixum textus? name = getOptionalName()
+
+# Using type guard
+si name est nihil {
+    scribe &quot;No name provided&quot;
+}
+aliter {
+    scribe name.longitudo()
+}
+</code></pre>
+<p>The <code>est</code> operator performs type checking:</p>
+<pre><code class="language-fab">fixum isNull = maybeValue est nihil
+</code></pre>
+<p>Function return types can be nullable to indicate that a function might not find what it is looking for:</p>
+<pre><code class="language-fab">functio inveni(textus id) -&gt; persona? {
+    # might return nihil if not found
+}
+</code></pre>
+<hr>
+<h2 id="collections">Collections</h2>
+<p>Faber provides three built-in collection types, each named for Latin words describing containment and abundance.</p>
+<h3 id="lista-array-list">lista (Array/List)</h3>
+<p>From the Latin <em>lista</em>, &quot;border, strip, list.&quot; An ordered, indexable sequence of elements:</p>
+<pre><code class="language-fab">fixum lista&lt;textus&gt; names = [&quot;Marcus&quot;, &quot;Julia&quot;, &quot;Gaius&quot;]
+fixum lista&lt;numerus&gt; scores = [100, 95, 87]
+</code></pre>
+<p>Array shorthand uses brackets with type parameter:</p>
+<pre><code class="language-fab">fixum textus[] names = [&quot;Marcus&quot;, &quot;Julia&quot;, &quot;Gaius&quot;]
+fixum numerus[] empty = []
+</code></pre>
+<p>The shorthand <code>textus[]</code> is equivalent to <code>lista&lt;textus&gt;</code>.</p>
+<p>Access elements by index:</p>
+<pre><code class="language-fab">fixum first = names[0]
+fixum last = names[names.longitudo() - 1]
+</code></pre>
+<h3 id="tabula-map-dictionary">tabula (Map/Dictionary)</h3>
+<p>From the Latin <em>tabula</em>, &quot;tablet, table, board.&quot; The writing tablet, a surface for recording associations. A <code>tabula</code> maps keys to values:</p>
+<pre><code class="language-fab">fixum tabula&lt;textus, numerus&gt; ages = {
+    &quot;Marcus&quot;: 30,
+    &quot;Julia&quot;: 25,
+    &quot;Gaius&quot;: 40
+}
+</code></pre>
+<p>The type takes two parameters: key type and value type. Access values by key:</p>
+<pre><code class="language-fab">fixum marcusAge = ages[&quot;Marcus&quot;]
+</code></pre>
+<h3 id="copia-set">copia (Set)</h3>
+<p>From the Latin <em>copia</em>, &quot;abundance, supply, plenty.&quot; A collection of unique values with no duplicates:</p>
+<pre><code class="language-fab">fixum copia&lt;textus&gt; uniqueNames = copia(&quot;Marcus&quot;, &quot;Julia&quot;, &quot;Marcus&quot;)
+# Contains only &quot;Marcus&quot; and &quot;Julia&quot;
+</code></pre>
+<p>Sets are useful when you care about membership and uniqueness rather than order or key-value association.</p>
+<hr>
+<h2 id="type-aliases">Type Aliases</h2>
+<p>The <code>typus</code> keyword creates named aliases for types, improving readability and enabling reuse:</p>
+<pre><code class="language-fab">typus UserId = numerus
+typus Username = textus
+typus IsActive = bivalens
+</code></pre>
+<p>Once defined, type aliases can be used anywhere a type is expected:</p>
+<pre><code class="language-fab">fixum UserId id = 42
+fixum Username name = &quot;Marcus&quot;
+</code></pre>
+<p>Aliases are especially useful for complex types:</p>
+<pre><code class="language-fab">typus Names = lista&lt;textus&gt;
+typus UserCache = tabula&lt;textus, numerus&gt;
+typus OptionalName = textus?
+</code></pre>
+<p>This makes function signatures more readable:</p>
+<pre><code class="language-fab">functio findUser(UserId id) -&gt; Username? {
+    # ...
+}
+</code></pre>
+<h3 id="typeof-extraction">typeof Extraction</h3>
+<p>Use <code>typus</code> on the right-hand side to extract a type from a value:</p>
+<pre><code class="language-fab">fixum config = { port: 3000, host: &quot;localhost&quot; }
+typus Config = typus config
+</code></pre>
+<p>This creates a type alias matching the inferred type of the value.</p>
+<hr>
+<h2 id="generics">Generics</h2>
+<p>Type parameters allow writing code that works with multiple types. Enclose parameters in angle brackets:</p>
+<pre><code class="language-fab">genus capsa&lt;T&gt; {
+    T valor
+
+    functio accipe() -&gt; T {
+        redde ego.valor
+    }
+}
+
+fixum c = novum capsa&lt;numerus&gt; { valor: 42 }
+scribe c.accipe()
+</code></pre>
+<p>Generic constraints can limit what types are acceptable:</p>
+<pre><code class="language-fab">pactum Comparable&lt;T&gt; {
+    functio compare(T other) -&gt; numerus
+}
+
+functio maximum&lt;T implet Comparable&lt;T&gt;&gt;(T a, T b) -&gt; T {
+    si a.compare(b) &gt; 0 {
+        redde a
+    }
+    redde b
+}
+</code></pre>
+<p>The type parameter <code>T</code> is constrained to types that implement the <code>Comparable</code> interface.</p>
+<hr>
+<h2 id="union-types">Union Types</h2>
+<p>The <code>unio&lt;A, B&gt;</code> generic expresses that a value may be one of several types:</p>
+<pre><code class="language-fab">typus StringOrNumber = unio&lt;textus, numerus&gt;
+
+functio process(StringOrNumber value) -&gt; textus {
+    si value est textus {
+        redde value
+    }
+    redde value.toString()
+}
+</code></pre>
+<p>Union types require narrowing before use. The compiler does not know which variant you have until you check:</p>
+<pre><code class="language-fab">fixum unio&lt;textus, numerus&gt; value = getValue()
+
+# Must narrow
+si value est numerus {
+    scribe value * 2
+}
+aliter si value est textus {
+    scribe value.longitudo()
+}
+</code></pre>
+<hr>
+<h2 id="type-casting">Type Casting</h2>
+<p>The <code>qua</code> keyword performs explicit type conversion:</p>
+<pre><code class="language-fab">fixum data = 42
+fixum asText = data qua textus
+</code></pre>
+<p>Casts are explicit acknowledgments of risk. When you write <code>qua</code>, you are telling the compiler: &quot;I know what I am doing.&quot; The compiler trusts you---but if you are wrong, runtime errors follow.</p>
+<pre><code class="language-fab"># Cast to nullable type
+fixum num = 10
+fixum maybe = num qua numerus?
+
+# Cast with member access
+fixum response = getResponse()
+fixum body = response.body qua textus
+
+# Cast for chaining
+fixum len = (data qua textus).length
+</code></pre>
+<p>Use casts sparingly. Prefer type guards (<code>est</code>) when possible, as they provide compile-time safety.</p>
+<hr>
+<h2 id="type-checking">Type Checking</h2>
+<p>The <code>est</code> keyword checks whether a value is of a given type:</p>
+<pre><code class="language-fab">fixum maybeValue = getValue()
+
+si maybeValue est textus {
+    # Within this block, maybeValue is known to be textus
+    scribe maybeValue.longitudo()
+}
+</code></pre>
+<p>Type guards work with nullable types:</p>
+<pre><code class="language-fab">fixum textus? name = getOptionalName()
+
+si name est nihil {
+    scribe &quot;No name&quot;
+}
+aliter {
+    scribe name
+}
+</code></pre>
+<p>The compiler narrows the type within the guarded block, eliminating the need for casts.</p>
 
     </main>
   </div>

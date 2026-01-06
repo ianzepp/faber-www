@@ -27,14 +27,25 @@
   <a href="/docs/functiones.html">Functiones</a>
   <a href="/docs/importa.html" class="active">Importa</a>
   <div class="nav-subheadings">
-    <a href="/docs/importa.html#exempla">Exempla</a>
-    <a href="/docs/importa.html#syntax">Syntax</a>
-    <a href="/docs/importa.html#import-declaration" class="nav-h3">Import Declaration</a>
-    <a href="/docs/importa.html#export-declaration" class="nav-h3">Export Declaration</a>
-    <a href="/docs/importa.html#dynamic-import" class="nav-h3">Dynamic Import</a>
+    <a href="/docs/importa.html#importing">Importing</a>
+    <a href="/docs/importa.html#the-ex-importa-pattern" class="nav-h3">The ex...importa Pattern</a>
+    <a href="/docs/importa.html#why-ex" class="nav-h3">Why "ex"?</a>
+    <a href="/docs/importa.html#string-paths-vs-bare-identifiers" class="nav-h3">String Paths vs. Bare Identifiers</a>
+    <a href="/docs/importa.html#named-imports" class="nav-h3">Named Imports</a>
+    <a href="/docs/importa.html#import-aliases" class="nav-h3">Import Aliases</a>
+    <a href="/docs/importa.html#wildcard-imports" class="nav-h3">Wildcard Imports</a>
+    <a href="/docs/importa.html#exporting">Exporting</a>
+    <a href="/docs/importa.html#named-exports" class="nav-h3">Named Exports</a>
+    <a href="/docs/importa.html#inline-exports" class="nav-h3">Inline Exports</a>
+    <a href="/docs/importa.html#no-default-exports" class="nav-h3">No Default Exports</a>
+    <a href="/docs/importa.html#dynamic-imports">Dynamic Imports</a>
+    <a href="/docs/importa.html#the-importabit-verb" class="nav-h3">The importabit Verb</a>
+    <a href="/docs/importa.html#module-organization">Module Organization</a>
+    <a href="/docs/importa.html#the-norma-standard-library" class="nav-h3">The norma Standard Library</a>
+    <a href="/docs/importa.html#external-packages" class="nav-h3">External Packages</a>
+    <a href="/docs/importa.html#local-imports" class="nav-h3">Local Imports</a>
   </div>
   <a href="/docs/errores.html">Errores</a>
-  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
   <div class="nav-section">research</div>
   <a href="/research/index.html">Research</a>
   <a href="/research/results.html">Research Results</a>
@@ -42,48 +53,135 @@
 </nav>
     <main class="content">
       <h1 id="importa">Importa</h1>
-<p>Module system: imports and exports.</p>
-<h2 id="exempla">Exempla</h2>
-<ul>
-<li><code>exempla/importa/</code></li>
-</ul>
-<hr>
-<h2 id="syntax">Syntax</h2>
-<h3 id="import-declaration">Import Declaration</h3>
-<pre><code class="language-ebnf">importDecl := &#39;ex&#39; (STRING | IDENTIFIER) &#39;importa&#39; (identifierList | &#39;*&#39;)
-identifierList := IDENTIFIER (&#39;,&#39; IDENTIFIER)*
-</code></pre>
-<p><strong>Examples:</strong></p>
+<p>Faber&#39;s module system lets programs organize code across files and incorporate external libraries. The design follows a simple principle: imports should read like Latin sentences. When you write <code>ex norma importa scribe</code>, you are saying &quot;from the standard library, bring in scribe.&quot; The syntax mirrors how Latin expresses provenance and acquisition.</p>
+<p>The verb <code>importa</code> is the imperative of <em>importare</em> (to bring in, to carry into). Its counterpart <code>exporta</code> comes from <em>exportare</em> (to carry out). These are not arbitrary keyword choices. They describe exactly what the operations do: bringing symbols into a scope, or carrying them out for others to use.</p>
+<h2 id="importing">Importing</h2>
+<h3 id="the-ex-importa-pattern">The ex...importa Pattern</h3>
+<p>Every import begins with <code>ex</code> followed by a source, then <code>importa</code> followed by the names you want:</p>
 <pre><code class="language-fab">ex norma importa scribe, lege
-ex &quot;norma/tempus&quot; importa nunc, dormi
-ex norma importa *
+ex &quot;lodash&quot; importa map, filter
+ex &quot;./utils&quot; importa helper
 </code></pre>
-<h3 id="export-declaration">Export Declaration</h3>
-<pre><code class="language-ebnf">exportDecl := &#39;exporta&#39; (identifierList | inlineDecl)
-identifierList := IDENTIFIER (&#39;,&#39; IDENTIFIER)*
-inlineDecl := funcDecl | genusDecl | varDecl | typeAliasDecl
+<p>This pattern reads naturally in Latin. The preposition <code>ex</code> means &quot;from&quot; or &quot;out of,&quot; indicating origin or source. You are drawing bindings <em>out of</em> a module into your local scope.</p>
+<p>The structure is consistent regardless of source type. Whether importing from the standard library, an external package, or a local file, the syntax remains the same. Only the source specifier changes.</p>
+<h3 id="why-ex">Why "ex"?</h3>
+<p>Latin prepositions carry semantic weight that English keywords lose through familiarity. When you see <code>ex items pro item</code> in a loop, the <code>ex</code> tells you where the data flows from. When you see <code>ex norma importa scribe</code>, the <code>ex</code> tells you where the symbol originates.</p>
+<p>The preposition <code>ex</code> appears throughout Faber whenever something is drawn from a source:</p>
+<ul>
+<li>Imports draw symbols from modules: <code>ex module importa name</code></li>
+<li>Iteration draws elements from collections: <code>ex items pro item { ... }</code></li>
+<li>Destructuring draws fields from objects: <code>ex response fixum status, data</code></li>
+</ul>
+<p>This consistency is deliberate. By using positional grammar rather than distinct keywords for each context, Faber mirrors how Latin works. The preposition&#39;s meaning derives from its position in the sentence, not from memorizing what each keyword does in isolation.</p>
+<h3 id="string-paths-vs-bare-identifiers">String Paths vs. Bare Identifiers</h3>
+<p>The source in an import can be either a quoted string or a bare identifier:</p>
+<pre><code class="language-fab">ex norma importa scribe           # bare identifier
+ex &quot;norma/tempus&quot; importa dormi   # string path
+ex &quot;@hono/hono&quot; importa Hono      # string with special characters
+ex &quot;./local&quot; importa helper       # relative path
 </code></pre>
-<blockquote>
-<p>Named exports only. No default exports — TS <code>export default</code> migrates to named export.</p>
-</blockquote>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-fab">exporta foo, bar
-exporta functio greet(textus name) -&gt; textus { redde &quot;Hello, &quot; + name }
-exporta genus User { textus nomen }
-exporta fixum VERSION = &quot;1.0.0&quot;
+<p>Bare identifiers work for simple module names that are valid identifiers. Use quoted strings when the path contains slashes, special characters, or needs to be a relative path. The <code>norma</code> standard library can be imported either way, but its submodules require string paths: <code>&quot;norma/tempus&quot;</code>, <code>&quot;norma/crypto&quot;</code>.</p>
+<p>External packages from registries like npm use their published names as strings. Scoped packages retain their syntax: <code>&quot;@scope/package&quot;</code>. Relative imports use standard path notation: <code>&quot;./sibling&quot;</code>, <code>&quot;../parent/child&quot;</code>.</p>
+<h3 id="named-imports">Named Imports</h3>
+<p>Most imports specify exactly which symbols to bring in:</p>
+<pre><code class="language-fab">ex &quot;hono&quot; importa Hono, Context
+ex &quot;lodash&quot; importa map, filter, reduce
+ex norma importa scribe, lege, mone
 </code></pre>
-<h3 id="dynamic-import">Dynamic Import</h3>
-<pre><code class="language-ebnf">dynamicImport := &#39;ex&#39; (STRING | expression) &#39;importabit&#39; IDENTIFIER
+<p>This is explicit and intentional. Named imports make dependencies visible. A reader can see at a glance what a file uses from each module without hunting through the code.</p>
+<p>Multiple symbols are comma-separated. There is no limit to how many you can import in a single statement, but consider readability. If you need a dozen symbols from one module, that module may be doing too much, or your file may be doing too much.</p>
+<h3 id="import-aliases">Import Aliases</h3>
+<p>Sometimes you need to rename an import. Perhaps there is a naming conflict, or the original name is unclear in context, or you prefer a shorter form for frequently used symbols. The <code>ut</code> keyword provides aliasing:</p>
+<pre><code class="language-fab">ex &quot;utils&quot; importa helper ut h
+ex &quot;db&quot; importa connect, query ut q, close
+ex &quot;lodash&quot; importa map ut lodashMap
 </code></pre>
-<blockquote>
-<p>Async import using future tense <code>importabit</code> (&quot;will import&quot;).</p>
-</blockquote>
-<p><strong>Examples:</strong></p>
+<p>The <code>ut</code> preposition means &quot;as&quot; or &quot;like.&quot; You are saying &quot;import <code>helper</code> <em>as</em> <code>h</code>.&quot; The original name appears first, then <code>ut</code>, then the local name you want to use. This mirrors Latin&#39;s use of <code>ut</code> for comparison and equivalence.</p>
+<p>Aliases work with any import, whether you are renaming one symbol or several:</p>
+<pre><code class="language-fab">ex &quot;mod&quot; importa foo ut f, bar ut b, baz ut z
+</code></pre>
+<p>Each renaming is independent. You can alias some imports while leaving others with their original names.</p>
+<h3 id="wildcard-imports">Wildcard Imports</h3>
+<p>When you need everything a module exports, use the wildcard form with an alias:</p>
+<pre><code class="language-fab">ex &quot;@std/crypto&quot; importa * ut crypto
+ex &quot;lodash&quot; importa * ut _
+</code></pre>
+<p>The asterisk <code>*</code> means &quot;all exports.&quot; The alias is required because wildcard imports must be namespaced. You cannot dump all exports into the local scope without a container. This prevents name collisions and keeps dependencies traceable.</p>
+<p>After a wildcard import, access symbols through the alias:</p>
+<pre><code class="language-fab">ex &quot;lodash&quot; importa * ut _
+fixum doubled = _.map(numbers, pro x: x * 2)
+</code></pre>
+<p>Use wildcards sparingly. Named imports are clearer about dependencies and help tree-shaking in build systems. But wildcards have their place when you genuinely need most of what a module provides.</p>
+<h2 id="exporting">Exporting</h2>
+<p>Modules expose their symbols through exports. Only exported symbols are visible to importers. Everything else remains internal to the module.</p>
+<h3 id="named-exports">Named Exports</h3>
+<p>To export existing declarations, list them after <code>exporta</code>:</p>
+<pre><code class="language-fab">fixum VERSION = &quot;1.0.0&quot;
+functio greet(textus name) -&gt; textus {
+    redde scriptum(&quot;Salve, §!&quot;, name)
+}
+
+exporta VERSION, greet
+</code></pre>
+<p>The <code>exporta</code> statement names what leaves the module. This can appear anywhere in the file, but placing exports at the end (after definitions) or at the beginning (as a manifest) aids readability.</p>
+<h3 id="inline-exports">Inline Exports</h3>
+<p>You can combine export with declaration for a more compact form:</p>
+<pre><code class="language-fab">exporta fixum VERSION = &quot;1.0.0&quot;
+
+exporta functio greet(textus name) -&gt; textus {
+    redde scriptum(&quot;Salve, §!&quot;, name)
+}
+
+exporta genus User {
+    textus nomen
+    numerus aetas
+}
+</code></pre>
+<p>When <code>exporta</code> precedes a declaration, that declaration is both defined and exported in one statement. This is convenient for modules where most definitions are public.</p>
+<p>Choose between named exports and inline exports based on what makes your code clearer. A module with many internal helpers might prefer explicit <code>exporta</code> at the end. A module that is primarily a public API might prefer inline exports throughout.</p>
+<h3 id="no-default-exports">No Default Exports</h3>
+<p>Faber does not support default exports. Every export has a name. This is a deliberate choice. Named exports are explicit, searchable, and consistent. When you import <code>Hono</code> from a module, you know that is exactly what the module calls it. There is no ambiguity about whether you are importing the default or a named export.</p>
+<p>If you are porting code from TypeScript or JavaScript that uses default exports, convert them to named exports with meaningful names.</p>
+<h2 id="dynamic-imports">Dynamic Imports</h2>
+<h3 id="the-importabit-verb">The importabit Verb</h3>
+<p>Static imports happen at module load time. Sometimes you need to import a module later, perhaps conditionally or to reduce initial load time. Faber provides dynamic imports using the future tense: <code>importabit</code>.</p>
 <pre><code class="language-fab">ex &quot;./heavy&quot; importabit modulus
-ex pathVariable importabit modulus
+scribe modulus.process(data)
 </code></pre>
+<p>The verb <code>importabit</code> is the future active indicative of <em>importare</em>: &quot;it will bring in.&quot; This naming follows Faber&#39;s convention that future tense indicates asynchronous operations. Just as <code>fiet</code> (will become) signals an async result and <code>incipiet</code> (will begin) signals an async entry point, <code>importabit</code> signals that the import happens asynchronously.</p>
+<p>Dynamic imports return a promise that resolves to the module. Use them within async contexts:</p>
+<pre><code class="language-fab">incipiet {
+    ex pathVariable importabit modulus
+    scribe modulus.result
+}
+</code></pre>
+<p>The source can be an expression, not just a literal string. This enables computed imports based on configuration or runtime conditions:</p>
+<pre><code class="language-fab">varia textus modulePath = determineModule()
+ex modulePath importabit loaded
+</code></pre>
+<p>Use dynamic imports judiciously. Static imports are analyzed at compile time, enabling better error checking and optimization. Dynamic imports defer this to runtime, trading analysis for flexibility.</p>
+<h2 id="module-organization">Module Organization</h2>
+<h3 id="the-norma-standard-library">The norma Standard Library</h3>
+<p>The identifier <code>norma</code> refers to Faber&#39;s standard library. Unlike external packages, <code>norma</code> modules are compiler-handled. The compiler recognizes <code>norma/*</code> paths, validates their exports, and generates appropriate target-language code without emitting import statements.</p>
+<pre><code class="language-fab">ex norma importa scribe, lege
+ex &quot;norma/tempus&quot; importa nunc, dormi, SECUNDUM
+</code></pre>
+<p>This design means compiled output has no Faber-specific dependencies. The standard library is &quot;batteries included&quot; at compile time, not runtime. When you import <code>dormi</code> from <code>norma/tempus</code>, the compiler emits the appropriate sleep implementation for your target language directly.</p>
+<h3 id="external-packages">External Packages</h3>
+<p>External packages are imported by their published names:</p>
+<pre><code class="language-fab">ex &quot;@hono/hono&quot; importa Hono, Context
+ex &quot;pg&quot; importa Pool
+</code></pre>
+<p>The compiler passes external package references through unchanged. This gives you full access to your target ecosystem&#39;s libraries while writing Faber syntax.</p>
+<h3 id="local-imports">Local Imports</h3>
+<p>Files within your project import from relative paths:</p>
+<pre><code class="language-fab">ex &quot;./utils&quot; importa helper, formatter
+ex &quot;../shared/types&quot; importa User, Config
+</code></pre>
+<p>Local imports work like external packages for compilation purposes. The compiler rewrites the path extension (<code>.fab</code> to <code>.ts</code> or <code>.py</code> depending on target) but otherwise passes the import through.</p>
+<p>For a project organized across multiple files, local imports let you compose modules while keeping each file focused. Export what others need; keep internals private by not exporting them.</p>
 <hr>
-<p><em>Generated from <code>fons/parser/index.ts</code> — do not edit directly.</em></p>
+<p>The module system is how Faber programs scale beyond single files. The <code>ex...importa</code> pattern, once familiar, reads naturally and makes dependencies explicit. Exports mark boundaries. Dynamic imports handle runtime flexibility. And throughout, the Latin vocabulary reminds you what these operations actually do: bringing symbols in, carrying them out, drawing from sources.</p>
 
     </main>
   </div>

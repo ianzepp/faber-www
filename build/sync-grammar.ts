@@ -13,16 +13,16 @@ interface SyncResult {
 async function syncGrammar(): Promise<SyncResult[]> {
   const results: SyncResult[] = []
 
-  // Sync main GRAMMAR.md
-  const grammarSource = join(FABER_ROMANUS, 'GRAMMAR.md')
+  // Sync EBNF.md → grammar.md (formal language specification)
+  const ebnfSource = join(FABER_ROMANUS, 'EBNF.md')
   const grammarDest = join(CONTENT_DIR, 'docs', 'grammar.md')
 
-  const sourceContent = await Bun.file(grammarSource).text()
+  const sourceContent = await Bun.file(ebnfSource).text()
 
-  // Transform: add frontmatter, potentially restructure
+  // Transform: add frontmatter
   const transformed = `---
 title: Grammar Reference
-description: Complete Faber language grammar specification
+description: Formal Faber language grammar in EBNF
 section: docs
 order: 1
 ---
@@ -33,8 +33,8 @@ ${sourceContent}
   await Bun.write(grammarDest, transformed)
   results.push({ file: 'docs/grammar.md', action: 'updated' })
 
-  // Sync grammatica/ directory (auto-generated topic guides)
-  const grammaticaDir = join(FABER_ROMANUS, 'grammatica')
+  // Sync fons/grammatica/ directory (prose tutorials)
+  const grammaticaDir = join(FABER_ROMANUS, 'fons', 'grammatica')
   const glob = new Glob('*.md')
 
   const topicOrder: Record<string, number> = {
@@ -46,7 +46,6 @@ ${sourceContent}
     'functiones.md': 15,
     'importa.md': 16,
     'errores.md': 17,
-    'preamble.md': 18,
   }
 
   for await (const file of glob.scan(grammaticaDir)) {

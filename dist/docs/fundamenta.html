@@ -21,9 +21,26 @@
   <a href="/docs/examples-full.html">All Examples</a>
   <a href="/docs/fundamenta.html" class="active">Fundamenta</a>
   <div class="nav-subheadings">
-    <a href="/docs/fundamenta.html#exempla">Exempla</a>
-    <a href="/docs/fundamenta.html#syntax">Syntax</a>
-    <a href="/docs/fundamenta.html#object-pattern" class="nav-h3">Object Pattern</a>
+    <a href="/docs/fundamenta.html#program-structure">Program Structure</a>
+    <a href="/docs/fundamenta.html#synchronous-entry-incipit" class="nav-h3">Synchronous Entry: incipit</a>
+    <a href="/docs/fundamenta.html#asynchronous-entry-incipiet" class="nav-h3">Asynchronous Entry: incipiet</a>
+    <a href="/docs/fundamenta.html#variables">Variables</a>
+    <a href="/docs/fundamenta.html#immutable-bindings-fixum" class="nav-h3">Immutable Bindings: fixum</a>
+    <a href="/docs/fundamenta.html#mutable-bindings-varia" class="nav-h3">Mutable Bindings: varia</a>
+    <a href="/docs/fundamenta.html#async-bindings-figendum-and-variandum" class="nav-h3">Async Bindings: figendum and variandum</a>
+    <a href="/docs/fundamenta.html#literals">Literals</a>
+    <a href="/docs/fundamenta.html#numbers" class="nav-h3">Numbers</a>
+    <a href="/docs/fundamenta.html#strings" class="nav-h3">Strings</a>
+    <a href="/docs/fundamenta.html#booleans-verum-and-falsum" class="nav-h3">Booleans: verum and falsum</a>
+    <a href="/docs/fundamenta.html#null-nihil" class="nav-h3">Null: nihil</a>
+    <a href="/docs/fundamenta.html#output">Output</a>
+    <a href="/docs/fundamenta.html#standard-output-scribe" class="nav-h3">Standard Output: scribe</a>
+    <a href="/docs/fundamenta.html#debug-output-vide" class="nav-h3">Debug Output: vide</a>
+    <a href="/docs/fundamenta.html#warning-output-mone" class="nav-h3">Warning Output: mone</a>
+    <a href="/docs/fundamenta.html#comments">Comments</a>
+    <a href="/docs/fundamenta.html#destructuring">Destructuring</a>
+    <a href="/docs/fundamenta.html#object-destructuring" class="nav-h3">Object Destructuring</a>
+    <a href="/docs/fundamenta.html#array-destructuring" class="nav-h3">Array Destructuring</a>
   </div>
   <a href="/docs/typi.html">Typi</a>
   <a href="/docs/operatores.html">Operatores</a>
@@ -32,7 +49,6 @@
   <a href="/docs/functiones.html">Functiones</a>
   <a href="/docs/importa.html">Importa</a>
   <a href="/docs/errores.html">Errores</a>
-  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
   <div class="nav-section">research</div>
   <a href="/research/index.html">Research</a>
   <a href="/research/results.html">Research Results</a>
@@ -40,29 +56,211 @@
 </nav>
     <main class="content">
       <h1 id="fundamenta">Fundamenta</h1>
-<p>Basic language elements: variables, constants, literals, and output.</p>
-<h2 id="exempla">Exempla</h2>
-<ul>
-<li><code>exempla/fundamenta/</code></li>
-</ul>
-<hr>
-<h2 id="syntax">Syntax</h2>
-<h3 id="object-pattern">Object Pattern</h3>
-<pre><code class="language-ebnf">objectPattern := &#39;{&#39; patternProperty (&#39;,&#39; patternProperty)* &#39;}&#39;
-patternProperty := &#39;ceteri&#39;? IDENTIFIER (&#39;:&#39; IDENTIFIER)?
+<p>The fundamentals of Faber: program structure, variable bindings, literals, output, and patterns. These are the building blocks upon which all Faber programs rest. Understanding them means understanding how Faber uses Latin&#39;s clarity to make programming concepts visible.</p>
+<h2 id="program-structure">Program Structure</h2>
+<p>Every Faber program needs an entry point. This is where execution begins, and Faber provides two forms depending on whether your program is synchronous or asynchronous.</p>
+<h3 id="synchronous-entry-incipit">Synchronous Entry: incipit</h3>
+<p>The keyword <code>incipit</code> marks the synchronous entry point. It is the third person singular present active indicative of <em>incipere</em> (to begin): &quot;it begins.&quot;</p>
+<pre><code class="language-fab">incipit {
+    scribe &quot;Salve, Munde!&quot;
+}
 </code></pre>
-<p><strong>Examples:</strong></p>
-<pre><code class="language-fab">{ nomen, aetas }              // extract nomen and aetas
-{ nomen: localName, aetas }   // rename nomen to localName
-{ nomen, ceteri rest }        // extract nomen, collect rest
+<p>This is the simplest possible Faber program. The <code>incipit</code> block contains the statements that execute when the program runs. Functions and types defined outside <code>incipit</code> become module-level declarations that the entry point can call.</p>
+<pre><code class="language-fab">functio greet(textus name) -&gt; textus {
+    redde scriptum(&quot;Salve, §!&quot;, name)
+}
 
-T SUPPORTED (will produce parser errors):
-{ ...rest }    // JS spread syntax
-{ *rest }      // Python unpack syntax
-{ **rest }     // Python kwargs syntax
+incipit {
+    scribe greet(&quot;Marcus&quot;)
+}
+</code></pre>
+<h3 id="asynchronous-entry-incipiet">Asynchronous Entry: incipiet</h3>
+<p>When your program needs to perform asynchronous operations at the top level, use <code>incipiet</code> instead. This is the future tense: &quot;it will begin.&quot; The naming mirrors the <code>fit</code>/<code>fiet</code> pattern used throughout Faber, where present tense indicates synchronous operations and future tense indicates asynchronous ones.</p>
+<pre><code class="language-fab">incipiet {
+    figendum data = fetchData()
+    scribe data
+}
+</code></pre>
+<p>Inside an <code>incipiet</code> block, you can use <code>figendum</code> and <code>variandum</code> (the async binding forms) directly, or use <code>cede</code> (yield/await) with regular bindings.</p>
+<h2 id="variables">Variables</h2>
+<p>Faber distinguishes between mutable and immutable bindings with distinct keywords. This explicitness is a core design principle: the reader should know at a glance whether a value can change.</p>
+<h3 id="immutable-bindings-fixum">Immutable Bindings: fixum</h3>
+<p>The keyword <code>fixum</code> declares an immutable binding. It is the perfect passive participle of <em>figere</em> (to fix, fasten): &quot;that which has been fixed.&quot; Once bound, a <code>fixum</code> value cannot be reassigned.</p>
+<pre><code class="language-fab">fixum greeting = &quot;Salve, Mundus!&quot;
+fixum x = 10
+fixum y = 20
+fixum sum = x + y
+</code></pre>
+<p>Immutable bindings are the default choice in Faber. They communicate intent clearly: this value will not change for the remainder of its scope. Prefer <code>fixum</code> unless you have a specific reason for mutability.</p>
+<p>Type annotations are optional when the type can be inferred, but you can be explicit:</p>
+<pre><code class="language-fab">fixum numerus age = 30
+fixum textus name = &quot;Marcus&quot;
+fixum bivalens active = verum
+</code></pre>
+<p>The pattern is always type-first: <code>fixum &lt;type&gt; &lt;name&gt; = &lt;value&gt;</code>. This mirrors Latin&#39;s adjective-noun ordering and distinguishes Faber from languages that place types after names.</p>
+<h3 id="mutable-bindings-varia">Mutable Bindings: varia</h3>
+<p>The keyword <code>varia</code> declares a mutable binding. It comes from <em>variare</em> (to vary): &quot;let it vary.&quot; A <code>varia</code> binding can be reassigned throughout its scope.</p>
+<pre><code class="language-fab">varia counter = 0
+scribe counter       # 0
+
+counter = 1
+scribe counter       # 1
+
+counter = counter + 10
+scribe counter       # 11
+</code></pre>
+<p>Use <code>varia</code> when a value genuinely needs to change, such as loop counters, accumulators, or state that evolves over time.</p>
+<pre><code class="language-fab">varia numerus count = 0
+varia textus status = &quot;pending&quot;
+varia bivalens running = falsum
+
+count = 100
+status = &quot;complete&quot;
+running = verum
+</code></pre>
+<h3 id="async-bindings-figendum-and-variandum">Async Bindings: figendum and variandum</h3>
+<p>Faber provides async-aware binding forms that combine declaration with awaiting. These use the Latin gerundive, a verbal adjective expressing necessity or obligation.</p>
+<p><code>figendum</code> means &quot;that which must be fixed.&quot; It declares an immutable binding whose value comes from an asynchronous operation:</p>
+<pre><code class="language-fab">figendum result = fetchData()
+</code></pre>
+<p><code>variandum</code> means &quot;that which must be varied.&quot; It declares a mutable binding from an async source:</p>
+<pre><code class="language-fab">variandum data = loadConfig()
+data = transform(data)
+</code></pre>
+<p>These forms are syntactic conveniences equivalent to using <code>cede</code> (await) with regular bindings, but they make the async nature visible at declaration time.</p>
+<h2 id="literals">Literals</h2>
+<p>Faber supports the standard literal types with Latin keywords for boolean and null values.</p>
+<h3 id="numbers">Numbers</h3>
+<p>Integers and floating-point numbers use standard notation:</p>
+<pre><code class="language-fab">fixum integer = 42
+fixum decimal = 3.14
+fixum negative = -100
+</code></pre>
+<p>For typed declarations, <code>numerus</code> is the integer type and <code>fractus</code> (from <em>frangere</em>, to break) is the floating-point type:</p>
+<pre><code class="language-fab">fixum numerus count = 42
+fixum fractus rate = 0.05
+</code></pre>
+<h3 id="strings">Strings</h3>
+<p>Strings can use either double or single quotes:</p>
+<pre><code class="language-fab">fixum greeting = &quot;hello&quot;
+fixum single = &#39;single quotes&#39;
+</code></pre>
+<p>Template literals use backticks with <code>${...}</code> interpolation, following the familiar JavaScript pattern:</p>
+<pre><code class="language-fab">fixum name = &quot;Mundus&quot;
+fixum message = `Hello ${name}`
+</code></pre>
+<h3 id="booleans-verum-and-falsum">Booleans: verum and falsum</h3>
+<p>Rather than <code>true</code> and <code>false</code>, Faber uses Latin: <code>verum</code> (true, real) and <code>falsum</code> (false, deceptive). These are not arbitrary choices. Latin&#39;s <em>verum</em> shares its root with English &quot;verify&quot; and &quot;veracity&quot;; <em>falsum</em> gives us &quot;falsify.&quot;</p>
+<pre><code class="language-fab">fixum yes = verum
+fixum no = falsum
+fixum bivalens active = verum
+</code></pre>
+<p>The type <code>bivalens</code> (two-valued) names what a boolean is: a value that can be one of exactly two states.</p>
+<h3 id="null-nihil">Null: nihil</h3>
+<p>The absence of a value is expressed as <code>nihil</code> (nothing). This is clearer than symbols like <code>null</code> or <code>nil</code> that have become so familiar we no longer notice their meaning.</p>
+<pre><code class="language-fab">fixum nothing = nihil
+</code></pre>
+<h2 id="output">Output</h2>
+<p>Faber provides three output statements corresponding to different severity levels. These are imperative forms that write to the console.</p>
+<h3 id="standard-output-scribe">Standard Output: scribe</h3>
+<p>The keyword <code>scribe</code> writes to standard output. It is the imperative of <em>scribere</em> (to write): &quot;write!&quot;</p>
+<pre><code class="language-fab">scribe &quot;Hello, world!&quot;
+</code></pre>
+<p>Multiple arguments are printed space-separated:</p>
+<pre><code class="language-fab">fixum nomen = &quot;Marcus&quot;
+fixum aetas = 30
+scribe &quot;Name:&quot;, nomen
+scribe &quot;Age:&quot;, aetas
+scribe &quot;Coordinates:&quot;, x, y
+</code></pre>
+<h3 id="debug-output-vide">Debug Output: vide</h3>
+<p>The keyword <code>vide</code> writes to debug output. It is the imperative of <em>videre</em> (to see): &quot;see!&quot; Use it for diagnostic information that should be visible during development but filtered in production.</p>
+<pre><code class="language-fab">vide &quot;Debug: entering main loop&quot;
+vide &quot;Debug: count =&quot;, count
+</code></pre>
+<h3 id="warning-output-mone">Warning Output: mone</h3>
+<p>The keyword <code>mone</code> writes to warning output. It is the imperative of <em>monere</em> (to warn, advise): &quot;warn!&quot; Use it for conditions that are not errors but deserve attention.</p>
+<pre><code class="language-fab">mone &quot;Warning: deprecated feature used&quot;
+mone &quot;Warning: count exceeds threshold:&quot;, count
+</code></pre>
+<h2 id="comments">Comments</h2>
+<p>Comments begin with <code>#</code> and extend to the end of the line. There is no block comment syntax.</p>
+<pre><code class="language-fab"># This is a comment
+fixum x = 10  # inline comment
+</code></pre>
+<p>Comments explain <em>why</em>, not <em>what</em>. The code itself shows what is happening; comments provide context that cannot be derived from the code alone.</p>
+<h2 id="destructuring">Destructuring</h2>
+<p>Faber provides patterns for extracting values from objects and arrays. The syntax uses <code>ex</code> (from, out of) to indicate the source and the binding keyword to indicate mutability.</p>
+<h3 id="object-destructuring">Object Destructuring</h3>
+<p>To extract properties from an object, use <code>ex &lt;source&gt; fixum &lt;properties&gt;</code>:</p>
+<pre><code class="language-fab">fixum person = { name: &quot;Marcus&quot;, age: 30, city: &quot;Roma&quot; }
+ex person fixum name, age
+
+scribe name   # &quot;Marcus&quot;
+scribe age    # 30
+</code></pre>
+<p>Use <code>ut</code> (as) to rename properties during extraction:</p>
+<pre><code class="language-fab">fixum user = { name: &quot;Julia&quot;, email: &quot;julia@roma.com&quot; }
+ex user fixum name ut userName, email ut userEmail
+
+scribe userName    # &quot;Julia&quot;
+scribe userEmail   # &quot;julia@roma.com&quot;
+</code></pre>
+<p>Use <code>varia</code> instead of <code>fixum</code> for mutable bindings:</p>
+<pre><code class="language-fab">fixum data = { count: 100, active: verum }
+ex data varia count, active
+
+count = 200
+active = falsum
+</code></pre>
+<p>The rest pattern <code>ceteri</code> (the rest, the others) collects remaining properties:</p>
+<pre><code class="language-fab">fixum fullUser = { id: 1, name: &quot;Gaius&quot;, email: &quot;g@roma.com&quot;, role: &quot;admin&quot; }
+ex fullUser fixum id, ceteri details
+
+scribe id       # 1
+scribe details  # { name: &quot;Gaius&quot;, email: &quot;g@roma.com&quot;, role: &quot;admin&quot; }
+</code></pre>
+<h3 id="array-destructuring">Array Destructuring</h3>
+<p>Arrays use bracket notation in the pattern:</p>
+<pre><code class="language-fab">fixum numbers = [1, 2, 3]
+fixum [a, b, c] = numbers
+
+scribe a  # 1
+scribe b  # 2
+scribe c  # 3
+</code></pre>
+<p>Partial destructuring extracts only what you need:</p>
+<pre><code class="language-fab">fixum values = [1, 2, 3, 4, 5]
+fixum [one, two] = values
+
+scribe one  # 1
+scribe two  # 2
+</code></pre>
+<p>The underscore <code>_</code> skips elements:</p>
+<pre><code class="language-fab">fixum triple = [10, 20, 30]
+fixum [_, middle, _] = triple
+
+scribe middle  # 20
+</code></pre>
+<p>The rest pattern works with arrays too:</p>
+<pre><code class="language-fab">fixum items = [1, 2, 3, 4, 5]
+fixum [head, ceteri tail] = items
+
+scribe head  # 1
+scribe tail  # [2, 3, 4, 5]
+</code></pre>
+<p>Mutable array destructuring uses <code>varia</code>:</p>
+<pre><code class="language-fab">fixum coords = [100, 200]
+varia [x, y] = coords
+
+x = x + 50
+y = y + 50
+
+scribe x  # 150
+scribe y  # 250
 </code></pre>
 <hr>
-<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+<p>These fundamentals are the vocabulary and grammar of Faber. With them, you can write clear, expressive programs. The more advanced features documented elsewhere build upon this foundation, but these basics are sufficient for substantial work.</p>
 
     </main>
   </div>

@@ -26,14 +26,39 @@
   <a href="/docs/regimen.html">Regimen</a>
   <a href="/docs/functiones.html" class="active">Functiones</a>
   <div class="nav-subheadings">
-    <a href="/docs/functiones.html#exempla">Exempla</a>
-    <a href="/docs/functiones.html#syntax">Syntax</a>
-    <a href="/docs/functiones.html#parameter-list" class="nav-h3">Parameter List</a>
-    <a href="/docs/functiones.html#parameter" class="nav-h3">Parameter</a>
+    <a href="/docs/functiones.html#declaring-functions">Declaring Functions</a>
+    <a href="/docs/functiones.html#basic-syntax" class="nav-h3">Basic Syntax</a>
+    <a href="/docs/functiones.html#parameters" class="nav-h3">Parameters</a>
+    <a href="/docs/functiones.html#dual-parameter-naming" class="nav-h3">Dual Parameter Naming</a>
+    <a href="/docs/functiones.html#optional-parameters" class="nav-h3">Optional Parameters</a>
+    <a href="/docs/functiones.html#default-values" class="nav-h3">Default Values</a>
+    <a href="/docs/functiones.html#rest-parameters" class="nav-h3">Rest Parameters</a>
+    <a href="/docs/functiones.html#return-types">Return Types</a>
+    <a href="/docs/functiones.html#arrow-syntax" class="nav-h3">Arrow Syntax</a>
+    <a href="/docs/functiones.html#latin-verb-forms" class="nav-h3">Latin Verb Forms</a>
+    <a href="/docs/functiones.html#async-functions">Async Functions</a>
+    <a href="/docs/functiones.html#the-futura-modifier" class="nav-h3">The futura Modifier</a>
+    <a href="/docs/functiones.html#the-cede-keyword" class="nav-h3">The cede Keyword</a>
+    <a href="/docs/functiones.html#async-via-verb-form" class="nav-h3">Async via Verb Form</a>
+    <a href="/docs/functiones.html#gerundive-declarations" class="nav-h3">Gerundive Declarations</a>
+    <a href="/docs/functiones.html#generator-functions">Generator Functions</a>
+    <a href="/docs/functiones.html#the-cursor-modifier" class="nav-h3">The cursor Modifier</a>
+    <a href="/docs/functiones.html#generator-via-verb-forms" class="nav-h3">Generator via Verb Forms</a>
+    <a href="/docs/functiones.html#iterating-over-generators" class="nav-h3">Iterating Over Generators</a>
+    <a href="/docs/functiones.html#generic-functions">Generic Functions</a>
+    <a href="/docs/functiones.html#type-parameters-with-prae" class="nav-h3">Type Parameters with prae</a>
+    <a href="/docs/functiones.html#lambda-expressions">Lambda Expressions</a>
+    <a href="/docs/functiones.html#basic-syntax" class="nav-h3">Basic Syntax</a>
+    <a href="/docs/functiones.html#with-return-type-annotation" class="nav-h3">With Return Type Annotation</a>
+    <a href="/docs/functiones.html#block-bodies" class="nav-h3">Block Bodies</a>
+    <a href="/docs/functiones.html#zero-parameter-lambdas" class="nav-h3">Zero-Parameter Lambdas</a>
+    <a href="/docs/functiones.html#async-lambdas" class="nav-h3">Async Lambdas</a>
+    <a href="/docs/functiones.html#common-patterns" class="nav-h3">Common Patterns</a>
+    <a href="/docs/functiones.html#ownership-prepositions-in-parameters">Ownership Prepositions in Parameters</a>
+    <a href="/docs/functiones.html#summary">Summary</a>
   </div>
   <a href="/docs/importa.html">Importa</a>
   <a href="/docs/errores.html">Errores</a>
-  <a href="/docs/preamble.html">Faber Romanus Grammar</a>
   <div class="nav-section">research</div>
   <a href="/research/index.html">Research</a>
   <a href="/research/results.html">Research Results</a>
@@ -41,32 +66,313 @@
 </nav>
     <main class="content">
       <h1 id="functiones">Functiones</h1>
-<p>Function declarations: basic functions, typed parameters, async, generators, and lambdas.</p>
-<h2 id="exempla">Exempla</h2>
+<p>Functions in Faber are declared using the <code>functio</code> keyword, derived from the Latin <em>functio</em> meaning &quot;performance, execution.&quot; This chapter covers function declarations, parameters, return types, async patterns, generators, and lambda expressions.</p>
+<h2 id="declaring-functions">Declaring Functions</h2>
+<h3 id="basic-syntax">Basic Syntax</h3>
+<p>A function declaration begins with <code>functio</code> followed by the function name, parameter list in parentheses, optional return type, and the function body in braces:</p>
+<pre><code class="language-fab">functio saluta() {
+    scribe &quot;Salve, Mundus!&quot;
+}
+</code></pre>
+<p>Functions that return values specify the return type after an arrow (<code>-&gt;</code>) and use <code>redde</code> (Latin &quot;give back, return&quot;) to yield the result:</p>
+<pre><code class="language-fab">functio nomen() -&gt; textus {
+    redde &quot;Marcus Aurelius&quot;
+}
+</code></pre>
+<h3 id="parameters">Parameters</h3>
+<p>Faber uses type-first syntax for parameters, placing the type before the parameter name. This mirrors natural language order (&quot;a string called name&quot;) and aligns with languages like Go, Rust, and Zig:</p>
+<pre><code class="language-fab">functio quadratum(numerus n) -&gt; numerus {
+    redde n * n
+}
+
+functio adde(numerus a, numerus b) -&gt; numerus {
+    redde a + b
+}
+
+functio describe(textus nomen, numerus aetas) -&gt; textus {
+    redde scriptum(&quot;§ habet § annos&quot;, nomen, aetas)
+}
+</code></pre>
+<p>When a parameter has no explicit type annotation, the compiler infers it from usage:</p>
+<pre><code class="language-fab">functio duplica(n) -&gt; numerus {
+    redde n * 2
+}
+</code></pre>
+<h3 id="dual-parameter-naming">Dual Parameter Naming</h3>
+<p>Following Swift&#39;s pattern, parameters can have separate external (callsite) and internal (body) names using <code>ut</code> (Latin &quot;as&quot;):</p>
+<pre><code class="language-fab">functio greet(textus location ut loc) {
+    scribe loc  # internal name
+}
+
+greet(location: &quot;Roma&quot;)  # external name at callsite
+</code></pre>
+<p>The <code>ut</code> keyword provides a unified aliasing syntax across the language:</p>
 <ul>
-<li><code>exempla/functiones/</code></li>
+<li>Imports: <code>ex norma importa scribe ut s</code></li>
+<li>Destructuring: <code>ex persona fixum nomen ut n</code></li>
+<li>Parameters: <code>textus location ut loc</code></li>
 </ul>
-<hr>
-<h2 id="syntax">Syntax</h2>
-<h3 id="parameter-list">Parameter List</h3>
-<pre><code class="language-ebnf">paramList := (parameter (&#39;,&#39; parameter)*)?
+<p>All three express the same concept: &quot;X, known locally as Y.&quot;</p>
+<h3 id="optional-parameters">Optional Parameters</h3>
+<p>The <code>si</code> modifier (Latin &quot;if&quot;) marks a parameter as optional. Without a default value, the parameter type becomes nullable (<code>ignotum&lt;T&gt;</code>):</p>
+<pre><code class="language-fab">functio greet(textus nomen, si textus titulus) -&gt; textus {
+    si titulus est nihil {
+        redde scriptum(&quot;Salve, §!&quot;, nomen)
+    }
+    redde scriptum(&quot;Salve, § §!&quot;, titulus, nomen)
+}
+
+greet(&quot;Marcus&quot;)              # titulus receives nihil
+greet(&quot;Marcus&quot;, &quot;Dominus&quot;)   # titulus receives &quot;Dominus&quot;
 </code></pre>
-<h3 id="parameter">Parameter</h3>
-<pre><code class="language-ebnf">parameter := (&#39;de&#39; | &#39;in&#39; | &#39;ex&#39;)? &#39;si&#39;? &#39;ceteri&#39;? (typeAnnotation IDENTIFIER | IDENTIFIER) (&#39;ut&#39; IDENTIFIER)? (&#39;vel&#39; expression)?
+<h3 id="default-values">Default Values</h3>
+<p>Default values use <code>vel</code> (Latin &quot;or&quot;), consistent with the nullish coalescing operator in expressions:</p>
+<pre><code class="language-fab">functio paginate(si numerus pagina vel 1, si numerus per_pagina vel 10) -&gt; textus {
+    redde scriptum(&quot;Page § with § items&quot;, pagina, per_pagina)
+}
+
+paginate()        # &quot;Page 1 with 10 items&quot;
+paginate(2)       # &quot;Page 2 with 10 items&quot;
+paginate(2, 25)   # &quot;Page 2 with 25 items&quot;
 </code></pre>
-<blockquote>
-<p>Type-first syntax: &quot;textus name&quot; or &quot;de textus source&quot;
-Prepositional prefixes indicate semantic roles:
-de = from/concerning (borrowed, read-only),
-in = in/into (mutable borrow),
-ex = from/out of (source)</p>
-<p>OPTIONAL PARAMETERS:
-&#39;si&#39; marks a parameter as optional. Without &#39;vel&#39;, type becomes ignotum<T>.
-With &#39;vel&#39;, parameter has a default value and type stays T.
-Order: preposition, then si, then ceteri, then type, then name.</p>
-</blockquote>
-<hr>
-<p><em>Generated from <code>fons/faber/parser/index.ts</code> — do not edit directly.</em></p>
+<p>The choice of <code>vel</code> provides consistency: <code>vel</code> already means &quot;or if nil&quot; in expressions like <code>value vel &quot;default&quot;</code>, making parameter defaults read naturally as &quot;numerus pagina or 1.&quot;</p>
+<p>Default values only make sense for owned parameters. Borrowed (<code>de</code>) and mutable (<code>in</code>) parameters require the caller to provide a value since there is nothing to borrow by default.</p>
+<h3 id="rest-parameters">Rest Parameters</h3>
+<p>The <code>ceteri</code> modifier (Latin &quot;the rest, the others&quot;) collects remaining arguments into an array:</p>
+<pre><code class="language-fab">functio sum(ceteri numerus[] nums) -&gt; numerus {
+    varia total = 0
+    ex nums pro n {
+        total += n
+    }
+    redde total
+}
+
+sum(1, 2, 3, 4, 5)  # 15
+</code></pre>
+<p>Rest parameters must come last in the parameter list.</p>
+<h2 id="return-types">Return Types</h2>
+<h3 id="arrow-syntax">Arrow Syntax</h3>
+<p>The arrow <code>-&gt;</code> specifies a function&#39;s return type directly. This is the simplest form and compiles with minimal overhead:</p>
+<pre><code class="language-fab">functio compute() -&gt; numerus {
+    redde 42
+}
+</code></pre>
+<p>When the function returns nothing, omit the return type entirely or specify <code>vacuum</code>:</p>
+<pre><code class="language-fab">functio doNothing() {
+    # no return value
+}
+
+functio doNothingExplicit() -&gt; vacuum {
+    redde
+}
+</code></pre>
+<h3 id="latin-verb-forms">Latin Verb Forms</h3>
+<p>Faber offers an alternative syntax using conjugated forms of the Latin verb <em>fieri</em> (&quot;to become&quot;). These verb forms encode additional semantic information about how the function returns values:</p>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Tense/Number</th>
+<th>Meaning</th>
+<th>Semantics</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fit</code></td>
+<td>present, sing.</td>
+<td>&quot;it becomes&quot;</td>
+<td>sync, single value</td>
+</tr>
+<tr>
+<td><code>fiet</code></td>
+<td>future, sing.</td>
+<td>&quot;it will become&quot;</td>
+<td>async, single value</td>
+</tr>
+<tr>
+<td><code>fiunt</code></td>
+<td>present, plur.</td>
+<td>&quot;they become&quot;</td>
+<td>sync, yields multiple</td>
+</tr>
+<tr>
+<td><code>fient</code></td>
+<td>future, plur.</td>
+<td>&quot;they will become&quot;</td>
+<td>async, yields multiple</td>
+</tr>
+</tbody></table>
+<p>The verb forms participate in the Responsum stream protocol, providing structured error handling. Arrow syntax (<code>-&gt;</code>) bypasses this protocol for direct returns with zero overhead.</p>
+<pre><code class="language-fab"># These are equivalent for simple cases:
+functio getId() -&gt; textus { redde &quot;abc&quot; }
+functio getId() fit textus { redde &quot;abc&quot; }
+</code></pre>
+<p>The verb syntax becomes valuable when you want stream-based error handling or generator behavior without explicit modifiers.</p>
+<h2 id="async-functions">Async Functions</h2>
+<h3 id="the-futura-modifier">The futura Modifier</h3>
+<p>The <code>futura</code> modifier (Latin &quot;future things,&quot; neuter plural of <em>futurus</em>) marks a function as asynchronous. Combined with arrow syntax, it returns a Promise:</p>
+<pre><code class="language-fab">futura functio fetchData(textus url) -&gt; textus {
+    fixum response = cede fetch(url)
+    redde response.text()
+}
+</code></pre>
+<p>The choice of <em>futura</em> leverages Latin&#39;s grammatical future tense to express temporal semantics: the result will be available in the future.</p>
+<h3 id="the-cede-keyword">The cede Keyword</h3>
+<p>Inside async functions, <code>cede</code> (Latin &quot;yield, give way, surrender&quot;) awaits a promise:</p>
+<pre><code class="language-fab">futura functio processAll(textus[] urls) -&gt; textus[] {
+    varia results = []
+    ex urls pro url {
+        fixum data = cede fetchData(url)
+        results.adde(data)
+    }
+    redde results
+}
+</code></pre>
+<p>The etymology captures the semantics precisely: the function cedes control until the async operation completes.</p>
+<h3 id="async-via-verb-form">Async via Verb Form</h3>
+<p>The <code>fiet</code> verb (&quot;it will become&quot;) implies async behavior without the <code>futura</code> modifier:</p>
+<pre><code class="language-fab">functio fetchData() fiet textus {
+    redde &quot;data&quot;
+}
+</code></pre>
+<p>This is equivalent to <code>futura functio fetchData() -&gt; textus</code> but participates in the Responsum protocol.</p>
+<h3 id="gerundive-declarations">Gerundive Declarations</h3>
+<p>The gerundive forms <code>figendum</code> and <code>variandum</code> provide implicit await:</p>
+<pre><code class="language-fab">figendum data = fetchData(url)   # immutable, implicit await
+variandum result = fetchInitial() # mutable, implicit await
+</code></pre>
+<p>These are equivalent to <code>fixum x = cede y()</code> and <code>varia x = cede y()</code>. The gerundive signals futurity: the value will be fixed/varied once the operation completes. If the right-hand side is synchronous, it passes through unchanged.</p>
+<h2 id="generator-functions">Generator Functions</h2>
+<h3 id="the-cursor-modifier">The cursor Modifier</h3>
+<p>The <code>cursor</code> modifier (Latin &quot;runner,&quot; from <em>currere</em> &quot;to run&quot;) creates a generator function:</p>
+<pre><code class="language-fab">cursor functio range(numerus n) -&gt; numerus {
+    ex 0..n pro i {
+        cede i
+    }
+}
+</code></pre>
+<p>In generator context, <code>cede</code> yields values rather than awaiting them, reusing the same keyword for both semantics based on function context.</p>
+<h3 id="generator-via-verb-forms">Generator via Verb Forms</h3>
+<p>The <code>fiunt</code> verb (&quot;they become,&quot; plural) implies generator behavior:</p>
+<pre><code class="language-fab">functio range(numerus n) fiunt numerus {
+    ex 0..n pro i {
+        cede i
+    }
+}
+</code></pre>
+<p>For async generators that yield promises, use <code>fient</code> (&quot;they will become&quot;):</p>
+<pre><code class="language-fab">functio fetchAll(textus[] urls) fient textus {
+    ex urls pro url {
+        cede fetch(url)
+    }
+}
+</code></pre>
+<h3 id="iterating-over-generators">Iterating Over Generators</h3>
+<p>Generator results can be consumed with <code>ex...pro</code> loops:</p>
+<pre><code class="language-fab">ex rangeSync(5) pro num {
+    scribe num
+}
+</code></pre>
+<h2 id="generic-functions">Generic Functions</h2>
+<h3 id="type-parameters-with-prae">Type Parameters with prae</h3>
+<p>The <code>prae</code> keyword (Latin &quot;before&quot;) declares compile-time type parameters. Combined with <code>typus</code> (&quot;type&quot;), it introduces generic type variables:</p>
+<pre><code class="language-fab">functio max(prae typus T, T a, T b) -&gt; T {
+    si a &gt; b { redde a }
+    redde b
+}
+
+fixum larger = max(10, 20)           # T inferred as numerus
+fixum longer = max(&quot;alpha&quot;, &quot;beta&quot;)  # T inferred as textus
+</code></pre>
+<p>Type parameters must come first in the parameter list, followed by regular parameters. This matches conventions in TypeScript, Rust, and Zig.</p>
+<p>Multiple type parameters are supported:</p>
+<pre><code class="language-fab">functio pair(prae typus T, prae typus U, T first, U second) -&gt; [T, U] {
+    redde [first, second]
+}
+</code></pre>
+<h2 id="lambda-expressions">Lambda Expressions</h2>
+<h3 id="basic-syntax">Basic Syntax</h3>
+<p>Lambda expressions use <code>pro</code> (Latin &quot;for, on behalf of&quot;) followed by parameters, a colon, and an expression:</p>
+<pre><code class="language-fab">fixum double = pro x: x * 2
+fixum add = pro a, b: a + b
+</code></pre>
+<p>The colon separates parameters from the body. For single expressions, the result is implicitly returned.</p>
+<h3 id="with-return-type-annotation">With Return Type Annotation</h3>
+<p>When type annotation is needed, use an arrow before the colon:</p>
+<pre><code class="language-fab">fixum add = pro a, b -&gt; numerus: a + b
+fixum isPositive = pro n -&gt; bivalens: n &gt; 0
+</code></pre>
+<h3 id="block-bodies">Block Bodies</h3>
+<p>For multi-statement lambdas, use braces and explicit <code>redde</code>:</p>
+<pre><code class="language-fab">fixum process = pro x {
+    varia result = x * 2
+    result += 10
+    redde result
+}
+</code></pre>
+<h3 id="zero-parameter-lambdas">Zero-Parameter Lambdas</h3>
+<p>When a lambda takes no parameters, place the colon immediately after <code>pro</code>:</p>
+<pre><code class="language-fab">fixum getFortyTwo = pro: 42
+</code></pre>
+<h3 id="async-lambdas">Async Lambdas</h3>
+<p>The <code>fiet</code> keyword creates async lambdas:</p>
+<pre><code class="language-fab">fixum fetchAndProcess = fiet url {
+    fixum data = cede fetch(url)
+    redde process(data)
+}
+</code></pre>
+<p>This is useful for callbacks in async contexts:</p>
+<pre><code class="language-fab">app.post(&quot;/users&quot;, fiet context {
+    redde context.json()
+})
+</code></pre>
+<h3 id="common-patterns">Common Patterns</h3>
+<p>Lambdas shine in functional operations:</p>
+<pre><code class="language-fab">fixum numbers = [1, 2, 3, 4, 5]
+
+# Filter
+fixum evens = numbers.filter(pro x: x % 2 == 0)
+
+# Map
+fixum doubled = numbers.map(pro x: x * 2)
+
+# Reduce
+fixum sum = numbers.reduce(0, pro acc, x: acc + x)
+</code></pre>
+<h2 id="ownership-prepositions-in-parameters">Ownership Prepositions in Parameters</h2>
+<p>Latin prepositions indicate how parameters are passed and what the function may do with them:</p>
+<ul>
+<li><code>de</code> (from/concerning): borrowed, read-only access</li>
+<li><code>in</code> (into): mutable borrow, the function may modify the value</li>
+</ul>
+<pre><code class="language-fab">functio processPoints(de Point[] points, in Point[] targets) {
+    # points is borrowed (read-only)
+    # targets is mutably borrowed
+    ex points pro point {
+        targets.adde(point)
+    }
+}
+</code></pre>
+<p>These prepositions combine naturally with other parameter modifiers:</p>
+<pre><code class="language-fab">functio analyze(textus source, de si numerus depth) -&gt; numerus {
+    si depth est nihil { redde 3 }
+    redde depth
+}
+</code></pre>
+<p>The prepositions express semantic intent about ownership and mutability. They serve as documentation for readers and enable stricter checking in future compiler versions.</p>
+<h2 id="summary">Summary</h2>
+<p>Faber&#39;s function system balances Latin linguistic authenticity with practical programming needs:</p>
+<ul>
+<li><code>functio</code> for declaration, <code>redde</code> for return</li>
+<li>Type-first parameters with <code>ut</code> aliasing</li>
+<li><code>si</code> for optional, <code>vel</code> for defaults, <code>ceteri</code> for rest</li>
+<li>Arrow <code>-&gt;</code> for direct returns, verb forms for stream protocol</li>
+<li><code>futura</code> and <code>cursor</code> modifiers, or <code>fiet</code>/<code>fiunt</code>/<code>fient</code> verbs</li>
+<li><code>cede</code> for await (async) or yield (generator)</li>
+<li><code>prae typus</code> for generics</li>
+<li><code>pro</code> for lambdas with optional <code>fiet</code> for async</li>
+</ul>
+<p>The Latin vocabulary maps naturally to programming concepts: <em>futura</em> captures async&#39;s temporal nature, <em>cede</em> captures yielding control, and verb conjugations encode sync/async and single/multiple semantics grammatically.</p>
 
     </main>
   </div>

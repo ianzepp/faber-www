@@ -170,7 +170,7 @@ This site documents the Faber programming language.
 
 ## Source
 - Language: https://github.com/ianzepp/faber-romanus
-- Research: https://github.com/ianzepp/faber-trials
+- Research: https://github.com/ianzepp/faber-romanus
 `
 
   await Bun.write(join(DIST_DIR, 'llms.txt'), llmsTxt)
