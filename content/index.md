@@ -1,14 +1,14 @@
 ---
-title: Faber
-description: A Latin programming language designed for LLM consumption
+title: Faber Romanus
+description: An LLM-oriented intermediate representation that compiles to Zig, Rust, C++, TypeScript, or Python
 order: 0
 ---
 
 <div class="hero">
 
-# Faber
+# Faber Romanus
 
-<p class="tagline">A Latin programming language designed for LLM consumption</p>
+<p class="tagline">The Roman Craftsman — An LLM-oriented intermediate representation that compiles to Zig, Rust, C++, TypeScript, or Python</p>
 
 </div>
 
@@ -22,40 +22,68 @@ Installation coming soon
 
 </div>
 
-Faber is an intermediate language where LLMs generate human-readable Latin code that humans can review before compilation to TypeScript, Python, Zig, C++, or Rust.
+## The Problem
 
-## Why Latin?
+LLMs write code. Humans review it. But systems languages — Zig, Rust, C++ — are hard for both:
 
-- **Regular morphology** - Latin's grammatical structure maps cleanly to programming constructs
-- **LLM priors** - Models trained on multilingual corpora have exposure to Latin patterns
-- **Human readable** - Unlike machine-optimized IRs, Faber code is reviewable by humans
-- **Compilation targets** - One source language, multiple output targets
+- **LLMs struggle with symbol-dense syntax.** Lifetimes, borrow checkers, template metaprogramming — these create semantic chaos that increases error rates.
+- **Humans can't skim generated code.** Reviewing 50 lines of Rust requires understanding Rust. You can't verify "yes, that logic looks right" without parsing the syntax mentally.
 
-## Quick Example
+You don't need an IR to generate TypeScript. You need one to generate Rust without lifetime annotation chaos.
+
+## The Solution
+
+Faber Romanus is an **intermediate representation** optimized for LLM generation and human review.
 
 ```faber
-functio summa(a: numerus, b: numerus) -> numerus {
-    redde a + b
+ex items pro item {
+    si item.price > 100 {
+        scribe item.name
+    }
+}
+```
+
+- **LLMs write Faber.** Word-based, regular syntax. No lifetime annotations, no pointer semantics, no template noise.
+- **Humans skim Faber.** You see `si` (if), `pro` (for), `scribe` (print). You don't need to know Zig to verify the loop logic.
+- **Compiler emits target code.** Zig, Rust, C++, TypeScript, or Python. The generated code is what actually runs.
+
+The workflow: **LLM drafts Faber → Human approves → Compiler emits production code.**
+
+## Why It Works
+
+**No ecosystem problem.** Faber compiles to the target language, so you use its libraries directly. `ex hono importa Hono` becomes `import { Hono } from 'hono'`. No need to rewrite npm/PyPI/crates.io.
+
+**Grammar designed for LLMs.** The EBNF specification is built for LLM consumption. Trials show models achieve 96-98% accuracy after reading the grammar specification alone — no prose documentation required.
+
+**Regular structure.** Type-first declarations, consistent block patterns, no operator overloading. The regularity may matter more than the vocabulary.
+
+**Semantic vocabulary.** Latin keywords encode intent: `fixum` (fixed/immutable) vs `varia` (variable/mutable), `cede` (yield/await), `redde` (give back/return).
+
+## Example
+
+```faber
+functio salve(nomen) -> textus {
+    redde "Salve, " + nomen + "!"
 }
 
-fixum x = summa(3, 4)
-scribe(x)
+fixum nomen = "Mundus"
+scribe salve(nomen)
 ```
 
 Compiles to TypeScript:
 
 ```typescript
-function summa(a: number, b: number): number {
-    return a + b
+function salve(nomen): string {
+    return 'Salve, ' + nomen + '!';
 }
 
-const x = summa(3, 4)
-console.log(x)
+const nomen = 'Mundus';
+console.log(salve(nomen));
 ```
 
 ## Links
 
-- [Grammar Reference](/docs/grammar.html) - Complete language specification
+- [Grammar Reference](/docs/grammar.html) - Complete language specification (EBNF)
 - [Examples](/docs/examples.html) - Code examples by feature
-- [Research](/research/results.html) - LLM learnability evaluation
+- [Thesis and Trials](/research/) - LLM learnability evaluation
 - [GitHub](https://github.com/ianzepp/faber-romanus) - Source code

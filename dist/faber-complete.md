@@ -4,6 +4,604 @@ This document contains the complete Faber language documentation.
 
 ---
 
+# Faber (Reference)
+
+
+# Faber (Reference)
+
+The reference compiler for the Faber Romanus programming language, implemented in TypeScript. Faber ("craftsman" in Latin) is the primary compiler used for all daily development, supporting multi-target code generation to TypeScript, Python, Rust, Zig, and C++.
+
+This compiler uses mixed Latin/English identifiers in its implementation, prioritizing clarity for contributors familiar with TypeScript conventions while maintaining the project's Latin aesthetic in user-facing APIs.
+
+## Usage
+
+```
+faber compile <file.fab>              # Compile to TypeScript (default)
+faber compile <file.fab> -t py        # Compile to Python
+faber compile <file.fab> -t zig       # Compile to Zig
+faber compile <file.fab> -t rs        # Compile to Rust
+faber compile <file.fab> -t cpp       # Compile to C++23
+faber compile <file.fab> -t fab       # Format/normalize Faber source
+faber compile <file.fab> -o out.ts    # Specify output file
+faber run <file.fab>                  # Compile and execute (TypeScript only)
+faber check <file.fab>                # Validate syntax without output
+faber format <file.fab>               # Format source in place
+```
+
+## Implementation Status
+
+| Target     | Tests | Status |
+| ---------- | ----: | :----: |
+| TypeScript |   760 |  100%  |
+| Python     |   613 |  81%   |
+| Rust       |   580 |  76%   |
+| C++23      |   475 |  63%   |
+| Zig        |   470 |  62%   |
+
+> Status % = passing tests / TypeScript baseline. Run `bun test proba/runner.test.ts -t "@<target>"` to verify (e.g., `-t "@zig"`).
+
+Status: ● implemented, ◐ partial, ○ not implemented, — not applicable, ◌ convention
+
+## Type System
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `textus` (string)         |    ●     | ● |  ●   | ●  |  ●  |
+| `numerus` (integer)       |    ●     | ● |  ●   | ●  |  ●  |
+| `fractus` (float)         |    ●     | ● |  ●   | ●  |  ●  |
+| `decimus` (decimal)       |    ●     | ◐ |  ●   | ○  |  ◐  |
+| `magnus` (bigint)         |    ●     | ◐ |  ●   | ●  |  ○  |
+| `bivalens` (boolean)      |    ●     | ● |  ●   | ●  |  ●  |
+| `nihil` (null)            |    ●     | ● |  ●   | ●  |  ●  |
+| `vacuum` (void)           |    ●     | ● |  ●   | ●  |  ●  |
+| `numquam` (never)         |    ●     | ● |  ●   | ●  |  ○  |
+| `octeti` (bytes)          |    ●     | ● |  ●   | ●  |  ●  |
+| `objectum` (object)       |    ●     | ◐ |  ●   | ○  |  ◐  |
+| `lista<T>` (array)        |    ●     | ◐ |  ●   | ●  |  ●  |
+| `tabula<K,V>` (map)       |    ●     | ◐ |  ●   | ●  |  ●  |
+| `copia<T>` (set)          |    ●     | ◐ |  ●   | ●  |  ●  |
+| `series<T...>` (tuple)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `promissum<T>` (promise)  |    ●     | ○ |  ●   | ●  |  ○  |
+| `erratum` (error)         |    ●     | ○ |  ●   | ○  |  ○  |
+| `cursor<T>` (iterator)    |    ●     | ○ |  ●   | ○  |  ○  |
+| `ignotum` (unknown)       |    ●     | ● |  ●   | ○  |  ○  |
+| `curator` (allocator)     |    —     | ● |  —   | —  |  —  |
+| Nullable types (`T?`)     |    ●     | ● |  ●   | ●  |  ○  |
+| Union types (`unio<A,B>`) |    ●     | ◐ |  ●   | ○  |  ○  |
+| Generic type params       |    ●     | ○ |  ●   | ●  |  ○  |
+| Type aliases (`typus`)    |    ●     | ● |  ●   | ●  |  ○  |
+| typeof (`typus` RHS)      |    ●     | ◐ |  ○   | ○  |  ○  |
+
+## Variable Declarations
+
+| Feature                      | TypeScript | Zig | Python | Rust | C++23 |
+| ---------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `varia` (mutable)            |    ●     | ● |  ●   | ●  |  ●  |
+| `fixum` (immutable)          |    ●     | ● |  ●   | ●  |  ●  |
+| `figendum` (async immutable) |    ●     | ○ |  ●   | ●  |  ○  |
+| `variandum` (async mutable)  |    ●     | ○ |  ●   | ●  |  ○  |
+| `nexum` (reactive field)     |    ●     | ○ |  ●   | ○  |  ○  |
+| Type annotations             |    ●     | ● |  ●   | ●  |  ●  |
+| Object destructuring         |    ●     | ● |  ●   | ●  |  ●  |
+| Array destructuring          |    ●     | ● |  ●   | ●  |  ●  |
+| Rest in destructuring        |    ●     | ● |  ●   | ●  |  ●  |
+| Skip pattern (`_`)           |    ●     | ● |  ●   | ●  |  ●  |
+| Negative indices `[-1]`      |    ●     | ● |  ●   | ●  |  ●  |
+| Slicing `[1..3]`             |    ●     | ● |  ●   | ●  |  ●  |
+| Inclusive slicing (`usque`)  |    ●     | ● |  ●   | ●  |  ●  |
+| Initializer expressions      |    ●     | ● |  ●   | ●  |  ●  |
+
+## Enum & Tagged Union Declarations
+
+| Feature                    | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `ordo` (enum)              |    ●     | ● |  ●   | ●  |  ●  |
+| Enum variants              |    ●     | ● |  ●   | ●  |  ●  |
+| Enum with values           |    ●     | ● |  ●   | ●  |  ◐  |
+| `discretio` (tagged union) |    ●     | ● |  ●   | ●  |  ●  |
+| Variant fields             |    ●     | ● |  ●   | ●  |  ●  |
+| Generic discretio          |    ●     | ● |  ●   | ●  |  ●  |
+| `discerne` (variant match) |    ●     | ● |  ●   | ●  |  ◐  |
+
+## Function Declarations
+
+| Feature                            | TypeScript | Zig | Python | Rust | C++23 |
+| ---------------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Basic functions (`functio`)        |    ●     | ● |  ●   | ●  |  ●  |
+| Parameters                         |    ●     | ● |  ●   | ●  |  ●  |
+| Parameter type annotations         |    ●     | ● |  ●   | ●  |  ●  |
+| Parameter aliasing (`ut`)          |    ●     | ● |  ●   | ●  |  ●  |
+| Parameter defaults (`vel`)         |    ●     | ○ |  ●   | ○  |  ●  |
+| Parameter prepositions (`de`/`in`) |    ●     | ● |  ●   | ●  |  ●  |
+| Rest parameters (`ceteri`)         |    ●     | ○ |  ●   | ○  |  ○  |
+| Return type annotation (`->`)      |    ●     | ● |  ●   | ●  |  ●  |
+| `futura` (async prefix)            |    ●     | ◐ |  ●   | ●  |  ○  |
+| `cursor` (generator prefix)        |    ●     | — |  ●   | —  |  —  |
+| Async generator                    |    ●     | — |  ●   | —  |  —  |
+| Arrow functions                    |    ●     | ◐ |  ●   | ●  |  ●  |
+| `fit T` (sync return)              |    ●     | ● |  ●   | ●  |  ○  |
+| `fiet T` (async return)            |    ●     | ○ |  ●   | ●  |  ○  |
+| `fiunt T` (generator return)       |    ●     | ○ |  ●   | —  |  —  |
+| `fient T` (async generator return) |    ●     | ○ |  ●   | —  |  —  |
+| `prae` (comptime type param)       |    ●     | ● |  ●   | ●  |  ○  |
+| `@ externa` (external decl)        |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Control Flow Statements
+
+| Feature                       | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `si` (if)                     |    ●     | ● |  ●   | ●  |  ●  |
+| `secus` (else)                |    ●     | ● |  ●   | ●  |  ●  |
+| `sin` (else if)               |    ●     | ● |  ●   | ●  |  ●  |
+| `dum` (while)                 |    ●     | ● |  ●   | ●  |  ●  |
+| `ex...pro` (for-of)           |    ●     | ● |  ●   | ●  |  ●  |
+| `ex...fit` (for-of verb form) |    ●     | ● |  ●   | ●  |  ○  |
+| `ex...fiet` (async for)       |    ●     | ○ |  ●   | ○  |  ○  |
+| `ex...pro (i, n)` (indexed)   |    ○     | ○ |  ○   | ○  |  ○  |
+| `de...pro` (for-in)           |    ●     | ● |  ●   | ●  |  ○  |
+| Range `..` (exclusive)        |    ●     | ● |  ●   | ●  |  ●  |
+| Range `ante` (exclusive)      |    ●     | ● |  ●   | ●  |  ●  |
+| Range `usque` (inclusive)     |    ●     | ● |  ●   | ●  |  ●  |
+| Range with step (`per`)       |    ●     | ● |  ●   | ●  |  ○  |
+| `in` (mutation block)         |    ●     | ● |  ●   | ●  |  ○  |
+| `elige` (switch)              |    ●     | ● |  ●   | ●  |  ●  |
+| Switch cases (`si`)           |    ●     | ● |  ●   | ●  |  ●  |
+| Switch default (`secus`)      |    ●     | ● |  ●   | ●  |  ●  |
+| `discerne` (pattern match)    |    ●     | ● |  ●   | ●  |  ◐  |
+| `discerne` multi-discriminant |    ●     | ○ |  ○   | ○  |  ○  |
+| `secus` (else/ternary alt)    |    ●     | ○ |  ●   | ●  |  ○  |
+| `fac` (do/block)              |    ●     | ● |  ●   | ●  |  ●  |
+| `ergo` (then, one-liner)      |    ●     | ○ |  ●   | ○  |  ○  |
+| `rumpe` (break)               |    ●     | ● |  ●   | ●  |  ●  |
+| `perge` (continue)            |    ●     | ● |  ●   | ●  |  ●  |
+| `custodi` (guard)             |    ●     | ● |  ●   | ●  |  ●  |
+| `cura` (resource management)  |    ●     | ● |  ○   | ●  |  ○  |
+| `praefixum` (comptime block)  |    ●     | ● |  ●   | ●  |  ○  |
+| Catch on control flow         |    ●     | ○ |  ●   | ○  |  ○  |
+
+## Return/Exit Statements
+
+| Feature            | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `redde` (return)   |    ●     | ● |  ●   | ●  |  ●  |
+| `redde` with value |    ●     | ● |  ●   | ●  |  ●  |
+| `redde` void       |    ●     | ● |  ●   | ●  |  ●  |
+
+## Exception Handling
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `tempta` (try)       |    ●     | — |  ●   | ◐  |  ●  |
+| `cape` (catch)       |    ●     | ◐ |  ●   | ◐  |  ●  |
+| `demum` (finally)    |    ●     | — |  ●   | —  |  ●  |
+| `fac...cape` (block) |    ●     | ● |  ●   | ●  |  ●  |
+| `iace` (throw)       |    ●     | ● |  ●   | ●  |  ●  |
+| `adfirma` (assert)   |    ●     | ● |  ●   | ●  |  ●  |
+| Assert with message  |    ●     | ● |  ●   | ●  |  ●  |
+| `mori` (panic/fatal) |    ●     | ● |  ●   | ●  |  ●  |
+
+## Output/Debug/Events
+
+| Feature            | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `scribe` statement |    ●     | ● |  ●   | ●  |  ●  |
+| `vide` (debug)     |    ●     | ● |  ●   | ○  |  ●  |
+| `mone` (warn)      |    ●     | ● |  ●   | ○  |  ●  |
+| Multiple args      |    ●     | ● |  ●   | ●  |  ●  |
+
+## Expressions
+
+| Feature                             | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Identifiers                         |    ●     | ● |  ●   | ●  |  ●  |
+| `ego` (this/self)                   |    ●     | ● |  ●   | ●  |  ●  |
+| Boolean literals (`verum`/`falsum`) |    ●     | ● |  ●   | ●  |  ●  |
+| `nihil` literal                     |    ●     | ● |  ●   | ●  |  ●  |
+| String literals                     |    ●     | ● |  ●   | ●  |  ●  |
+| Number literals                     |    ●     | ● |  ●   | ●  |  ●  |
+| Hex literals (`0xFF`)               |    ●     | ● |  ●   | ●  |  ○  |
+| Binary literals (`0b1010`)          |    ●     | ● |  ●   | ●  |  ○  |
+| Octal literals (`0o755`)            |    ●     | ● |  ●   | ●  |  ○  |
+| BigInt literals (`123n`)            |    ●     | ● |  ●   | ●  |  ○  |
+| Template literals                   |    ●     | ◐ |  ●   | ●  |  ○  |
+| `scriptum()` format strings         |    ●     | ● |  ●   | ●  |  ●  |
+| Regex literals (`sed`)              |    ●     | ○ |  ●   | ●  |  ○  |
+| Array literals                      |    ●     | ● |  ●   | ●  |  ●  |
+| Array spread (`sparge`)             |    ●     | ○ |  ●   | ○  |  ○  |
+| Object literals                     |    ●     | ● |  ●   | ●  |  ●  |
+| Object spread (`sparge`)            |    ●     | ○ |  ●   | ○  |  ○  |
+| Binary operators                    |    ●     | ● |  ●   | ●  |  ●  |
+| Comparison operators                |    ●     | ● |  ●   | ●  |  ●  |
+| Logical operators                   |    ●     | ● |  ●   | ●  |  ●  |
+| Bitwise operators                   |    ●     | ● |  ●   | ●  |  ●  |
+| Unary operators                     |    ●     | ● |  ●   | ●  |  ●  |
+| `nulla` (is empty)                  |    ●     | ● |  ●   | ●  |  ○  |
+| `nonnulla` (has content)            |    ●     | ● |  ●   | ●  |  ○  |
+| `nihil x` (is null)                 |    ●     | ● |  ●   | ●  |  ○  |
+| `nonnihil x` (is not null)          |    ●     | ● |  ●   | ●  |  ○  |
+| `negativum` (is negative)           |    ●     | ● |  ●   | ●  |  ○  |
+| `positivum` (is positive)           |    ●     | ● |  ●   | ●  |  ○  |
+| `verum x` (is true)                 |    ○     | ● |  ●   | ●  |  ○  |
+| `falsum x` (is false)               |    ○     | ● |  ●   | ●  |  ○  |
+| Member access (`.`)                 |    ●     | ● |  ●   | ●  |  ●  |
+| Optional chaining (`?.`)            |    ●     | ● |  ●   | ●  |  ●  |
+| Non-null assertion (`!.`)           |    ●     | ● |  ●   | ●  |  ●  |
+| Computed access (`[]`)              |    ●     | ● |  ●   | ●  |  ●  |
+| Function calls                      |    ●     | ● |  ●   | ●  |  ●  |
+| Call spread (`sparge`)              |    ●     | ○ |  ●   | ○  |  ○  |
+| Method calls                        |    ●     | ● |  ●   | ●  |  ●  |
+| Assignment                          |    ●     | ● |  ●   | ●  |  ●  |
+| Compound assignment (`+=`, etc.)    |    ●     | ● |  ●   | ●  |  ●  |
+| Conditional (ternary)               |    ●     | ● |  ●   | ●  |  ●  |
+| `sic`/`secus` ternary syntax        |    ●     | ○ |  ●   | ●  |  ○  |
+| `cede` (await/yield)                |    ●     | ◐ |  ●   | ●  |  ○  |
+| `novum` (new)                       |    ●     | ● |  ●   | ●  |  ●  |
+| `novum...de` (new with props)       |    ●     | ● |  ●   | ●  |  ●  |
+| `===` / `est` (strict equality)     |    ●     | ● |  ●   | ●  |  ●  |
+| `!==` / `non est` (strict ineq.)    |    ●     | ● |  ●   | ●  |  ●  |
+| `est` (instanceof/typeof)           |    ●     | ● |  ●   | ●  |  ○  |
+| `qua` (type cast)                   |    ●     | ● |  ●   | ●  |  ○  |
+| `innatum` (native construction)     |    ●     | ● |  ●   | ●  |  ●  |
+| `aut` (logical or)                  |    ●     | ● |  ●   | ●  |  ●  |
+| `vel` (nullish coalescing)          |    ●     | ● |  ●   | ●  |  ●  |
+| `praefixum` (comptime expr)         |    ●     | ● |  ●   | ●  |  ○  |
+
+## Lambda Syntax
+
+| Feature                        | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `pro x: expr` (expression)     |    ●     | ◐ |  ◐   | ●  |  ○  |
+| `pro x { body }` (block)       |    ●     | ◐ |  ◐   | ●  |  ○  |
+| `pro: expr` (zero-param)       |    ●     | ◐ |  ◐   | ●  |  ○  |
+| `pro x -> T: expr` (ret. type) |    ●     | ● |  —   | ●  |  ●  |
+| `fit x: expr` (sync binding)   |    ●     | ◐ |  ◐   | ●  |  ○  |
+| `per property` (shorthand)     |    ○     | ○ |  ○   | ○  |  ○  |
+
+## OOP Features (genus/pactum)
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `genus` declaration       |    ●     | ● |  ●   | ●  |  ●  |
+| Field declarations        |    ●     | ● |  ●   | ●  |  ●  |
+| Field defaults            |    ●     | ● |  ●   | ●  |  ●  |
+| `nexum` (reactive field)  |    ●     | ○ |  ●   | ○  |  ○  |
+| Static fields (`generis`) |    ●     | ○ |  ◐   | ○  |  ○  |
+| `@ privatum` (private)    |    ●     | ○ |  ●   | ●  |  ○  |
+| `@ protectum` (protected) |    ●     | ○ |  ●   | ○  |  ○  |
+| `creo` (constructor hook) |    ●     | ● |  ●   | ●  |  ●  |
+| `deleo` (destructor)      |    ◌     | ◌ |  ◌   | ◌  |  ◌  |
+| `pingo` (render method)   |    ◌     | ◌ |  ◌   | ◌  |  ◌  |
+| Auto-merge constructor    |    ●     | ● |  ●   | ●  |  ●  |
+| Methods                   |    ●     | ● |  ●   | ●  |  ●  |
+| Async methods             |    ●     | ◐ |  ●   | ●  |  ○  |
+| Generator methods         |    ●     | — |  ●   | —  |  —  |
+| `sub` (extends)           |    ●     | ○ |  ●   | ○  |  ○  |
+| `implet` (implements)     |    ●     | ● |  ●   | ●  |  ○  |
+| Multiple `implet`         |    ●     | ○ |  ●   | ●  |  ○  |
+| `@ abstractum` class      |    ●     | ○ |  ●   | ○  |  ○  |
+| `@ abstracta` method      |    ●     | ○ |  ●   | ○  |  ○  |
+| `aperit` (index sig)      |    ○     | — |  —   | —  |  —  |
+| Generic classes           |    ●     | ○ |  ●   | ●  |  ○  |
+| `pactum` declaration      |    ●     | ● |  ●   | ●  |  ●  |
+| Interface methods         |    ●     | ● |  ●   | ●  |  ●  |
+
+## Import/Export
+
+| Feature                        | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `ex...importa` (named imports) |    ●     | ● |  ●   | ●  |  ○  |
+| `ex...importa *` (wildcard)    |    ●     | ● |  ●   | ●  |  ○  |
+| `ut` alias (import renaming)   |    ●     | ● |  ●   | ●  |  ○  |
+
+## Testing
+
+| Feature                         | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `proba` (test case)             |    ●     | ○ |  ○   | ●  |  ○  |
+| `probandum` (test suite)        |    ●     | ○ |  ○   | ●  |  ○  |
+| `cura ante` (beforeEach)        |    ●     | ○ |  ○   | ●  |  ○  |
+| `cura post` (afterEach)         |    ●     | ○ |  ○   | ●  |  ○  |
+| `cura ante omnia` (beforeAll)   |    ●     | ○ |  ○   | ○  |  ○  |
+| `cura post omnia` (afterAll)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `omitte` modifier (skip)        |    ●     | ○ |  ○   | ●  |  ○  |
+| `solum` modifier (only)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `futurum` modifier (todo)       |    ●     | ○ |  ○   | ●  |  ○  |
+| Table-driven tests (`proba ex`) |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Preamble / Prologue
+
+| Feature                 | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Preamble infrastructure |    ●     | ◐ |  ●   | ◐  |  ●  |
+| Panic class/import      |    ●     | — |  ○   | —  |  —  |
+| Decimal import          |    ●     | — |  ●   | —  |  —  |
+| Enum import             |    —     | — |  ●   | —  |  —  |
+| Regex import            |    —     | — |  ●   | ●  |  —  |
+| Collection imports      |    —     | ○ |  ○   | ○  |  —  |
+| Async imports           |    —     | ○ |  ○   | ○  |  —  |
+| Arena allocator         |    —     | ● |  —   | ○  |  —  |
+| Curator tracking        |    —     | ● |  —   | ○  |  —  |
+| Flumina/Responsum       |    ●     | ○ |  ○   | ○  |  ○  |
+
+## I/O Intrinsics
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `_scribe` (print)    |    ●     | ● |  ●   | ●  |  ●  |
+| `_vide` (debug)      |    ●     | ● |  ●   | ●  |  ●  |
+| `_mone` (warn)       |    ●     | ● |  ●   | ●  |  ●  |
+| `_lege` (read input) |    ●     | ● |  ●   | ●  |  ●  |
+
+## Stdlib: Math (mathesis)
+
+| Feature                    | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `pavimentum(x)` (floor)    |    ●     | ● |  ●   | ●  |  ●  |
+| `tectum(x)` (ceiling)      |    ●     | ● |  ●   | ●  |  ●  |
+| `radix(x)` (sqrt)          |    ●     | ● |  ●   | ●  |  ●  |
+| `potentia(x, n)` (pow)     |    ●     | ● |  ●   | ●  |  ●  |
+| `absolutum(x)` (abs)       |    ●     | ● |  ●   | ●  |  ●  |
+| `signum(x)` (sign)         |    ●     | ● |  ●   | ●  |  ●  |
+| `rotundum(x)` (round)      |    ●     | ● |  ●   | ●  |  ●  |
+| `truncatum(x)` (trunc)     |    ●     | ● |  ●   | ●  |  ●  |
+| `logarithmus(x)` (log)     |    ●     | ● |  ●   | ●  |  ●  |
+| `logarithmus10(x)` (log10) |    ●     | ● |  ●   | ●  |  ●  |
+| `exponens(x)` (exp)        |    ●     | ● |  ●   | ●  |  ●  |
+| `sinus(x)` (sin)           |    ●     | ● |  ●   | ●  |  ●  |
+| `cosinus(x)` (cos)         |    ●     | ● |  ●   | ●  |  ●  |
+| `tangens(x)` (tan)         |    ●     | ● |  ●   | ●  |  ●  |
+| `minimus(a, b)` (min)      |    ●     | ● |  ●   | ●  |  ●  |
+| `maximus(a, b)` (max)      |    ●     | ● |  ●   | ●  |  ●  |
+| `constringens(x, lo, hi)`  |    ●     | ● |  ●   | ●  |  ●  |
+| `PI` (constant)            |    ●     | ● |  ●   | ●  |  ●  |
+| `E` (constant)             |    ●     | ● |  ●   | ●  |  ●  |
+| `TAU` (constant)           |    ●     | ● |  ●   | ●  |  ●  |
+
+## Stdlib: Random (aleator)
+
+| Feature                       | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `fractus()` (random 0-1)      |    ●     | ● |  ●   | ●  |  ●  |
+| `inter(min, max)` (int)       |    ●     | ● |  ●   | ●  |  ●  |
+| `octeti(n)` (random bytes)    |    ●     | ● |  ●   | ●  |  ●  |
+| `uuid()` (UUID v4)            |    ●     | ● |  ●   | ●  |  ●  |
+| `selige(lista)` (random pick) |    ●     | ● |  ●   | ●  |  ●  |
+| `misce(lista)` (shuffle copy) |    ●     | ● |  ●   | ●  |  ●  |
+| `semen(n)` (seed)             |    ●     | ● |  ●   | ●  |  ●  |
+
+## Lista (Array) Methods
+
+| Latin                        | TypeScript | Zig | Python | Rust | C++23 |
+| ---------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `adde` (push)                |    ●     | ● |  ●   | ●  |  ●  |
+| `addita` (push copy)         |    ●     | — |  ●   | ●  |  ●  |
+| `praepone` (unshift)         |    ●     | ● |  ●   | ●  |  ●  |
+| `praeposita` (unshift copy)  |    ●     | — |  ●   | ●  |  ●  |
+| `remove` (pop)               |    ●     | ● |  ●   | ●  |  ●  |
+| `remota` (pop copy)          |    ●     | — |  ●   | ●  |  ●  |
+| `decapita` (shift)           |    ●     | ● |  ●   | ●  |  ●  |
+| `decapitata` (shift copy)    |    ●     | — |  ●   | ●  |  ●  |
+| `purga` (clear)              |    ●     | ● |  ●   | ●  |  ●  |
+| `primus` (first)             |    ●     | ● |  ●   | ●  |  ●  |
+| `ultimus` (last)             |    ●     | ● |  ●   | ●  |  ●  |
+| `accipe` (at index)          |    ●     | ● |  ●   | ●  |  ●  |
+| `longitudo` (length)         |    ●     | ● |  ●   | ●  |  ●  |
+| `vacua` (is empty)           |    ●     | ● |  ●   | ●  |  ●  |
+| `continet` (includes)        |    ●     | ● |  ●   | ●  |  ●  |
+| `indiceDe` (indexOf)         |    ●     | ● |  ●   | ●  |  ●  |
+| `inveni` (find)              |    ●     | ● |  ●   | ●  |  ●  |
+| `inveniIndicem` (findIndex)  |    ●     | ● |  ●   | ●  |  ●  |
+| `filtrata` (filter)          |    ●     | ● |  ●   | ●  |  ●  |
+| `mappata` (map)              |    ●     | ● |  ●   | ●  |  ●  |
+| `reducta` (reduce)           |    ●     | ● |  ●   | ●  |  ●  |
+| `explanata` (flatMap)        |    ●     | — |  ●   | ●  |  ●  |
+| `plana` (flat)               |    ●     | — |  ●   | ●  |  ●  |
+| `inversa` (reverse copy)     |    ●     | ● |  ●   | ●  |  ●  |
+| `ordinata` (sort copy)       |    ●     | ● |  ●   | ●  |  ●  |
+| `sectio` (slice)             |    ●     | ● |  ●   | ●  |  ●  |
+| `prima` (take first n)       |    ●     | ● |  ●   | ●  |  ●  |
+| `ultima` (take last n)       |    ●     | ● |  ●   | ●  |  ●  |
+| `omitte` (skip first n)      |    ●     | ● |  ●   | ●  |  ●  |
+| `omnes` (every)              |    ●     | ● |  ●   | ●  |  ●  |
+| `aliquis` (some)             |    ●     | ● |  ●   | ●  |  ●  |
+| `coniunge` (join)            |    ●     | — |  ●   | ●  |  ●  |
+| `perambula` (forEach)        |    ●     | ● |  ●   | ●  |  ●  |
+| `filtra` (filter in-place)   |    ●     | — |  ●   | ○  |  ●  |
+| `ordina` (sort in-place)     |    ●     | ● |  ●   | ●  |  ●  |
+| `inverte` (reverse in-place) |    ●     | ● |  ●   | ●  |  ●  |
+| `congrega` (groupBy)         |    ●     | — |  ●   | ○  |  ●  |
+| `unica` (unique)             |    ●     | — |  ●   | ●  |  ●  |
+| `planaOmnia` (flattenDeep)   |    ●     | — |  ○   | ○  |  ◐  |
+| `fragmenta` (chunk)          |    ●     | — |  ●   | ●  |  ●  |
+| `densa` (compact)            |    ●     | — |  ●   | ○  |  ●  |
+| `partire` (partition)        |    ●     | — |  ●   | ●  |  ●  |
+| `misce` (shuffle)            |    ●     | — |  ●   | ○  |  ●  |
+| `specimen` (sample one)      |    ●     | — |  ●   | ○  |  ●  |
+| `specimina` (sample n)       |    ●     | — |  ●   | ○  |  ●  |
+| `summa` (sum)                |    ●     | ● |  ●   | ●  |  ●  |
+| `medium` (average)           |    ●     | ● |  ●   | ●  |  ●  |
+| `minimus` (min)              |    ●     | ● |  ●   | ●  |  ●  |
+| `maximus` (max)              |    ●     | ● |  ●   | ●  |  ●  |
+| `minimusPer` (minBy)         |    ●     | — |  ○   | ●  |  ●  |
+| `maximusPer` (maxBy)         |    ●     | — |  ○   | ●  |  ●  |
+| `numera` (count)             |    ●     | ● |  ●   | ●  |  ●  |
+
+## Tabula (Map) Methods
+
+| Latin                      | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `pone` (set)               |    ●     | ● |  ●   | ●  |  ●  |
+| `accipe` (get)             |    ●     | ● |  ●   | ●  |  ●  |
+| `habet` (has)              |    ●     | ● |  ●   | ●  |  ●  |
+| `dele` (delete)            |    ●     | ● |  ●   | ●  |  ●  |
+| `longitudo` (size)         |    ●     | ● |  ●   | ●  |  ●  |
+| `vacua` (isEmpty)          |    ●     | ● |  ●   | ●  |  ●  |
+| `purga` (clear)            |    ●     | ● |  ●   | ●  |  ●  |
+| `claves` (keys)            |    ●     | ● |  ●   | ●  |  ●  |
+| `valores` (values)         |    ●     | ● |  ●   | ●  |  ●  |
+| `paria` (entries)          |    ●     | ● |  ●   | ●  |  ●  |
+| `accipeAut` (getOrDefault) |    ●     | ● |  ●   | ●  |  ●  |
+| `selige` (pick)            |    ●     | — |  ●   | ○  |  ●  |
+| `omitte` (omit)            |    ●     | — |  ●   | ○  |  ●  |
+| `confla` (merge)           |    ●     | — |  ●   | ●  |  ●  |
+| `inversa` (invert)         |    ●     | — |  ●   | ○  |  ●  |
+| `mappaValores` (mapValues) |    ●     | — |  ●   | ○  |  ●  |
+| `mappaClaves` (mapKeys)    |    ●     | — |  ●   | ○  |  ●  |
+| `inLista` (toArray)        |    ●     | — |  ●   | ●  |  ●  |
+| `inObjectum` (toObject)    |    ●     | — |  ●   | —  |  —  |
+
+## Copia (Set) Methods
+
+| Latin                         | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `adde` (add)                  |    ●     | ● |  ●   | ●  |  ●  |
+| `habet` (has)                 |    ●     | ● |  ●   | ●  |  ●  |
+| `dele` (delete)               |    ●     | ● |  ●   | ●  |  ●  |
+| `longitudo` (size)            |    ●     | ● |  ●   | ●  |  ●  |
+| `vacua` (isEmpty)             |    ●     | ● |  ●   | ●  |  ●  |
+| `purga` (clear)               |    ●     | ● |  ●   | ●  |  ●  |
+| `unio` (union)                |    ●     | — |  ●   | ●  |  ●  |
+| `intersectio` (intersection)  |    ●     | — |  ●   | ●  |  ●  |
+| `differentia` (difference)    |    ●     | — |  ●   | ●  |  ●  |
+| `symmetrica` (symmetric diff) |    ●     | — |  ●   | ●  |  ●  |
+| `subcopia` (isSubset)         |    ●     | — |  ●   | ●  |  ●  |
+| `supercopia` (isSuperset)     |    ●     | — |  ●   | ●  |  ●  |
+| `inLista` (toArray)           |    ●     | — |  ●   | ●  |  ●  |
+| `valores` (values)            |    ●     | ● |  ●   | ○  |  ●  |
+| `perambula` (forEach)         |    ●     | — |  ●   | ●  |  ●  |
+
+## Stdlib: Time (tempus)
+
+| Feature                  | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `nunc()` (current epoch) |    ●     | ● |  ●   | ●  |  ●  |
+| `nunc_nano()` (nanos)    |    ●     | ● |  ●   | ●  |  ●  |
+| `nunc_secunda()` (secs)  |    ●     | ● |  ●   | ●  |  ●  |
+| `dormi ms` (sleep)       |    ●     | ● |  ●   | ●  |  ●  |
+| Duration constants       |    ●     | ● |  ●   | ●  |  ●  |
+
+## Stdlib: File I/O (solum)
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `lege` (read file)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `inscribe` (write file)   |    ○     | ○ |  ○   | ○  |  ○  |
+| `appone` (append)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `aperi` / `claude` (open) |    ○     | ○ |  ○   | ○  |  ○  |
+| `exstat` (exists)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `dele` (delete)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `duplica` (copy)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `move` (rename)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `crea` (mkdir)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `elenca` (readdir)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `via.*` (path utils)      |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Network (caelum)
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `pete` (HTTP GET)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `mitte` (HTTP POST)  |    ○     | ○ |  ○   | ○  |  ○  |
+| `pone` (HTTP PUT)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `dele` (HTTP DELETE) |    ○     | ○ |  ○   | ○  |  ○  |
+| WebSocket client     |    ○     | ○ |  ○   | ○  |  ○  |
+| TCP/UDP sockets      |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Crypto
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `digere` (hash)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `hmac` (HMAC)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `cifra` (encrypt)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `decifra` (decrypt)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `fortuita` (random bytes) |    ○     | ○ |  ○   | ○  |  ○  |
+| `deriva` (key derivation) |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Encoding (codex)
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `coda` (encode)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `decoda` (decode)    |    ○     | ○ |  ○   | ○  |  ○  |
+| Base64/Base64URL     |    ○     | ○ |  ○   | ○  |  ○  |
+| Hex encoding         |    ○     | ○ |  ○   | ○  |  ○  |
+| URL percent-encoding |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Compression (comprimo)
+
+| Feature               | TypeScript | Zig | Python | Rust | C++23 |
+| --------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `comprimo` (compress) |    ○     | ○ |  ○   | ○  |  ○  |
+| `laxo` (decompress)   |    ○     | ○ |  ○   | ○  |  ○  |
+| gzip/zstd/brotli      |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Database (arca)
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Query DSL (`de...quaere`) |    ○     | ○ |  ○   | ○  |  ○  |
+| Mutations (`in...muta`)   |    ○     | ○ |  ○   | ○  |  ○  |
+| Transactions              |    ○     | ○ |  ○   | ○  |  ○  |
+| SQLite embedded           |    —     | ○ |  —   | —  |  —  |
+
+## Collection DSL
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `ex...prima n` (take)     |    ●     | ○ |  ●   | ○  |  ○  |
+| `ex...ultima n` (last)    |    ●     | ○ |  ●   | ○  |  ○  |
+| `ex...summa` (sum)        |    ●     | ○ |  ●   | ○  |  ○  |
+| `ab...ubi` (filter where) |    ◐     | ○ |  ◐   | ○  |  ○  |
+| `ab...pro` (filter iter)  |    ○     | ○ |  ○   | ○  |  ○  |
+
+## External Dispatch (ad)
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `ad "target" (args)` |    ○     | ○ |  ○   | ○  |  ○  |
+| Syscall dispatch     |    ○     | ○ |  ○   | ○  |  ○  |
+| URL protocol routing |    ○     | ○ |  ○   | ○  |  ○  |
+| Package dispatch     |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Nucleus Runtime
+
+The Nucleus is Faber's micro-kernel runtime providing unified I/O dispatch, message-passing protocol, and async execution across all targets. See `consilia/futura/nucleus.md` for full design.
+
+| Feature                    | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Responsum protocol         |    ●     | ○ |  ○   | ○  |  ○  |
+| Handle abstraction         |    ○     | ○ |  ○   | ○  |  ○  |
+| Dispatcher (syscall table) |    ○     | ○ |  ○   | ○  |  ○  |
+| Request correlation        |    ○     | ○ |  ○   | ○  |  ○  |
+| AsyncContext executor      |    ○     | ○ |  ○   | ○  |  ○  |
+| State machine codegen      |    —     | ○ |  —   | ○  |  ○  |
+
+The Responsum protocol defines a tagged union for all syscall results.
+
+---
+
+## Target Notes
+
+### Python (3.10+)
+
+No block braces (indentation-based), no `new` keyword, `asyncio` for async, `typing.Protocol` for interfaces, `match`/`case` for pattern matching.
+
+### Zig (0.11+)
+
+No classes (structs with methods), no interfaces (duck typing), no exceptions (error unions), no generators, comptime generics. `genus` becomes `const Name = struct { ... };`. Memory management via `curator` type which maps to `std.mem.Allocator` — collection methods automatically use the allocator from function parameters or the default arena in `main()`.
+
+### Rust (2021 edition)
+
+Ownership system, borrowing (`&`/`&mut`), `Option<T>`/`Result<T,E>` instead of null/exceptions, traits instead of interfaces, exhaustive pattern matching.
+
+### C++23
+
+`std::expected<T,E>` for errors, `std::print` for output, concepts for interfaces, coroutines for async, RAII for cleanup.
+
+
+---
+
 # Documentation
 
 
@@ -42,10 +640,10 @@ The grammar specification uses consistent patterns and explicit examples designe
 
 ---
 
-# Research
+# Thesis and Trials
 
 
-# Research
+# Thesis and Trials
 
 Can LLMs learn Faber effectively? The [faber-romanus](https://github.com/ianzepp/faber-romanus) project includes an evaluation harness to test this systematically.
 
@@ -62,17 +660,757 @@ The trials test:
 - **Task types** - Translation, completion, prediction, explanation
 - **Context levels** - From examples-only to complete documentation
 
-## Results
+## Trial Results
 
-See [Research Results](/research/results.html) for current data.
+| Metric | Value |
+|--------|-------|
+| Framework version | 1.1 |
+| Total evaluations | 13,270 |
+| Models tested | 15 |
+| Total cost | $12.04 |
+| Total tokens | 9.5M in / 563K out |
+| Total time | 18980.8s |
+
+## Model Comparison: Cost vs Speed vs Accuracy
+
+| Model | Accuracy | Avg Latency | Cost | Tokens |
+|-------|----------|-------------|------|--------|
+| gpt-4o | 89% | 829ms | $1.94 | 707K |
+| qwen3-coder | 89% | 1.4s | $0.22 | 926K |
+| gpt-3.5-turbo | 89% | 521ms | $0.40 | 762K |
+| gpt-5 | 89% | 6.7s | $4.37 | 584K |
+| gpt-4o-mini | 88% | 869ms | $0.10 | 630K |
+| claude-3.5-sonnet | 88% | 1.8s | $2.21 | 667K |
+| llama-3.1-70b | 86% | 1.1s | $0.21 | 609K |
+| codestral | 86% | 541ms | $0.24 | 737K |
+| deepseek-v3.1 | 85% | 2.0s | $0.10 | 617K |
+| claude-4.5-sonnet | 77% | 1.5s | $1.74 | 518K |
+| mercury-coder | 73% | 589ms | $0.22 | 834K |
+| llama-3.1-8b | 73% | 915ms | $0.04 | 717K |
+| claude-3-haiku | 70% | 970ms | $0.22 | 769K |
+| llama-3.2-1b | 15% | 486ms | $0.03 | 778K |
+| qwen2.5-coder-32b | 0% | 7.2s | $0.02 | 253K |
+
+## Three-Level Grading Breakdown
+
+**A** = typechecks, **B** = runs without error, **C** = correct output.
+
+| Model | Tests | A (Typechecks) | B (Runs) | C (Correct) |
+|-------|-------|----------------|----------|-------------|
+| gpt-4o | 952 | 93% | 93% | 88% |
+| qwen3-coder | 1068 | 94% | 94% | 89% |
+| gpt-3.5-turbo | 1166 | 91% | 91% | 89% |
+| gpt-5 | 672 | 93% | 93% | 89% |
+| gpt-4o-mini | 895 | 93% | 93% | 88% |
+| claude-3.5-sonnet | 840 | 95% | 95% | 88% |
+| llama-3.1-70b | 870 | 91% | 91% | 86% |
+| codestral | 964 | 93% | 92% | 86% |
+| deepseek-v3.1 | 862 | 95% | 94% | 85% |
+| claude-4.5-sonnet | 672 | 93% | 93% | 77% |
+| mercury-coder | 840 | 76% | 76% | 73% |
+| llama-3.1-8b | 1063 | 90% | 90% | 73% |
+| claude-3-haiku | 946 | 92% | 92% | 70% |
+| llama-3.2-1b | 1138 | 43% | 43% | 15% |
+| qwen2.5-coder-32b | 282 | 29% | 29% | 0% |
+
+## By Context Level
+
+How much documentation context helps models learn Faber.
+
+| Context | Tests | Accuracy |
+|---------|-------|----------|
+| examples-only | 2681 | 61% |
+| grammar-only | 2662 | 82% |
+| minimal | 2985 | 77% |
+| basic | 2466 | 79% |
+| complete | 2476 | 79% |
+
+## By N-shot (Learning Curve)
+
+Effect of few-shot examples on accuracy.
+
+| Examples | Tests | Accuracy |
+|----------|-------|----------|
+| 0-shot | 3343 | 70% |
+| 1-shot | 3073 | 71% |
+| 3-shot | 3914 | 80% |
+| 10-shot | 2940 | 81% |
+
+## Error Distribution
+
+Where failures occur (among failed trials only).
+
+| Error Type | Count | % of Failures |
+|------------|-------|---------------|
+| type_error | 1360 | 42% |
+| wrong_output | 1345 | 42% |
+| no_response | 312 | 10% |
+| syntax_error | 201 | 6% |
+| runtime_error | 14 | 0% |
+
+## By Task
+
+| Task | Tests | Accuracy |
+|------|-------|----------|
+| faber_to_ts_functio_string | 305 | 95% |
+| faber_to_ts_arithmetic | 303 | 94% |
+| faber_to_ts_ex_pro | 304 | 93% |
+| faber_to_ts_si_true | 305 | 92% |
+| faber_to_ts_functio | 305 | 92% |
+| complex_ts_to_faber_factorial | 12 | 92% |
+| complex_ts_to_faber_fibonacci | 12 | 92% |
+| complex_ts_to_faber_multi_function | 12 | 92% |
+| complex_ts_to_faber_ternary_chain | 12 | 92% |
+| complex_ts_to_faber_string_ops | 12 | 92% |
+| complex_ts_to_faber_early_return | 12 | 92% |
+| complex_ts_to_faber_accumulator | 12 | 92% |
+| complex_ts_to_faber_prime_check | 12 | 92% |
+| faber_to_ts_fixum | 304 | 91% |
+| faber_to_ts_string | 305 | 91% |
+| faber_to_ts_si_false | 305 | 91% |
+| faber_to_ts_varia | 305 | 90% |
+| faber_to_ts_dum | 303 | 89% |
+| predict_const_value | 303 | 87% |
+| faber_to_ts_boolean | 303 | 85% |
+| ts_to_faber_const | 333 | 84% |
+| complex_ts_to_faber_if_in_loop | 12 | 83% |
+| complex_ts_to_faber_typed_params | 12 | 83% |
+| complex_ts_to_faber_find_max | 12 | 83% |
+| ts_to_faber_string | 332 | 82% |
+| ts_to_faber_arithmetic | 331 | 82% |
+| complete_const_keyword | 302 | 81% |
+| ts_to_faber_let | 331 | 80% |
+| complete_return_keyword | 302 | 79% |
+| complete_let_keyword | 302 | 79% |
+| ts_to_faber_if_false | 332 | 78% |
+| complete_function_keyword | 301 | 78% |
+| complete_while_keyword | 301 | 78% |
+| ts_to_faber_if_true | 332 | 77% |
+| predict_simple_output | 303 | 77% |
+| complete_print_keyword | 300 | 77% |
+| ts_to_faber_while | 331 | 76% |
+| predict_function_math | 302 | 76% |
+| predict_arithmetic_parens | 302 | 75% |
+| predict_loop_sum | 302 | 75% |
+| complex_ts_to_faber_fizzbuzz | 12 | 75% |
+| complete_else_keyword | 301 | 74% |
+| predict_conditional_true | 303 | 73% |
+| complete_loop_keyword | 302 | 72% |
+| predict_conditional_false | 304 | 71% |
+| ts_to_faber_for_of | 332 | 67% |
+| predict_arithmetic_precedence | 303 | 67% |
+| complex_ts_to_faber_array_type | 12 | 67% |
+| ts_to_faber_function | 332 | 65% |
+| predict_loop_output | 302 | 65% |
+| predict_function_call | 302 | 65% |
+| ts_to_faber_boolean | 331 | 59% |
+| complex_ts_to_faber_guard_clause | 12 | 58% |
+| ts_to_faber_function_string | 332 | 57% |
+| complex_ts_to_faber_loop_in_loop | 14 | 43% |
+| complex_ts_to_faber_nested_if | 14 | 29% |
+| predict_boolean_and | 302 | 16% |
+| predict_boolean_or | 301 | 13% |
+| complex_ts_to_faber_higher_order | 12 | 0% |
+| complex_ts_to_faber_gcd | 12 | 0% |
+| complex_ts_to_faber_binary_search | 14 | 0% |
 
 ## Methodology
 
-- Deterministic: temperature 0.0, seed 42
-- Reproducible: all prompts and responses logged
-- Transparent: raw JSONL data available
+- **Temperature:** 0.0 (deterministic)
+- **Seed:** 42 (reproducible)
+- **Dialects:** Latin keywords
+- **Context levels:** examples-only, minimal, basic, complete
 
-Source: [faber-romanus on GitHub](https://github.com/ianzepp/faber-romanus)
+See [faber-romanus](https://github.com/ianzepp/faber-romanus) for raw data and methodology details.
+
+
+---
+
+# Rivus (Bootstrap)
+
+
+# Rivus (Bootstrap)
+
+The bootstrap compiler for Faber Romanus, written entirely in Faber itself. Rivus ("stream" in Latin) demonstrates that Faber is self-hosting: the language can compile its own compiler. This serves as both a proof of concept and a comprehensive test of the language's expressiveness.
+
+Unlike the reference compiler, Rivus uses Latin exclusively in its source code, serving as a showcase for writing substantial programs in pure Faber. The bootstrap compiler currently targets TypeScript output, with Zig support in development.
+
+## Usage
+
+```
+rivus compile <file.fab>              # Compile to TypeScript
+rivus compile <file.fab> -o out.ts    # Specify output file
+```
+
+> **Note:** Rivus must be built before use with `bun run build:rivus`. The bootstrap compiler has a narrower feature set than Faber, focusing on the subset needed for self-hosting.
+
+## Implementation Status
+
+| Target     | Tests | Status |
+| ---------- | ----: | :----: |
+| TypeScript |   741 |  100%  |
+| Python     |     0 |   0%   |
+| Rust       |     0 |   0%   |
+| C++23      |     0 |   0%   |
+| Zig        |     0 |   0%   |
+
+> Status % = passing tests / TypeScript baseline (741). Run `bun test proba/runner.test.ts -t "@rivus @<target>"` to verify. 35 tests skipped (intrinsic I/O functions, deferred).
+
+Status: ● implemented, ◐ partial, ○ not implemented, — not applicable, ◌ convention
+
+## Type System
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `textus` (string)         |    ●     | ● |  ○   | ○  |  ○  |
+| `numerus` (integer)       |    ●     | ● |  ○   | ○  |  ○  |
+| `fractus` (float)         |    ●     | ● |  ○   | ○  |  ○  |
+| `decimus` (decimal)       |    ●     | ● |  ○   | ○  |  ○  |
+| `magnus` (bigint)         |    ●     | ● |  ○   | ○  |  ○  |
+| `bivalens` (boolean)      |    ●     | ● |  ○   | ○  |  ○  |
+| `nihil` (null)            |    ●     | ● |  ○   | ○  |  ○  |
+| `vacuum` (void)           |    ●     | ● |  ○   | ○  |  ○  |
+| `numquam` (never)         |    ●     | ● |  ○   | ○  |  ○  |
+| `octeti` (bytes)          |    ●     | ● |  ○   | ○  |  ○  |
+| `objectum` (object)       |    ●     | ● |  ○   | ○  |  ○  |
+| `lista<T>` (array)        |    ●     | ● |  ○   | ○  |  ○  |
+| `tabula<K,V>` (map)       |    ●     | ● |  ○   | ○  |  ○  |
+| `copia<T>` (set)          |    ●     | ● |  ○   | ○  |  ○  |
+| `series<T...>` (tuple)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `promissum<T>` (promise)  |    ●     | ◐ |  ○   | ○  |  ○  |
+| `erratum` (error)         |    ●     | ○ |  ○   | ○  |  ○  |
+| `cursor<T>` (iterator)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `ignotum` (unknown)       |    ●     | ● |  ○   | ○  |  ○  |
+| `curator` (allocator)     |    —     | ● |  —   | —  |  —  |
+| Nullable types (`T?`)     |    ●     | ● |  ○   | ○  |  ○  |
+| Union types (`unio<A,B>`) |    ●     | ◐ |  ○   | ○  |  ○  |
+| Generic type params       |    ●     | ● |  ○   | ○  |  ○  |
+| Type aliases (`typus`)    |    ●     | ○ |  ○   | ○  |  ○  |
+| typeof (`typus` RHS)      |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Variable Declarations
+
+| Feature                      | TypeScript | Zig | Python | Rust | C++23 |
+| ---------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `varia` (mutable)            |    ●     | ● |  ○   | ○  |  ○  |
+| `fixum` (immutable)          |    ●     | ● |  ○   | ○  |  ○  |
+| `figendum` (async immutable) |    ●     | ○ |  ○   | ○  |  ○  |
+| `variandum` (async mutable)  |    ●     | ○ |  ○   | ○  |  ○  |
+| `nexum` (reactive field)     |    ●     | ○ |  ○   | ○  |  ○  |
+| Type annotations             |    ●     | ● |  ○   | ○  |  ○  |
+| Object destructuring         |    ●     | ○ |  ○   | ○  |  ○  |
+| Array destructuring          |    ●     | ○ |  ○   | ○  |  ○  |
+| Rest in destructuring        |    ●     | ○ |  ○   | ○  |  ○  |
+| Skip pattern (`_`)           |    ●     | ○ |  ○   | ○  |  ○  |
+| Negative indices `[-1]`      |    ●     | ○ |  ○   | ○  |  ○  |
+| Slicing `[1..3]`             |    ●     | ○ |  ○   | ○  |  ○  |
+| Inclusive slicing (`usque`)  |    ●     | ○ |  ○   | ○  |  ○  |
+| Initializer expressions      |    ●     | ● |  ○   | ○  |  ○  |
+
+## Enum & Tagged Union Declarations
+
+| Feature                    | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `ordo` (enum)              |    ●     | ● |  ○   | ○  |  ○  |
+| Enum variants              |    ●     | ● |  ○   | ○  |  ○  |
+| Enum with values           |    ●     | ○ |  ○   | ○  |  ○  |
+| `discretio` (tagged union) |    ●     | ○ |  ○   | ○  |  ○  |
+| Variant fields             |    ●     | ○ |  ○   | ○  |  ○  |
+| Generic discretio          |    ●     | ○ |  ○   | ○  |  ○  |
+| `discerne` (variant match) |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Function Declarations
+
+| Feature                            | TypeScript | Zig | Python | Rust | C++23 |
+| ---------------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Basic functions (`functio`)        |    ●     | ● |  ○   | ○  |  ○  |
+| Parameters                         |    ●     | ● |  ○   | ○  |  ○  |
+| Parameter type annotations         |    ●     | ● |  ○   | ○  |  ○  |
+| Parameter aliasing (`ut`)          |    ●     | ○ |  ○   | ○  |  ○  |
+| Parameter defaults (`vel`)         |    ●     | ○ |  ○   | ○  |  ○  |
+| Parameter prepositions (`de`/`in`) |    ●     | ○ |  ○   | ○  |  ○  |
+| Rest parameters (`ceteri`)         |    ●     | ○ |  ○   | ○  |  ○  |
+| Return type annotation (`->`)      |    ●     | ● |  ○   | ○  |  ○  |
+| `futura` (async prefix)            |    ●     | ○ |  ○   | ○  |  ○  |
+| `cursor` (generator prefix)        |    ●     | ○ |  ○   | ○  |  ○  |
+| Async generator                    |    ●     | ○ |  ○   | ○  |  ○  |
+| Arrow functions                    |    ●     | ● |  ○   | ○  |  ○  |
+| `fit T` (sync return)              |    ●     | ○ |  ○   | ○  |  ○  |
+| `fiet T` (async return)            |    ●     | ○ |  ○   | ○  |  ○  |
+| `fiunt T` (generator return)       |    ●     | ○ |  ○   | ○  |  ○  |
+| `fient T` (async generator return) |    ●     | ○ |  ○   | ○  |  ○  |
+| `prae` (comptime type param)       |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Control Flow Statements
+
+| Feature                       | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `si` (if)                     |    ●     | ● |  ○   | ○  |  ○  |
+| `secus` (else)                |    ●     | ● |  ○   | ○  |  ○  |
+| `sin` (else if)               |    ●     | ● |  ○   | ○  |  ○  |
+| `dum` (while)                 |    ●     | ● |  ○   | ○  |  ○  |
+| `ex...pro` (for-of)           |    ●     | ● |  ○   | ○  |  ○  |
+| `ex...fit` (for-of verb form) |    ●     | ○ |  ○   | ○  |  ○  |
+| `ex...fiet` (async for)       |    ●     | ○ |  ○   | ○  |  ○  |
+| `ex...pro (i, n)` (indexed)   |    ●     | ○ |  ○   | ○  |  ○  |
+| `de...pro` (for-in)           |    ●     | ○ |  ○   | ○  |  ○  |
+| Range `..` (exclusive)        |    ●     | ● |  ○   | ○  |  ○  |
+| Range `ante` (exclusive)      |    ●     | ● |  ○   | ○  |  ○  |
+| Range `usque` (inclusive)     |    ●     | ● |  ○   | ○  |  ○  |
+| Range with step (`per`)       |    ●     | ○ |  ○   | ○  |  ○  |
+| `in` (mutation block)         |    ●     | ○ |  ○   | ○  |  ○  |
+| `elige` (switch)              |    ●     | ○ |  ○   | ○  |  ○  |
+| Switch cases (`si`)           |    ●     | ○ |  ○   | ○  |  ○  |
+| Switch default (`secus`)      |    ●     | ○ |  ○   | ○  |  ○  |
+| `discerne` (pattern match)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `secus` (else/ternary alt)    |    ●     | ● |  ○   | ○  |  ○  |
+| `fac` (do/block)              |    ●     | ○ |  ○   | ○  |  ○  |
+| `ergo` (then, one-liner)      |    ●     | ○ |  ○   | ○  |  ○  |
+| `rumpe` (break)               |    ●     | ● |  ○   | ○  |  ○  |
+| `perge` (continue)            |    ●     | ● |  ○   | ○  |  ○  |
+| `custodi` (guard)             |    ●     | ○ |  ○   | ○  |  ○  |
+| `cura` (resource management)  |    ●     | ● |  ○   | ○  |  ○  |
+| `praefixum` (comptime block)  |    ●     | ○ |  ○   | ○  |  ○  |
+| Catch on control flow         |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Return/Exit Statements
+
+| Feature            | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `redde` (return)   |    ●     | ● |  ○   | ○  |  ○  |
+| `redde` with value |    ●     | ● |  ○   | ○  |  ○  |
+| `redde` void       |    ●     | ● |  ○   | ○  |  ○  |
+
+## Exception Handling
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `tempta` (try)       |    ●     | — |  ○   | ○  |  ○  |
+| `cape` (catch)       |    ●     | ○ |  ○   | ○  |  ○  |
+| `demum` (finally)    |    ●     | — |  ○   | —  |  ○  |
+| `fac...cape` (block) |    ●     | ○ |  ○   | ○  |  ○  |
+| `iace` (throw)       |    ●     | ○ |  ○   | ○  |  ○  |
+| `adfirma` (assert)   |    ●     | ○ |  ○   | ○  |  ○  |
+| Assert with message  |    ●     | ○ |  ○   | ○  |  ○  |
+| `mori` (panic/fatal) |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Output/Debug/Events
+
+| Feature            | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `scribe` statement |    ●     | ● |  ○   | ○  |  ○  |
+| `vide` (debug)     |    ●     | ○ |  ○   | ○  |  ○  |
+| `mone` (warn)      |    ●     | ○ |  ○   | ○  |  ○  |
+| Multiple args      |    ●     | ● |  ○   | ○  |  ○  |
+
+## Expressions
+
+| Feature                             | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Identifiers                         |    ●     | ● |  ○   | ○  |  ○  |
+| `ego` (this/self)                   |    ●     | ● |  ○   | ○  |  ○  |
+| Boolean literals (`verum`/`falsum`) |    ●     | ● |  ○   | ○  |  ○  |
+| `nihil` literal                     |    ●     | ● |  ○   | ○  |  ○  |
+| String literals                     |    ●     | ● |  ○   | ○  |  ○  |
+| Number literals                     |    ●     | ● |  ○   | ○  |  ○  |
+| Hex literals (`0xFF`)               |    ●     | ● |  ○   | ○  |  ○  |
+| Binary literals (`0b1010`)          |    ●     | ● |  ○   | ○  |  ○  |
+| Octal literals (`0o755`)            |    ●     | ● |  ○   | ○  |  ○  |
+| BigInt literals (`123n`)            |    ●     | ○ |  ○   | ○  |  ○  |
+| Template literals                   |    ●     | ○ |  ○   | ○  |  ○  |
+| `scriptum()` format strings         |    ●     | ● |  ○   | ○  |  ○  |
+| Regex literals (`sed`)              |    ●     | — |  ○   | ○  |  ○  |
+| Array literals                      |    ●     | ● |  ○   | ○  |  ○  |
+| Array spread (`sparge`)             |    ●     | ○ |  ○   | ○  |  ○  |
+| Object literals                     |    ●     | ● |  ○   | ○  |  ○  |
+| Object spread (`sparge`)            |    ●     | ○ |  ○   | ○  |  ○  |
+| Binary operators                    |    ●     | ● |  ○   | ○  |  ○  |
+| Comparison operators                |    ●     | ● |  ○   | ○  |  ○  |
+| Logical operators                   |    ●     | ● |  ○   | ○  |  ○  |
+| Bitwise operators                   |    ●     | ○ |  ○   | ○  |  ○  |
+| Unary operators                     |    ●     | ● |  ○   | ○  |  ○  |
+| `nulla` (is empty)                  |    ●     | ○ |  ○   | ○  |  ○  |
+| `nonnulla` (has content)            |    ●     | ○ |  ○   | ○  |  ○  |
+| `nihil x` (is null)                 |    ●     | ● |  ○   | ○  |  ○  |
+| `nonnihil x` (is not null)          |    ●     | ● |  ○   | ○  |  ○  |
+| `negativum` (is negative)           |    ●     | ● |  ○   | ○  |  ○  |
+| `positivum` (is positive)           |    ●     | ● |  ○   | ○  |  ○  |
+| `verum x` (is true)                 |    ●     | ● |  ○   | ○  |  ○  |
+| `falsum x` (is false)               |    ●     | ● |  ○   | ○  |  ○  |
+| Member access (`.`)                 |    ●     | ● |  ○   | ○  |  ○  |
+| Optional chaining (`?.`)            |    ●     | ● |  ○   | ○  |  ○  |
+| Non-null assertion (`!.`)           |    ●     | ○ |  ○   | ○  |  ○  |
+| Computed access (`[]`)              |    ●     | ● |  ○   | ○  |  ○  |
+| Function calls                      |    ●     | ● |  ○   | ○  |  ○  |
+| Call spread (`sparge`)              |    ●     | ○ |  ○   | ○  |  ○  |
+| Method calls                        |    ●     | ● |  ○   | ○  |  ○  |
+| Assignment                          |    ●     | ● |  ○   | ○  |  ○  |
+| Compound assignment (`+=`, etc.)    |    ●     | ○ |  ○   | ○  |  ○  |
+| Conditional (ternary)               |    ●     | ● |  ○   | ○  |  ○  |
+| `sic`/`secus` ternary syntax        |    ●     | ● |  ○   | ○  |  ○  |
+| `cede` (await/yield)                |    ●     | ○ |  ○   | ○  |  ○  |
+| `novum` (new)                       |    ●     | ○ |  ○   | ○  |  ○  |
+| `novum...de` (new with props)       |    ●     | ○ |  ○   | ○  |  ○  |
+| `===` / `est` (strict equality)     |    ●     | ○ |  ○   | ○  |  ○  |
+| `!==` / `non est` (strict ineq.)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `est` (instanceof/typeof)           |    ●     | ○ |  ○   | ○  |  ○  |
+| `qua` (type cast)                   |    ●     | ● |  ○   | ○  |  ○  |
+| `aut` (logical or)                  |    ●     | ● |  ○   | ○  |  ○  |
+| `vel` (nullish coalescing)          |    ●     | ○ |  ○   | ○  |  ○  |
+| `praefixum` (comptime expr)         |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Lambda Syntax
+
+| Feature                        | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `pro x: expr` (expression)     |    ●     | ● |  ○   | ○  |  ○  |
+| `pro x { body }` (block)       |    ●     | ◐ |  ○   | ○  |  ○  |
+| `pro: expr` (zero-param)       |    ●     | ● |  ○   | ○  |  ○  |
+| `pro x -> T: expr` (ret. type) |    ●     | ◐ |  ○   | ○  |  ○  |
+| `fit x: expr` (sync binding)   |    ●     | ○ |  ○   | ○  |  ○  |
+| `per property` (shorthand)     |    ●     | ○ |  ○   | ○  |  ○  |
+
+## OOP Features (genus/pactum)
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `genus` declaration       |    ●     | ● |  ○   | ○  |  ○  |
+| Field declarations        |    ●     | ● |  ○   | ○  |  ○  |
+| Field defaults            |    ●     | ○ |  ○   | ○  |  ○  |
+| `nexum` (reactive field)  |    ●     | ○ |  ○   | ○  |  ○  |
+| Static fields (`generis`) |    ●     | ○ |  ○   | ○  |  ○  |
+| `@ privatum` (private)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `@ protectum` (protected) |    ●     | ○ |  ○   | ○  |  ○  |
+| `creo` (constructor hook) |    ●     | ○ |  ○   | ○  |  ○  |
+| `deleo` (destructor)      |    ◌     | ◌ |  ◌   | ◌  |  ◌  |
+| `pingo` (render method)   |    ◌     | ◌ |  ◌   | ◌  |  ◌  |
+| Auto-merge constructor    |    ●     | ○ |  ○   | ○  |  ○  |
+| Methods                   |    ●     | ○ |  ○   | ○  |  ○  |
+| Async methods             |    ●     | ○ |  ○   | ○  |  ○  |
+| Generator methods         |    ●     | ○ |  ○   | ○  |  ○  |
+| `sub` (extends)           |    ●     | — |  ○   | ○  |  ○  |
+| `implet` (implements)     |    ●     | — |  ○   | ○  |  ○  |
+| Multiple `implet`         |    ●     | — |  ○   | ○  |  ○  |
+| `@ abstractum` class      |    ●     | — |  ○   | ○  |  ○  |
+| `@ abstracta` method      |    ●     | — |  ○   | ○  |  ○  |
+| `aperit` (index sig)      |    ●     | — |  —   | —  |  —  |
+| Generic classes           |    ●     | ○ |  ○   | ○  |  ○  |
+| `pactum` declaration      |    ●     | — |  ○   | ○  |  ○  |
+| Interface methods         |    ●     | — |  ○   | ○  |  ○  |
+
+## Import/Export
+
+| Feature                        | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `ex...importa` (named imports) |    ●     | ○ |  ○   | ○  |  ○  |
+| `ex...importa *` (wildcard)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `ut` alias (import renaming)   |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Testing
+
+| Feature                         | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `proba` (test case)             |    ●     | ○ |  ○   | ○  |  ○  |
+| `probandum` (test suite)        |    ●     | ○ |  ○   | ○  |  ○  |
+| `cura ante` (beforeEach)        |    ●     | ○ |  ○   | ○  |  ○  |
+| `cura post` (afterEach)         |    ●     | ○ |  ○   | ○  |  ○  |
+| `cura ante omnia` (beforeAll)   |    ●     | ○ |  ○   | ○  |  ○  |
+| `cura post omnia` (afterAll)    |    ●     | ○ |  ○   | ○  |  ○  |
+| `omitte` modifier (skip)        |    ●     | ○ |  ○   | ○  |  ○  |
+| `solum` modifier (only)         |    ●     | ○ |  ○   | ○  |  ○  |
+| `futurum` modifier (todo)       |    ●     | ○ |  ○   | ○  |  ○  |
+| Table-driven tests (`proba ex`) |    ●     | ○ |  ○   | ○  |  ○  |
+
+## Preamble / Prologue
+
+| Feature                 | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Preamble infrastructure |    ●     | ◐ |  ○   | ○  |  ○  |
+| Panic class/import      |    ●     | — |  ○   | —  |  —  |
+| Decimal import          |    ●     | — |  ○   | —  |  —  |
+| Enum import             |    —     | — |  ○   | —  |  —  |
+| Regex import            |    —     | — |  ○   | ○  |  —  |
+| Collection imports      |    —     | ◐ |  ○   | ○  |  —  |
+| Async imports           |    —     | ○ |  ○   | ○  |  —  |
+| Arena allocator         |    —     | ● |  —   | ○  |  —  |
+| Curator tracking        |    —     | ● |  —   | ○  |  —  |
+| Flumina/Responsum       |    ○     | ○ |  ○   | ○  |  ○  |
+
+## I/O Intrinsics
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `_scribe` (print)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `_vide` (debug)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `_mone` (warn)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `_lege` (read input) |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Math (mathesis)
+
+| Feature                    | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `pavimentum(x)` (floor)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `tectum(x)` (ceiling)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `radix(x)` (sqrt)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `potentia(x, n)` (pow)     |    ○     | ○ |  ○   | ○  |  ○  |
+| `absolutum(x)` (abs)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `signum(x)` (sign)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `rotundum(x)` (round)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `truncatum(x)` (trunc)     |    ○     | ○ |  ○   | ○  |  ○  |
+| `logarithmus(x)` (log)     |    ○     | ○ |  ○   | ○  |  ○  |
+| `logarithmus10(x)` (log10) |    ○     | ○ |  ○   | ○  |  ○  |
+| `exponens(x)` (exp)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `sinus(x)` (sin)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `cosinus(x)` (cos)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `tangens(x)` (tan)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `minimus(a, b)` (min)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `maximus(a, b)` (max)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `constringens(x, lo, hi)`  |    ○     | ○ |  ○   | ○  |  ○  |
+| `PI` (constant)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `E` (constant)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `TAU` (constant)           |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Random (aleator)
+
+| Feature                       | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `fractus()` (random 0-1)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `inter(min, max)` (int)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `octeti(n)` (random bytes)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `uuid()` (UUID v4)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `selige(lista)` (random pick) |    ○     | ○ |  ○   | ○  |  ○  |
+| `misce(lista)` (shuffle copy) |    ○     | ○ |  ○   | ○  |  ○  |
+| `semen(n)` (seed)             |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Lista (Array) Methods
+
+| Latin                        | TypeScript | Zig | Python | Rust | C++23 |
+| ---------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `adde` (push)                |    ○     | ○ |  ○   | ○  |  ○  |
+| `addita` (push copy)         |    ○     | — |  ○   | ○  |  ○  |
+| `praepone` (unshift)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `praeposita` (unshift copy)  |    ○     | — |  ○   | ○  |  ○  |
+| `remove` (pop)               |    ○     | ○ |  ○   | ○  |  ○  |
+| `remota` (pop copy)          |    ○     | — |  ○   | ○  |  ○  |
+| `decapita` (shift)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `decapitata` (shift copy)    |    ○     | — |  ○   | ○  |  ○  |
+| `purga` (clear)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `primus` (first)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `ultimus` (last)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `accipe` (at index)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `longitudo` (length)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `vacua` (is empty)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `continet` (includes)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `indiceDe` (indexOf)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `inveni` (find)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `inveniIndicem` (findIndex)  |    ○     | ○ |  ○   | ○  |  ○  |
+| `filtrata` (filter)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `mappata` (map)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `reducta` (reduce)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `explanata` (flatMap)        |    ○     | — |  ○   | ○  |  ○  |
+| `plana` (flat)               |    ○     | — |  ○   | ○  |  ○  |
+| `inversa` (reverse copy)     |    ○     | ○ |  ○   | ○  |  ○  |
+| `ordinata` (sort copy)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `sectio` (slice)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `prima` (take first n)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `ultima` (take last n)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `omitte` (skip first n)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `omnes` (every)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `aliquis` (some)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `coniunge` (join)            |    ○     | — |  ○   | ○  |  ○  |
+| `perambula` (forEach)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `filtra` (filter in-place)   |    ○     | — |  ○   | ○  |  ○  |
+| `ordina` (sort in-place)     |    ○     | ○ |  ○   | ○  |  ○  |
+| `inverte` (reverse in-place) |    ○     | ○ |  ○   | ○  |  ○  |
+| `congrega` (groupBy)         |    ○     | — |  ○   | ○  |  ○  |
+| `unica` (unique)             |    ○     | — |  ○   | ○  |  ○  |
+| `planaOmnia` (flattenDeep)   |    ○     | — |  ○   | ○  |  ○  |
+| `fragmenta` (chunk)          |    ○     | — |  ○   | ○  |  ○  |
+| `densa` (compact)            |    ○     | — |  ○   | ○  |  ○  |
+| `partire` (partition)        |    ○     | — |  ○   | ○  |  ○  |
+| `misce` (shuffle)            |    ○     | — |  ○   | ○  |  ○  |
+| `specimen` (sample one)      |    ○     | — |  ○   | ○  |  ○  |
+| `specimina` (sample n)       |    ○     | — |  ○   | ○  |  ○  |
+| `summa` (sum)                |    ○     | ○ |  ○   | ○  |  ○  |
+| `medium` (average)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `minimus` (min)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `maximus` (max)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `minimusPer` (minBy)         |    ○     | — |  ○   | ○  |  ○  |
+| `maximusPer` (maxBy)         |    ○     | — |  ○   | ○  |  ○  |
+| `numera` (count)             |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Tabula (Map) Methods
+
+| Latin                      | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `pone` (set)               |    ○     | ○ |  ○   | ○  |  ○  |
+| `accipe` (get)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `habet` (has)              |    ○     | ○ |  ○   | ○  |  ○  |
+| `dele` (delete)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `longitudo` (size)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `vacua` (isEmpty)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `purga` (clear)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `claves` (keys)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `valores` (values)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `paria` (entries)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `accipeAut` (getOrDefault) |    ○     | ○ |  ○   | ○  |  ○  |
+| `selige` (pick)            |    ○     | — |  ○   | ○  |  ○  |
+| `omitte` (omit)            |    ○     | — |  ○   | ○  |  ○  |
+| `confla` (merge)           |    ○     | — |  ○   | ○  |  ○  |
+| `inversa` (invert)         |    ○     | — |  ○   | ○  |  ○  |
+| `mappaValores` (mapValues) |    ○     | — |  ○   | ○  |  ○  |
+| `mappaClaves` (mapKeys)    |    ○     | — |  ○   | ○  |  ○  |
+| `inLista` (toArray)        |    ○     | — |  ○   | ○  |  ○  |
+| `inObjectum` (toObject)    |    ○     | — |  ○   | —  |  —  |
+
+## Copia (Set) Methods
+
+| Latin                         | TypeScript | Zig | Python | Rust | C++23 |
+| ----------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `adde` (add)                  |    ○     | ○ |  ○   | ○  |  ○  |
+| `habet` (has)                 |    ○     | ○ |  ○   | ○  |  ○  |
+| `dele` (delete)               |    ○     | ○ |  ○   | ○  |  ○  |
+| `longitudo` (size)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `vacua` (isEmpty)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `purga` (clear)               |    ○     | ○ |  ○   | ○  |  ○  |
+| `unio` (union)                |    ○     | — |  ○   | ○  |  ○  |
+| `intersectio` (intersection)  |    ○     | — |  ○   | ○  |  ○  |
+| `differentia` (difference)    |    ○     | — |  ○   | ○  |  ○  |
+| `symmetrica` (symmetric diff) |    ○     | — |  ○   | ○  |  ○  |
+| `subcopia` (isSubset)         |    ○     | — |  ○   | ○  |  ○  |
+| `supercopia` (isSuperset)     |    ○     | — |  ○   | ○  |  ○  |
+| `inLista` (toArray)           |    ○     | — |  ○   | ○  |  ○  |
+| `valores` (values)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `perambula` (forEach)         |    ○     | — |  ○   | ○  |  ○  |
+
+## Stdlib: Time (tempus)
+
+| Feature                  | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------ | :--------: | :-: | :----: | :--: | :---: |
+| `nunc()` (current epoch) |    ○     | ○ |  ○   | ○  |  ○  |
+| `nunc_nano()` (nanos)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `nunc_secunda()` (secs)  |    ○     | ○ |  ○   | ○  |  ○  |
+| `dormi ms` (sleep)       |    ○     | ○ |  ○   | ○  |  ○  |
+| Duration constants       |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: File I/O (solum)
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `lege` (read file)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `inscribe` (write file)   |    ○     | ○ |  ○   | ○  |  ○  |
+| `appone` (append)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `aperi` / `claude` (open) |    ○     | ○ |  ○   | ○  |  ○  |
+| `exstat` (exists)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `dele` (delete)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `duplica` (copy)          |    ○     | ○ |  ○   | ○  |  ○  |
+| `move` (rename)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `crea` (mkdir)            |    ○     | ○ |  ○   | ○  |  ○  |
+| `elenca` (readdir)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `via.*` (path utils)      |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Network (caelum)
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `pete` (HTTP GET)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `mitte` (HTTP POST)  |    ○     | ○ |  ○   | ○  |  ○  |
+| `pone` (HTTP PUT)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `dele` (HTTP DELETE) |    ○     | ○ |  ○   | ○  |  ○  |
+| WebSocket client     |    ○     | ○ |  ○   | ○  |  ○  |
+| TCP/UDP sockets      |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Crypto
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `digere` (hash)           |    ○     | ○ |  ○   | ○  |  ○  |
+| `hmac` (HMAC)             |    ○     | ○ |  ○   | ○  |  ○  |
+| `cifra` (encrypt)         |    ○     | ○ |  ○   | ○  |  ○  |
+| `decifra` (decrypt)       |    ○     | ○ |  ○   | ○  |  ○  |
+| `fortuita` (random bytes) |    ○     | ○ |  ○   | ○  |  ○  |
+| `deriva` (key derivation) |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Encoding (codex)
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `coda` (encode)      |    ○     | ○ |  ○   | ○  |  ○  |
+| `decoda` (decode)    |    ○     | ○ |  ○   | ○  |  ○  |
+| Base64/Base64URL     |    ○     | ○ |  ○   | ○  |  ○  |
+| Hex encoding         |    ○     | ○ |  ○   | ○  |  ○  |
+| URL percent-encoding |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Compression (comprimo)
+
+| Feature               | TypeScript | Zig | Python | Rust | C++23 |
+| --------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `comprimo` (compress) |    ○     | ○ |  ○   | ○  |  ○  |
+| `laxo` (decompress)   |    ○     | ○ |  ○   | ○  |  ○  |
+| gzip/zstd/brotli      |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Stdlib: Database (arca)
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Query DSL (`de...quaere`) |    ○     | ○ |  ○   | ○  |  ○  |
+| Mutations (`in...muta`)   |    ○     | ○ |  ○   | ○  |  ○  |
+| Transactions              |    ○     | ○ |  ○   | ○  |  ○  |
+| SQLite embedded           |    —     | ○ |  —   | —  |  —  |
+
+## Collection DSL
+
+| Feature                   | TypeScript | Zig | Python | Rust | C++23 |
+| ------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `ex...prima n` (take)     |    ○     | ○ |  ○   | ○  |  ○  |
+| `ex...ultima n` (last)    |    ○     | ○ |  ○   | ○  |  ○  |
+| `ex...summa` (sum)        |    ○     | ○ |  ○   | ○  |  ○  |
+| `ab...ubi` (filter where) |    ○     | ○ |  ○   | ○  |  ○  |
+| `ab...pro` (filter iter)  |    ○     | ○ |  ○   | ○  |  ○  |
+
+## External Dispatch (ad)
+
+| Feature              | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------- | :--------: | :-: | :----: | :--: | :---: |
+| `ad "target" (args)` |    ○     | ○ |  ○   | ○  |  ○  |
+| Syscall dispatch     |    ○     | ○ |  ○   | ○  |  ○  |
+| URL protocol routing |    ○     | ○ |  ○   | ○  |  ○  |
+| Package dispatch     |    ○     | ○ |  ○   | ○  |  ○  |
+
+## Nucleus Runtime
+
+The Nucleus is Faber's micro-kernel runtime providing unified I/O dispatch, message-passing protocol, and async execution across all targets. See `consilia/futura/nucleus.md` for full design.
+
+| Feature                    | TypeScript | Zig | Python | Rust | C++23 |
+| -------------------------- | :--------: | :-: | :----: | :--: | :---: |
+| Responsum protocol         |    ○     | ○ |  ○   | ○  |  ○  |
+| Handle abstraction         |    ○     | ○ |  ○   | ○  |  ○  |
+| Dispatcher (syscall table) |    ○     | ○ |  ○   | ○  |  ○  |
+| Request correlation        |    ○     | ○ |  ○   | ○  |  ○  |
+| AsyncContext executor      |    ○     | ○ |  ○   | ○  |  ○  |
+| State machine codegen      |    —     | ○ |  —   | ○  |  ○  |
+
+The Responsum protocol defines a tagged union for all syscall results.
+
+---
+
+## Target Notes
+
+### Python (3.10+)
+
+No block braces (indentation-based), no `new` keyword, `asyncio` for async, `typing.Protocol` for interfaces, `match`/`case` for pattern matching.
+
+### Zig (0.11+)
+
+No classes (structs with methods), no interfaces (duck typing), no exceptions (error unions), no generators, comptime generics. `genus` becomes `const Name = struct { ... };`. Memory management via `curator` type which maps to `std.mem.Allocator` — collection methods automatically use the allocator from function parameters or the default arena in `main()`.
+
+### Rust (2021 edition)
+
+Ownership system, borrowing (`&`/`&mut`), `Option<T>`/`Result<T,E>` instead of null/exceptions, traits instead of interfaces, exhaustive pattern matching.
+
+### C++23
+
+`std::expected<T,E>` for errors, `std::print` for output, concepts for interfaces, coroutines for async, RAII for cleanup.
 
 
 ---
@@ -497,177 +1835,6 @@ inStmt := 'in' expression blockStmt
 4. **Parentheses around conditions are valid but not idiomatic**: prefer `si x > 0 { }` or `si positivum x { }` over `si (x > 0) { }`
 5. **Output keywords are statements**, not functions — `scribe x` works, `scribe(x)` also works (parentheses group the expression), but `scribe` is not a callable value
 
-
-
----
-
-# Research Results
-
-
-# Research Results
-
-Results from the Faber evaluation harness. Testing whether LLMs can learn Faber syntax from examples.
-
-| Metric | Value |
-|--------|-------|
-| Framework version | 1.1 |
-| Total evaluations | 13,270 |
-| Models tested | 15 |
-| Total cost | $12.04 |
-| Total tokens | 9.5M in / 563K out |
-| Total time | 18980.8s |
-
-## Model Comparison: Cost vs Speed vs Accuracy
-
-| Model | Accuracy | Avg Latency | Cost | Tokens |
-|-------|----------|-------------|------|--------|
-| gpt-4o | 89% | 829ms | $1.94 | 707K |
-| qwen3-coder | 89% | 1.4s | $0.22 | 926K |
-| gpt-3.5-turbo | 89% | 521ms | $0.40 | 762K |
-| gpt-5 | 89% | 6.7s | $4.37 | 584K |
-| gpt-4o-mini | 88% | 869ms | $0.10 | 630K |
-| claude-3.5-sonnet | 88% | 1.8s | $2.21 | 667K |
-| llama-3.1-70b | 86% | 1.1s | $0.21 | 609K |
-| codestral | 86% | 541ms | $0.24 | 737K |
-| deepseek-v3.1 | 85% | 2.0s | $0.10 | 617K |
-| claude-4.5-sonnet | 77% | 1.5s | $1.74 | 518K |
-| mercury-coder | 73% | 589ms | $0.22 | 834K |
-| llama-3.1-8b | 73% | 915ms | $0.04 | 717K |
-| claude-3-haiku | 70% | 970ms | $0.22 | 769K |
-| llama-3.2-1b | 15% | 486ms | $0.03 | 778K |
-| qwen2.5-coder-32b | 0% | 7.2s | $0.02 | 253K |
-
-## Three-Level Grading Breakdown
-
-**A** = typechecks, **B** = runs without error, **C** = correct output.
-
-| Model | Tests | A (Typechecks) | B (Runs) | C (Correct) |
-|-------|-------|----------------|----------|-------------|
-| gpt-4o | 952 | 93% | 93% | 88% |
-| qwen3-coder | 1068 | 94% | 94% | 89% |
-| gpt-3.5-turbo | 1166 | 91% | 91% | 89% |
-| gpt-5 | 672 | 93% | 93% | 89% |
-| gpt-4o-mini | 895 | 93% | 93% | 88% |
-| claude-3.5-sonnet | 840 | 95% | 95% | 88% |
-| llama-3.1-70b | 870 | 91% | 91% | 86% |
-| codestral | 964 | 93% | 92% | 86% |
-| deepseek-v3.1 | 862 | 95% | 94% | 85% |
-| claude-4.5-sonnet | 672 | 93% | 93% | 77% |
-| mercury-coder | 840 | 76% | 76% | 73% |
-| llama-3.1-8b | 1063 | 90% | 90% | 73% |
-| claude-3-haiku | 946 | 92% | 92% | 70% |
-| llama-3.2-1b | 1138 | 43% | 43% | 15% |
-| qwen2.5-coder-32b | 282 | 29% | 29% | 0% |
-
-## By Context Level
-
-How much documentation context helps models learn Faber.
-
-| Context | Tests | Accuracy |
-|---------|-------|----------|
-| examples-only | 2681 | 61% |
-| grammar-only | 2662 | 82% |
-| minimal | 2985 | 77% |
-| basic | 2466 | 79% |
-| complete | 2476 | 79% |
-
-## By N-shot (Learning Curve)
-
-Effect of few-shot examples on accuracy.
-
-| Examples | Tests | Accuracy |
-|----------|-------|----------|
-| 0-shot | 3343 | 70% |
-| 1-shot | 3073 | 71% |
-| 3-shot | 3914 | 80% |
-| 10-shot | 2940 | 81% |
-
-## Error Distribution
-
-Where failures occur (among failed trials only).
-
-| Error Type | Count | % of Failures |
-|------------|-------|---------------|
-| type_error | 1360 | 42% |
-| wrong_output | 1345 | 42% |
-| no_response | 312 | 10% |
-| syntax_error | 201 | 6% |
-| runtime_error | 14 | 0% |
-
-## By Task
-
-| Task | Tests | Accuracy |
-|------|-------|----------|
-| faber_to_ts_functio_string | 305 | 95% |
-| faber_to_ts_arithmetic | 303 | 94% |
-| faber_to_ts_ex_pro | 304 | 93% |
-| faber_to_ts_si_true | 305 | 92% |
-| faber_to_ts_functio | 305 | 92% |
-| complex_ts_to_faber_factorial | 12 | 92% |
-| complex_ts_to_faber_fibonacci | 12 | 92% |
-| complex_ts_to_faber_multi_function | 12 | 92% |
-| complex_ts_to_faber_ternary_chain | 12 | 92% |
-| complex_ts_to_faber_string_ops | 12 | 92% |
-| complex_ts_to_faber_early_return | 12 | 92% |
-| complex_ts_to_faber_accumulator | 12 | 92% |
-| complex_ts_to_faber_prime_check | 12 | 92% |
-| faber_to_ts_fixum | 304 | 91% |
-| faber_to_ts_string | 305 | 91% |
-| faber_to_ts_si_false | 305 | 91% |
-| faber_to_ts_varia | 305 | 90% |
-| faber_to_ts_dum | 303 | 89% |
-| predict_const_value | 303 | 87% |
-| faber_to_ts_boolean | 303 | 85% |
-| ts_to_faber_const | 333 | 84% |
-| complex_ts_to_faber_if_in_loop | 12 | 83% |
-| complex_ts_to_faber_typed_params | 12 | 83% |
-| complex_ts_to_faber_find_max | 12 | 83% |
-| ts_to_faber_string | 332 | 82% |
-| ts_to_faber_arithmetic | 331 | 82% |
-| complete_const_keyword | 302 | 81% |
-| ts_to_faber_let | 331 | 80% |
-| complete_return_keyword | 302 | 79% |
-| complete_let_keyword | 302 | 79% |
-| ts_to_faber_if_false | 332 | 78% |
-| complete_function_keyword | 301 | 78% |
-| complete_while_keyword | 301 | 78% |
-| ts_to_faber_if_true | 332 | 77% |
-| predict_simple_output | 303 | 77% |
-| complete_print_keyword | 300 | 77% |
-| ts_to_faber_while | 331 | 76% |
-| predict_function_math | 302 | 76% |
-| predict_arithmetic_parens | 302 | 75% |
-| predict_loop_sum | 302 | 75% |
-| complex_ts_to_faber_fizzbuzz | 12 | 75% |
-| complete_else_keyword | 301 | 74% |
-| predict_conditional_true | 303 | 73% |
-| complete_loop_keyword | 302 | 72% |
-| predict_conditional_false | 304 | 71% |
-| ts_to_faber_for_of | 332 | 67% |
-| predict_arithmetic_precedence | 303 | 67% |
-| complex_ts_to_faber_array_type | 12 | 67% |
-| ts_to_faber_function | 332 | 65% |
-| predict_loop_output | 302 | 65% |
-| predict_function_call | 302 | 65% |
-| ts_to_faber_boolean | 331 | 59% |
-| complex_ts_to_faber_guard_clause | 12 | 58% |
-| ts_to_faber_function_string | 332 | 57% |
-| complex_ts_to_faber_loop_in_loop | 14 | 43% |
-| complex_ts_to_faber_nested_if | 14 | 29% |
-| predict_boolean_and | 302 | 16% |
-| predict_boolean_or | 301 | 13% |
-| complex_ts_to_faber_higher_order | 12 | 0% |
-| complex_ts_to_faber_gcd | 12 | 0% |
-| complex_ts_to_faber_binary_search | 14 | 0% |
-
-## Methodology
-
-- **Temperature:** 0.0 (deterministic)
-- **Seed:** 42 (reproducible)
-- **Dialects:** Latin keywords
-- **Context levels:** examples-only, minimal, basic, complete
-
-See [faber-romanus](https://github.com/ianzepp/faber-romanus) for raw data and methodology details.
 
 
 ---

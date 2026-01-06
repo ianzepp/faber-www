@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "bun run build/generate.ts",
-    "sync": "bun run sync:grammar && bun run sync:examples && bun run sync:research",
+    "build": "bun run sync:content && bun run build/generate.ts",
+    "sync": "bun run sync:content && bun run sync:research",
+    "sync:content": "bun run sync:grammar && bun run sync:examples && bun run sync:compilers",
     "sync:grammar": "bun run build/sync-grammar.ts",
     "sync:examples": "bun run build/sync-examples.ts",
     "sync:research": "bun run build/sync-research.ts",
+    "sync:compilers": "bun run build/sync-compilers.ts",
     "dev": "bun run build && bunx serve dist",
     "clean": "rm -rf dist/*"
   },

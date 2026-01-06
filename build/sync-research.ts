@@ -391,15 +391,30 @@ function generateResearchPage(stats: Stats): string {
   } = stats
 
   let content = `---
-title: Research Results
+title: Thesis and Trials
 description: LLM learnability research for Faber
 section: research
-order: 1
+order: 0
 ---
 
-# Research Results
+# Thesis and Trials
 
-Results from the Faber evaluation harness. Testing whether LLMs can learn Faber syntax from examples.
+Can LLMs learn Faber effectively? The [faber-romanus](https://github.com/ianzepp/faber-romanus) project includes an evaluation harness to test this systematically.
+
+## Hypothesis
+
+Faber's design choices - Latin vocabulary, regular morphology, consistent syntax - should make it easier for LLMs to learn from few examples compared to languages optimized for human ergonomics.
+
+## Evaluation
+
+The trials test:
+
+- **Multiple models** - From GPT-3.5 to Llama 3.2 1B
+- **N-shot learning** - 0, 1, 3, and 10 example configurations
+- **Task types** - Translation, completion, prediction, explanation
+- **Context levels** - From examples-only to complete documentation
+
+## Trial Results
 
 | Metric | Value |
 |--------|-------|
@@ -520,8 +535,8 @@ async function main() {
   const stats = computeStats(gradedResults, rawResponses, pricing)
   const page = generateResearchPage(stats)
 
-  await Bun.write(join(CONTENT_DIR, 'research', 'results.md'), page)
-  console.log('  created: research/results.md')
+  await Bun.write(join(CONTENT_DIR, 'research', 'index.md'), page)
+  console.log('  created: research/index.md')
 
   console.log()
   console.log(`Total cost: ${formatCost(stats.totalCost)}`)

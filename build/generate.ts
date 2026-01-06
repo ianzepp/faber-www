@@ -106,6 +106,7 @@ async function loadPages(): Promise<Page[]> {
 
 function buildNav(pages: Page[], currentPage: Page): string {
   const sections: Record<string, Page[]> = {}
+  const sectionOrder = ['compilers', 'research', 'docs']
 
   for (const page of pages) {
     if (page.path === 'index.md') continue
@@ -114,10 +115,20 @@ function buildNav(pages: Page[], currentPage: Page): string {
     sections[section].push(page)
   }
 
-  let nav = '<nav class="site-nav">\n'
-  nav += `  <a href="/" class="nav-home">Faber</a>\n`
+  // Sort sections by defined order
+  const orderedSections = Object.keys(sections).sort((a, b) => {
+    const aIndex = sectionOrder.indexOf(a)
+    const bIndex = sectionOrder.indexOf(b)
+    if (aIndex === -1 && bIndex === -1) return a.localeCompare(b)
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+    return aIndex - bIndex
+  })
 
-  for (const [section, sectionPages] of Object.entries(sections)) {
+  let nav = '<nav class="site-nav">\n'
+
+  for (const section of orderedSections) {
+    const sectionPages = sections[section]
     if (section !== 'root') {
       nav += `  <div class="nav-section">${section}</div>\n`
     }

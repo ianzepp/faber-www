@@ -3,17 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faber - Faber</title>
-  <meta name="description" content="A Latin programming language designed for LLM consumption">
+  <title>Faber Romanus - Faber</title>
+  <meta name="description" content="An LLM-oriented intermediate representation that compiles to Zig, Rust, C++, TypeScript, or Python">
   <link rel="stylesheet" href="/styles.css">
   <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Site Index">
   <link rel="alternate" type="text/markdown" href="/faber-complete.md" title="Complete Documentation (Markdown)">
 </head>
 <body>
-  <div class="banner">Pre-alpha: Published for early evaluation only</div>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle">
+  <header class="header">
+    <div class="header-banner">Pre-alpha: Published for early evaluation only</div>
+    <div class="header-bar">
+      <a href="/" class="header-logo">Faber</a>
+      <label for="nav-toggle" class="header-menu" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+    </div>
+  </header>
   <div class="container">
     <nav class="site-nav">
-  <a href="/" class="nav-home">Faber</a>
+  <div class="nav-section">compilers</div>
+  <a href="/compilers/faber.html">Faber (Reference)</a>
+  <a href="/compilers/rivus.html">Rivus (Bootstrap)</a>
+  <div class="nav-section">research</div>
+  <a href="/research/index.html">Thesis and Trials</a>
+  <a href="/research/framework-1.1.html">Framework 1.1 Results</a>
   <div class="nav-section">docs</div>
   <a href="/docs/index.html">Documentation</a>
   <a href="/docs/grammar.html">Grammar Reference</a>
@@ -27,16 +43,12 @@
   <a href="/docs/functiones.html">Functiones</a>
   <a href="/docs/importa.html">Importa</a>
   <a href="/docs/errores.html">Errores</a>
-  <div class="nav-section">research</div>
-  <a href="/research/index.html">Research</a>
-  <a href="/research/results.html">Research Results</a>
-  <a href="/research/framework-1.1.html">Framework 1.1 Results</a>
 </nav>
     <main class="content">
       <div class="hero">
 
-<h1 id="faber">Faber</h1>
-<p class="tagline">A Latin programming language designed for LLM consumption</p>
+<h1 id="faber-romanus">Faber Romanus</h1>
+<p class="tagline">The Roman Craftsman — An LLM-oriented intermediate representation that compiles to Zig, Rust, C++, TypeScript, or Python</p>
 
 </div>
 
@@ -49,39 +61,63 @@ Installation coming soon
 <p><a href="https://github.com/ianzepp/faber-romanus">GitHub</a></p>
 </div>
 
-<p>Faber is an intermediate language where LLMs generate human-readable Latin code that humans can review before compilation to TypeScript, Python, Zig, C++, or Rust.</p>
-<h2 id="why-latin">Why Latin?</h2>
+<h2 id="the-problem">The Problem</h2>
+<p>LLMs write code. Humans review it. But systems languages — Zig, Rust, C++ — are hard for both:</p>
 <ul>
-<li><strong>Regular morphology</strong> - Latin&#39;s grammatical structure maps cleanly to programming constructs</li>
-<li><strong>LLM priors</strong> - Models trained on multilingual corpora have exposure to Latin patterns</li>
-<li><strong>Human readable</strong> - Unlike machine-optimized IRs, Faber code is reviewable by humans</li>
-<li><strong>Compilation targets</strong> - One source language, multiple output targets</li>
+<li><strong>LLMs struggle with symbol-dense syntax.</strong> Lifetimes, borrow checkers, template metaprogramming — these create semantic chaos that increases error rates.</li>
+<li><strong>Humans can&#39;t skim generated code.</strong> Reviewing 50 lines of Rust requires understanding Rust. You can&#39;t verify &quot;yes, that logic looks right&quot; without parsing the syntax mentally.</li>
 </ul>
-<h2 id="quick-example">Quick Example</h2>
-<pre><code class="language-faber">functio summa(a: numerus, b: numerus) -&gt; numerus {
-    redde a + b
+<p>You don&#39;t need an IR to generate TypeScript. You need one to generate Rust without lifetime annotation chaos.</p>
+<h2 id="the-solution">The Solution</h2>
+<p>Faber Romanus is an <strong>intermediate representation</strong> optimized for LLM generation and human review.</p>
+<pre><code class="language-faber">ex items pro item {
+    si item.price &gt; 100 {
+        scribe item.name
+    }
+}
+</code></pre>
+<ul>
+<li><strong>LLMs write Faber.</strong> Word-based, regular syntax. No lifetime annotations, no pointer semantics, no template noise.</li>
+<li><strong>Humans skim Faber.</strong> You see <code>si</code> (if), <code>pro</code> (for), <code>scribe</code> (print). You don&#39;t need to know Zig to verify the loop logic.</li>
+<li><strong>Compiler emits target code.</strong> Zig, Rust, C++, TypeScript, or Python. The generated code is what actually runs.</li>
+</ul>
+<p>The workflow: <strong>LLM drafts Faber → Human approves → Compiler emits production code.</strong></p>
+<h2 id="why-it-works">Why It Works</h2>
+<p><strong>No ecosystem problem.</strong> Faber compiles to the target language, so you use its libraries directly. <code>ex hono importa Hono</code> becomes <code>import { Hono } from &#39;hono&#39;</code>. No need to rewrite npm/PyPI/crates.io.</p>
+<p><strong>Grammar designed for LLMs.</strong> The EBNF specification is built for LLM consumption. Trials show models achieve 96-98% accuracy after reading the grammar specification alone — no prose documentation required.</p>
+<p><strong>Regular structure.</strong> Type-first declarations, consistent block patterns, no operator overloading. The regularity may matter more than the vocabulary.</p>
+<p><strong>Semantic vocabulary.</strong> Latin keywords encode intent: <code>fixum</code> (fixed/immutable) vs <code>varia</code> (variable/mutable), <code>cede</code> (yield/await), <code>redde</code> (give back/return).</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-faber">functio salve(nomen) -&gt; textus {
+    redde &quot;Salve, &quot; + nomen + &quot;!&quot;
 }
 
-fixum x = summa(3, 4)
-scribe(x)
+fixum nomen = &quot;Mundus&quot;
+scribe salve(nomen)
 </code></pre>
 <p>Compiles to TypeScript:</p>
-<pre><code class="language-typescript">function summa(a: number, b: number): number {
-    return a + b
+<pre><code class="language-typescript">function salve(nomen): string {
+    return &#39;Salve, &#39; + nomen + &#39;!&#39;;
 }
 
-const x = summa(3, 4)
-console.log(x)
+const nomen = &#39;Mundus&#39;;
+console.log(salve(nomen));
 </code></pre>
 <h2 id="links">Links</h2>
 <ul>
-<li><a href="/docs/grammar.html">Grammar Reference</a> - Complete language specification</li>
+<li><a href="/docs/grammar.html">Grammar Reference</a> - Complete language specification (EBNF)</li>
 <li><a href="/docs/examples.html">Examples</a> - Code examples by feature</li>
-<li><a href="/research/results.html">Research</a> - LLM learnability evaluation</li>
+<li><a href="/research/">Thesis and Trials</a> - LLM learnability evaluation</li>
 <li><a href="https://github.com/ianzepp/faber-romanus">GitHub</a> - Source code</li>
 </ul>
 
     </main>
   </div>
+  <footer class="footer-bar">
+    <a href="https://github.com/ianzepp/faber-romanus" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      Visit or star on GitHub!
+    </a>
+  </footer>
 </body>
 </html>
