@@ -6,7 +6,7 @@ order: 15
 
 # Functiones
 
-Functions in Faber are declared using the `functio` keyword, derived from the Latin _functio_ meaning "performance, execution." This chapter covers function declarations, parameters, return types, async patterns, generators, and lambda expressions.
+Functions in Faber are declared using the `functio` keyword, derived from the Latin _functio_ meaning "performance, execution." This chapter covers function declarations, parameters, return types, async patterns, generators, and clausura expressions.
 
 ## Declaring Functions
 
@@ -115,7 +115,7 @@ The `ceteri` modifier (Latin "the rest, the others") collects remaining argument
 ```fab
 functio sum(ceteri numerus[] nums) -> numerus {
     varia total = 0
-    ex nums pro n {
+    itera ex nums fixum n {
         total += n
     }
     redde total
@@ -154,12 +154,12 @@ functio doNothingExplicit() -> vacuum {
 
 Faber offers an alternative syntax using conjugated forms of the Latin verb _fieri_ ("to become"). These verb forms encode additional semantic information about how the function returns values:
 
-| Verb    | Tense/Number   | Meaning                | Semantics              |
-| ------- | -------------- | ---------------------- | ---------------------- |
-| `fit`   | present, sing. | "it becomes"           | sync, single value     |
-| `fiet`  | future, sing.  | "it will become"       | async, single value    |
-| `fiunt` | present, plur. | "they become"          | sync, yields multiple  |
-| `fient` | future, plur.  | "they will become"     | async, yields multiple |
+| Verb    | Tense/Number   | Meaning            | Semantics              |
+| ------- | -------------- | ------------------ | ---------------------- |
+| `fit`   | present, sing. | "it becomes"       | sync, single value     |
+| `fiet`  | future, sing.  | "it will become"   | async, single value    |
+| `fiunt` | present, plur. | "they become"      | sync, yields multiple  |
+| `fient` | future, plur.  | "they will become" | async, yields multiple |
 
 The verb forms participate in the Responsum stream protocol, providing structured error handling. Arrow syntax (`->`) bypasses this protocol for direct returns with zero overhead.
 
@@ -173,12 +173,13 @@ The verb syntax becomes valuable when you want stream-based error handling or ge
 
 ## Async Functions
 
-### The futura Modifier
+### The `@ futura` Annotation
 
-The `futura` modifier (Latin "future things," neuter plural of _futurus_) marks a function as asynchronous. Combined with arrow syntax, it returns a Promise:
+The `@ futura` annotation (Latin "future things," neuter plural of _futurus_) marks a function as asynchronous. Combined with arrow syntax, it returns a `promissum<T>` / Promise:
 
 ```fab
-futura functio fetchData(textus url) -> textus {
+@ futura
+functio fetchData(textus url) -> textus {
     fixum response = cede fetch(url)
     redde response.text()
 }
@@ -191,11 +192,12 @@ The choice of _futura_ leverages Latin's grammatical future tense to express tem
 Inside async functions, `cede` (Latin "yield, give way, surrender") awaits a promise:
 
 ```fab
-futura functio processAll(textus[] urls) -> textus[] {
+@ futura
+functio processAll(textus[] urls) -> textus[] {
     varia results = []
-    ex urls pro url {
+    itera ex urls fixum url {
         fixum data = cede fetchData(url)
-        results.adde(data)
+        results.appende(data)
     }
     redde results
 }
@@ -205,7 +207,7 @@ The etymology captures the semantics precisely: the function cedes control until
 
 ### Async via Verb Form
 
-The `fiet` verb ("it will become") implies async behavior without the `futura` modifier:
+The `fiet` verb ("it will become") implies async behavior without the `@ futura` annotation:
 
 ```fab
 functio fetchData() fiet textus {
@@ -213,28 +215,25 @@ functio fetchData() fiet textus {
 }
 ```
 
-This is equivalent to `futura functio fetchData() -> textus` but participates in the Responsum protocol.
-
-### Gerundive Declarations
-
-The gerundive forms `figendum` and `variandum` provide implicit await:
+This is equivalent to:
 
 ```fab
-figendum data = fetchData(url)   # immutable, implicit await
-variandum result = fetchInitial() # mutable, implicit await
+@ futura
+functio fetchData() -> textus { redde "data" }
 ```
 
-These are equivalent to `fixum x = cede y()` and `varia x = cede y()`. The gerundive signals futurity: the value will be fixed/varied once the operation completes. If the right-hand side is synchronous, it passes through unchanged.
+…but participates in the Responsum protocol.
 
 ## Generator Functions
 
-### The cursor Modifier
+### The `@ cursor` Annotation
 
-The `cursor` modifier (Latin "runner," from _currere_ "to run") creates a generator function:
+The `@ cursor` annotation (Latin "runner," from _currere_ "to run") creates a generator function:
 
 ```fab
-cursor functio range(numerus n) -> numerus {
-    ex 0..n pro i {
+@ cursor
+functio range(numerus n) -> numerus {
+    itera ex 0..n fixum i {
         cede i
     }
 }
@@ -248,7 +247,7 @@ The `fiunt` verb ("they become," plural) implies generator behavior:
 
 ```fab
 functio range(numerus n) fiunt numerus {
-    ex 0..n pro i {
+    itera ex 0..n fixum i {
         cede i
     }
 }
@@ -258,7 +257,7 @@ For async generators that yield promises, use `fient` ("they will become"):
 
 ```fab
 functio fetchAll(textus[] urls) fient textus {
-    ex urls pro url {
+    itera ex urls fixum url {
         cede fetch(url)
     }
 }
@@ -266,10 +265,10 @@ functio fetchAll(textus[] urls) fient textus {
 
 ### Iterating Over Generators
 
-Generator results can be consumed with `ex...pro` loops:
+Generator results can be consumed with `itera ex` loops:
 
 ```fab
-ex rangeSync(5) pro num {
+itera ex rangeSync(5) fixum num {
     scribe num
 }
 ```
@@ -300,15 +299,15 @@ functio pair(prae typus T, prae typus U, T first, U second) -> [T, U] {
 }
 ```
 
-## Lambda Expressions
+## Clausura Expressions (Closures)
 
 ### Basic Syntax
 
-Lambda expressions use `pro` (Latin "for, on behalf of") followed by parameters, a colon, and an expression:
+Clausura expressions use `clausura` (Latin for "closure") followed by parameters, a colon, and an expression:
 
 ```fab
-fixum double = pro x: x * 2
-fixum add = pro a, b: a + b
+fixum double = clausura x: x * 2
+fixum add = clausura a, b: a + b
 ```
 
 The colon separates parameters from the body. For single expressions, the result is implicitly returned.
@@ -318,36 +317,36 @@ The colon separates parameters from the body. For single expressions, the result
 When type annotation is needed, use an arrow before the colon:
 
 ```fab
-fixum add = pro a, b -> numerus: a + b
-fixum isPositive = pro n -> bivalens: n > 0
+fixum add = clausura a, b -> numerus: a + b
+fixum isPositive = clausura n -> bivalens: n > 0
 ```
 
 ### Block Bodies
 
-For multi-statement lambdas, use braces and explicit `redde`:
+For multi-statement clausuras, use braces and explicit `redde`:
 
 ```fab
-fixum process = pro x {
+fixum process = clausura x {
     varia result = x * 2
     result += 10
     redde result
 }
 ```
 
-### Zero-Parameter Lambdas
+### Zero-Parameter Clausuras
 
-When a lambda takes no parameters, place the colon immediately after `pro`:
+When a clausura takes no parameters, place the colon immediately after `clausura`:
 
 ```fab
-fixum getFortyTwo = pro: 42
+fixum getFortyTwo = clausura: 42
 ```
 
-### Async Lambdas
+### Async Clausuras
 
-The `fiet` keyword creates async lambdas:
+Async is inferred from the presence of `cede` in the body:
 
 ```fab
-fixum fetchAndProcess = fiet url {
+fixum fetchAndProcess = clausura url {
     fixum data = cede fetch(url)
     redde process(data)
 }
@@ -356,27 +355,52 @@ fixum fetchAndProcess = fiet url {
 This is useful for callbacks in async contexts:
 
 ```fab
-app.post("/users", fiet context {
-    redde context.json()
+app.post("/users", clausura context {
+    fixum data = cede context.json()
+    redde data
 })
 ```
 
 ### Common Patterns
 
-Lambdas shine in functional operations:
+Clausuras shine in functional operations:
 
 ```fab
 fixum numbers = [1, 2, 3, 4, 5]
 
 # Filter
-fixum evens = numbers.filter(pro x: x % 2 == 0)
+fixum evens = numbers.filter(clausura x: x % 2 == 0)
 
 # Map
-fixum doubled = numbers.map(pro x: x * 2)
+fixum doubled = numbers.map(clausura x: x * 2)
 
 # Reduce
-fixum sum = numbers.reduce(0, pro acc, x: acc + x)
+fixum sum = numbers.reduce(0, clausura acc, x: acc + x)
 ```
+
+## Allocator Binding with curata
+
+The `curata` modifier (Latin "cared for," from _curare_ "to care for") declares that a function requires an allocator. This is essential for Zig targets where memory allocation is explicit:
+
+```fab
+functio greet(textus name) curata alloc -> textus {
+    redde scriptum("Hello, §!", name)
+}
+```
+
+The allocator name following `curata` becomes available within the function body for operations requiring allocation (string formatting, collection creation, etc.).
+
+At call sites, the allocator is automatically injected when calling from within a `cura` block:
+
+```fab
+incipit ergo cura arena fit alloc {
+    scribe greet("World")  # alloc auto-injected
+}
+```
+
+The `curata` modifier keeps the function signature clean—the allocator is a resource concern, not a semantic parameter. Callers within a `cura` block don't need to pass it explicitly; the compiler threads it through.
+
+For TypeScript targets, `curata` has no effect since JavaScript handles memory automatically.
 
 ## Ownership Prepositions in Parameters
 
@@ -389,8 +413,8 @@ Latin prepositions indicate how parameters are passed and what the function may 
 functio processPoints(de Point[] points, in Point[] targets) {
     # points is borrowed (read-only)
     # targets is mutably borrowed
-    ex points pro point {
-        targets.adde(point)
+    itera ex points fixum point {
+        targets.appende(point)
     }
 }
 ```
@@ -414,10 +438,10 @@ Faber's function system balances Latin linguistic authenticity with practical pr
 - Type-first parameters with `ut` aliasing
 - `si` for optional, `vel` for defaults, `ceteri` for rest
 - Arrow `->` for direct returns, verb forms for stream protocol
-- `futura` and `cursor` modifiers, or `fiet`/`fiunt`/`fient` verbs
+- `@ futura` and `@ cursor` annotations, post-function modifiers (`curata`, `errata`, `immutata`, `iacit`), or `fiet`/`fiunt`/`fient` verbs
 - `cede` for await (async) or yield (generator)
 - `prae typus` for generics
-- `pro` for lambdas with optional `fiet` for async
+- `clausura` for closures (async inferred from `cede` usage)
 
 The Latin vocabulary maps naturally to programming concepts: _futura_ captures async's temporal nature, _cede_ captures yielding control, and verb conjugations encode sync/async and single/multiple semantics grammatically.
 

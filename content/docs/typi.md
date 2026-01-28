@@ -189,6 +189,46 @@ functio log(textus message) -> vacuum {
 }
 ```
 
+### Function Types
+
+Higher-order functions accept or return other functions. Faber uses parenthesized syntax for function type annotations:
+
+```fab
+(paramTypes) -> returnType
+```
+
+A predicate function that takes a value and returns a boolean:
+
+```fab
+functio filtra(lista<T> items, (T) -> bivalens pred) -> lista<T> {
+    # ...
+}
+```
+
+A transformer that takes two functions and returns their composition:
+
+```fab
+functio compone((A) -> B f, (B) -> C g) -> (A) -> C {
+    redde pro a: f(a) |> g
+}
+```
+
+Function types can appear anywhere a type annotation is valid---parameters, return types, variable declarations, and generics:
+
+```fab
+fixum (numerus) -> numerus doubler = pro x: x * 2
+typus Predicate<T> = (T) -> bivalens
+typus Mapper<A, B> = (A) -> B
+```
+
+Multiple parameters are comma-separated; no parameters use empty parentheses:
+
+```fab
+() -> vacuum                     # no params, returns nothing
+(numerus) -> textus              # one param
+(textus, numerus) -> bivalens    # two params
+```
+
 ---
 
 ## Nullable Types
@@ -209,7 +249,7 @@ fixum textus? name = getOptionalName()
 si name est nihil {
     scribe "No name provided"
 }
-aliter {
+secus {
     scribe name.longitudo()
 }
 ```
@@ -243,14 +283,22 @@ fixum lista<textus> names = ["Marcus", "Julia", "Gaius"]
 fixum lista<numerus> scores = [100, 95, 87]
 ```
 
-Array shorthand uses brackets with type parameter:
+Array shorthand uses brackets after the type:
 
 ```fab
 fixum textus[] names = ["Marcus", "Julia", "Gaius"]
-fixum numerus[] empty = []
 ```
 
 The shorthand `textus[]` is equivalent to `lista<textus>`.
+
+For empty collections, use `innatum` to construct the native type:
+
+```fab
+varia items = [] innatum lista<textus>
+varia cache = {} innatum tabula<textus, numerus>
+```
+
+Without `innatum`, empty literals lack methods. The `innatum` keyword (Latin "inborn") creates proper native instances---`new Map()` in TypeScript, `HashMap` in Rust, etc.
 
 Access elements by index:
 
@@ -396,7 +444,7 @@ fixum unio<textus, numerus> value = getValue()
 si value est numerus {
     scribe value * 2
 }
-aliter si value est textus {
+sin value est textus {
     scribe value.longitudo()
 }
 ```
@@ -452,7 +500,7 @@ fixum textus? name = getOptionalName()
 si name est nihil {
     scribe "No name"
 }
-aliter {
+secus {
     scribe name
 }
 ```

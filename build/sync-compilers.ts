@@ -2,7 +2,7 @@ import { join } from 'path'
 
 const ROOT = join(import.meta.dir, '..')
 const CONTENT_DIR = join(ROOT, 'content')
-const FABER_ROMANUS = join(ROOT, '..', 'faber-romanus')
+const FABER = join(ROOT, '..', 'faber')
 
 interface CompilerInfo {
   source: string
@@ -14,23 +14,30 @@ interface CompilerInfo {
 
 const compilers: CompilerInfo[] = [
   {
-    source: join(FABER_ROMANUS, 'fons', 'faber', 'CHECKLIST.md'),
-    dest: join(CONTENT_DIR, 'compilers', 'faber.md'),
-    title: 'Faber (Reference)',
-    description: 'Reference compiler implementation status',
+    source: join(FABER, 'fons', 'nanus-ts', 'README.md'),
+    dest: join(CONTENT_DIR, 'compilers', 'nanus-ts.md'),
+    title: 'nanus-ts (TypeScript)',
+    description: 'TypeScript compiler implementation',
     order: 0,
   },
   {
-    source: join(FABER_ROMANUS, 'fons', 'rivus', 'CHECKLIST.md'),
-    dest: join(CONTENT_DIR, 'compilers', 'rivus.md'),
-    title: 'Rivus (Bootstrap)',
-    description: 'Bootstrap compiler implementation status',
+    source: join(FABER, 'fons', 'nanus-go', 'README.md'),
+    dest: join(CONTENT_DIR, 'compilers', 'nanus-go.md'),
+    title: 'nanus-go (Go)',
+    description: 'Go compiler implementation',
     order: 1,
+  },
+  {
+    source: join(FABER, 'fons', 'rivus', 'CHECKLIST.md'),
+    dest: join(CONTENT_DIR, 'compilers', 'rivus.md'),
+    title: 'rivus (Bootstrap)',
+    description: 'Bootstrap compiler implementation status',
+    order: 2,
   },
 ]
 
 async function main() {
-  console.log('Syncing compiler checklists from faber-romanus...')
+  console.log('Syncing compiler checklists from faber...')
 
   // Ensure compilers directory exists
   const compilersDir = join(CONTENT_DIR, 'compilers')

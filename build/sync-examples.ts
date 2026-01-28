@@ -3,8 +3,8 @@ import { Glob } from 'bun'
 
 const ROOT = join(import.meta.dir, '..')
 const CONTENT_DIR = join(ROOT, 'content')
-const FABER_ROMANUS = join(ROOT, '..', 'faber-romanus')
-const EXEMPLA_DIR = join(FABER_ROMANUS, 'fons', 'exempla')
+const FABER = join(ROOT, '..', 'faber')
+const EXEMPLA_DIR = join(FABER, 'fons', 'exempla')
 
 interface Example {
   category: string
@@ -113,7 +113,7 @@ This file contains all ${examples.length} examples from the Faber exempla/ direc
 }
 
 async function main() {
-  console.log('Syncing examples from faber-romanus...')
+  console.log('Syncing examples from faber...')
   console.log(`Source: ${EXEMPLA_DIR}`)
   console.log()
 

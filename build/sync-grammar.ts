@@ -3,7 +3,7 @@ import { Glob } from 'bun'
 
 const ROOT = join(import.meta.dir, '..')
 const CONTENT_DIR = join(ROOT, 'content')
-const FABER_ROMANUS = join(ROOT, '..', 'faber-romanus')
+const FABER = join(ROOT, '..', 'faber')
 
 interface SyncResult {
   file: string
@@ -14,7 +14,7 @@ async function syncGrammar(): Promise<SyncResult[]> {
   const results: SyncResult[] = []
 
   // Sync EBNF.md → grammar.md (formal language specification)
-  const ebnfSource = join(FABER_ROMANUS, 'EBNF.md')
+  const ebnfSource = join(FABER, 'EBNF.md')
   const grammarDest = join(CONTENT_DIR, 'docs', 'grammar.md')
 
   const sourceContent = await Bun.file(ebnfSource).text()
@@ -34,7 +34,7 @@ ${sourceContent}
   results.push({ file: 'docs/grammar.md', action: 'updated' })
 
   // Sync fons/grammatica/ directory (prose tutorials)
-  const grammaticaDir = join(FABER_ROMANUS, 'fons', 'grammatica')
+  const grammaticaDir = join(FABER, 'fons', 'grammatica')
   const glob = new Glob('*.md')
 
   const topicOrder: Record<string, number> = {
@@ -76,8 +76,8 @@ ${content}
 }
 
 async function main() {
-  console.log('Syncing grammar from faber-romanus...')
-  console.log(`Source: ${FABER_ROMANUS}`)
+  console.log('Syncing grammar from faber...')
+  console.log(`Source: ${FABER}`)
   console.log()
 
   const results = await syncGrammar()

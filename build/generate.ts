@@ -106,7 +106,7 @@ async function loadPages(): Promise<Page[]> {
 
 function buildNav(pages: Page[], currentPage: Page): string {
   const sections: Record<string, Page[]> = {}
-  const sectionOrder = ['compilers', 'research', 'docs']
+  const sectionOrder = ['compilers', 'docs']
 
   for (const page of pages) {
     if (page.path === 'index.md') continue

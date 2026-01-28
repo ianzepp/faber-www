@@ -4,11 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "bun run sync:content && bun run build/generate.ts",
-    "sync": "bun run sync:content && bun run sync:research",
+    "sync": "bun run sync:content",
     "sync:content": "bun run sync:grammar && bun run sync:examples && bun run sync:compilers",
     "sync:grammar": "bun run build/sync-grammar.ts",
     "sync:examples": "bun run build/sync-examples.ts",
-    "sync:research": "bun run build/sync-research.ts",
+    "sync:research": "echo 'Research sync disabled - project focus changed'",
     "sync:compilers": "bun run build/sync-compilers.ts",
     "dev": "bun run build && bunx serve dist",
     "clean": "rm -rf dist/*"
